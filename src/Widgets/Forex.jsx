@@ -4,8 +4,11 @@ const ForexRatesWidget = () => {
   const containerRef = useRef(null);
 
   useEffect(() => {
+    // Store containerRef.current in a variable
+    const currentContainer = containerRef.current;
+
     // Ensure the container is available
-    if (!containerRef.current) return;
+    if (!currentContainer) return;
 
     // Create a new script element
     const script = document.createElement("script");
@@ -33,28 +36,27 @@ const ForexRatesWidget = () => {
 
     // Append the script to the container once the script is loaded
     script.onload = () => {
-      if (containerRef.current) {
-        containerRef.current.appendChild(script);
+      if (currentContainer) {
+        currentContainer.appendChild(script);
       }
     };
 
     // Append the script to the DOM
-    if (containerRef.current) {
-      containerRef.current.appendChild(script);
+    if (currentContainer) {
+      currentContainer.appendChild(script);
     }
 
     // Cleanup the script when the component unmounts
     return () => {
-      if (containerRef.current) {
-        containerRef.current.innerHTML = "";
+      if (currentContainer) {
+        currentContainer.innerHTML = "";
       }
     };
-  }, []);
+  }, []); // Only run on mount and unmount
 
   return (
     <div className="tradingview-widget-container">
       <div ref={containerRef} className="tradingview-widget-container__widget" />
-      
     </div>
   );
 };

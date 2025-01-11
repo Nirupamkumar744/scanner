@@ -1,18 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { FaHome, FaTelegram, FaSyncAlt } from "react-icons/fa";
-import { CiLogout } from 'react-icons/ci'; // Correct path for CiLogout
+import { FaHome, FaSyncAlt } from "react-icons/fa"; // Keep only the used icons
+import { CiLogout } from 'react-icons/ci'; // Keep if you use it
 
-import TickerTape from '../Widgets/TickerTape'; // Make sure this is correctly imported
-import Heatmap from '../Widgets/heatmap'; // Import the Heatmap component
+import TickerTape from '../Widgets/TickerTape'; 
+import Heatmap from '../Widgets/heatmap'; 
 import Crypto from "../Widgets/crypto";
 import Forex from "../Widgets/Forex";
-const Layout = () => {
-  const boxWidth = 150;
-  const margin = 15;
-  const totalBoxes = 100;
-  const scrollSpeed = 1;
 
+const MarketPulse = () => {
   return (
     <div>
       <style>
@@ -60,9 +55,9 @@ const Layout = () => {
           }
 
           .logo img {
-            width: 140px;  
-            height: 140px; 
-            margin-bottom: 0; 
+            width: 140px;
+            height: 140px;
+            margin-bottom: 0;
           }
 
           .nav-links {
@@ -107,97 +102,7 @@ const Layout = () => {
             width: 100%;
             overflow: hidden;
             z-index: 1;
-            margin-bottom: 20px; 
-          }
-
-          .tall-box {
-            margin-left: 50px;
-            width: calc(110% - 250px);
-            height: 200vh;
-            background: linear-gradient(135deg,rgb(169, 182, 219), #6A89CC);
-            border-radius: 12px;
-            box-shadow: 0px 15px 35px rgba(42, 48, 63, 0.8), 0px -15px 35px rgba(106, 137, 204, 0.8);
-            display: flex;
-            flex-wrap: wrap;
-            align-items: flex-start;
-            justify-content: space-evenly;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
-            padding: 20px;
-            gap: 20px;
-          }
-
-          .card {
-            display: flex;
-            flex-direction: row;
-            width: 48%;
-            height: 30vh;
-            background: linear-gradient(135deg, #000000, #2C2C2C);
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            color: white;
-            font-weight: bold;
-            font-size: 16px;
-            margin: 10px;
-            transition: all 0.3s ease;
-          }
-
-          .card:hover {
-            transform: scale(1.05);
-          }
-
-          .card-image {
-            flex: 1; 
-            width: 50%; 
-            height: 100%;
-            overflow: hidden;
-          }
-
-          .card-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-          }
-
-          .card-content {
-            flex: 1;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-          }
-
-          .card-content h3 {
-            font-size: 18px;
-            margin: 20px 0 10px;
-            font-weight: bold;
-            color: #FFD700;
-          }
-
-          .card-content p {
-            font-size: 14px;
-            margin: 0 0 10px;
-            color: #ccc;
-          }
-
-          .card-content button {
-            align-self: flex-start;
-            padding: 12px 24px;
-            background: linear-gradient(135deg, #4A69BD, #6A89CC);
-            color: white;
-            border-radius: 8px;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.3s ease;
-          }
-
-          .card-content button:hover {
-            background: #2C3E50;
-            transform: translateY(-3px);
+            margin-bottom: 20px;
           }
 
           .main-container {
@@ -250,15 +155,15 @@ const Layout = () => {
           <li><a href="/home"><FaHome style={{ marginRight: '10px', color: "yellow" }} />Home</a></li>
           <li><a href="/marketpulse"><i className="fa fa-chart-line"></i>Market Pulse</a></li>
           <li><a href="/insiderstrategy"><i className="fa fa-cogs"></i>Insider Strategy</a></li>
-          <li><a href="#"><i className="fa fa-th"></i>Sector Scope</a></li>
-          <li><a href="#"><i className="fa fa-signal"></i>Swing Spectrum</a></li>
-          <li><a href="#"><i className="fa fa-clock"></i>Option Clock</a></li>
-          <li><a href="#"><i className="fa fa-users"></i>FII / DII</a></li>
-          <li><a href="#"><i className="fa fa-arrow-up"></i>Index Mover</a></li>
-          <li><a href="#"><i className="fa fa-book"></i>Trading Journal</a></li>
-          <li><a href="#"><i className="fa fa-graduation-cap"></i>Trade Tutor</a></li>
-          <li><a href="#"><i className="fa fa-video"></i>Strategy Video</a></li>
-          <li><a href="#"><i className="fa fa-calendar-check"></i>Calculator</a></li>
+          <li><a href=""><i className="fa fa-th"></i>Sector Scope</a></li>
+          <li><a href=""><i className="fa fa-signal"></i>Swing Spectrum</a></li>
+          <li><a href=""><i className="fa fa-clock"></i>Option Clock</a></li>
+          <li><a href=""><i className="fa fa-users"></i>FII / DII</a></li>
+          <li><a href=""><i className="fa fa-arrow-up"></i>Index Mover</a></li>
+          <li><a href=""><i className="fa fa-book"></i>Trading Journal</a></li>
+          <li><a href=""><i className="fa fa-graduation-cap"></i>Trade Tutor</a></li>
+          <li><a href=""><i className="fa fa-video"></i>Strategy Video</a></li>
+          <li><a href=""><i className="fa fa-calendar-check"></i>Calculator</a></li>
         </ul>
       </div>
 
@@ -285,11 +190,10 @@ const Layout = () => {
         {/* Additional Container 2 */}
         <div className="additional-container">
           <Forex />
-          
         </div>
       </div>
     </div>
   );
 };
 
-export default Layout;
+export default MarketPulse;
