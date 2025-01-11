@@ -13,7 +13,7 @@ const HomePage = () => {
 
     if (!isLoggedIn) {
       // Redirect to login page if not logged in
-      navigate("/");
+      navigate("/login");
     }
   }, [navigate]);
 

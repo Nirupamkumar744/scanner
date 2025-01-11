@@ -2,22 +2,17 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./Components/LoginPage";
 import HomePage from "./Components/HomePage";
-import RiskRewardCalculator from "./Components/RiskRewardCalculator"; 
+import RiskRewardCalculator from "./Components/RiskRewardCalculator";
 import TickerTape from "./Widgets/TickerTape";
 import MarketPulse from "./Components/MarketPulse";
 
-// Simulated authentication function
-const isAuthenticated = () => {
-  return localStorage.getItem("isLoggedIn") === "true"; // Example logic
+const PrivateRoute = ({ element: Element }) => {
+  const isLoggedIn = localStorage.getItem("isLoggedIn"); // Check login status from localStorage
+  return isLoggedIn ? <Element /> : <Navigate to="/login" />;
 };
 
-// PrivateRoute component
-const PrivateRoute = ({ children }) => {
-  return isAuthenticated() ? children : <Navigate to="/login" />;
-};
-
-function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated());
+const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("isLoggedIn"));
 
   const handleLogin = () => {
     localStorage.setItem("isLoggedIn", "true");
@@ -32,48 +27,17 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Login Route */}
-        <Route
-          path="/login"
-          element={<LoginPage onLogin={handleLogin} />}
-        />
-        
+        {/* Public Routes */}
+        <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+
         {/* Protected Routes */}
-        <Route
-          path="/"
-          element={
-            <PrivateRoute>
-              <HomePage onLogout={handleLogout} />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/calculator"
-          element={
-            <PrivateRoute>
-              <RiskRewardCalculator />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/tickertape"
-          element={
-            <PrivateRoute>
-              <TickerTape />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/marketpulse"
-          element={
-            <PrivateRoute>
-              <MarketPulse />
-            </PrivateRoute>
-          }
-        />
+        <Route path="/" element={<PrivateRoute element={() => <HomePage onLogout={handleLogout} />} />} />
+        <Route path="/calculator" element={<PrivateRoute element={RiskRewardCalculator} />} />
+        <Route path="/tickertape" element={<PrivateRoute element={TickerTape} />} />
+        <Route path="/marketpulse" element={<PrivateRoute element={MarketPulse} />} />
       </Routes>
     </Router>
   );
-}
+};
 
 export default App;
