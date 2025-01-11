@@ -1,7 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { FaHome ,FaTelegram, FaSyncAlt } from "react-icons/fa";
-import { CiLogout } from 'react-icons/ci'; // Correct path for CiLogout
+import { FaHome  } from "react-icons/fa";
 
 import TickerTape from '../Widgets/TickerTape'; // Make sure this is correctly imported
 
@@ -208,15 +206,15 @@ const Layout = () => {
         <li><a href="/home"><FaHome style={{ marginRight: '10px', color: "yellow" }} />Home</a></li>
           <li><a href="/marketpulse"><i className="fa fa-chart-line"></i>Market Pulse</a></li>
           <li><a href="/insiderstrategy"><i className="fa fa-cogs"></i>Insider Strategy</a></li>
-          <li><a href="#"><i className="fa fa-th"></i>Sector Scope</a></li>
-          <li><a href="#"><i className="fa fa-signal"></i>Swing Spectrum</a></li>
-          <li><a href="#"><i className="fa fa-clock"></i>Option Clock</a></li>
-          <li><a href="#"><i className="fa fa-users"></i>FII / DII</a></li>
-          <li><a href="#"><i className="fa fa-arrow-up"></i>Index Mover</a></li>
-          <li><a href="#"><i className="fa fa-book"></i>Trading Journal</a></li>
-          <li><a href="#"><i className="fa fa-graduation-cap"></i>Trade Tutor</a></li>
-          <li><a href="#"><i className="fa fa-video"></i>Strategy Video</a></li>
-          <li><a href="#"><i className="fa fa-calendar-check"></i>Calculator</a></li>
+          <li><a href=""><i className="fa fa-th"></i>Sector Scope</a></li>
+          <li><a href=""><i className="fa fa-signal"></i>Swing Spectrum</a></li>
+          <li><a href=""><i className="fa fa-clock"></i>Option Clock</a></li>
+          <li><a href=""><i className="fa fa-users"></i>FII / DII</a></li>
+          <li><a href=""><i className="fa fa-arrow-up"></i>Index Mover</a></li>
+          <li><a href=""><i className="fa fa-book"></i>Trading Journal</a></li>
+          <li><a href=""><i className="fa fa-graduation-cap"></i>Trade Tutor</a></li>
+          <li><a href=""><i className="fa fa-video"></i>Strategy Video</a></li>
+          <li><a href=""><i className="fa fa-calendar-check"></i>Calculator</a></li>
         </ul>
       </div>
 
