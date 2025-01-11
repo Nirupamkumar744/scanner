@@ -6,6 +6,7 @@ import { CiLogout } from 'react-icons/ci'; // Correct path for CiLogout
 import TickerTape from '../Widgets/TickerTape'; // Make sure this is correctly imported
 import Heatmap from '../Widgets/heatmap'; // Import the Heatmap component
 import Crypto from "../Widgets/crypto";
+import Forex from "../Widgets/Forex";
 const Layout = () => {
   const boxWidth = 150;
   const margin = 15;
@@ -283,7 +284,7 @@ const Layout = () => {
 
         {/* Additional Container 2 */}
         <div className="additional-container">
-          {/* Render any component or content here */}
+          <Forex />
           
         </div>
       </div>
