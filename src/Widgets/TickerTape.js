@@ -19,10 +19,10 @@ const TickerTape = () => {
           { "proName": "BITSTAMP:ETHUSD", "title": "Ethereum" }
         ],
         "showSymbolLogo": true,
-  "isTransparent": false,
-  "displayMode": "compact",
-  "colorTheme": "dark",
-  "locale": "en"
+        "isTransparent": false,
+        "displayMode": "compact",
+        "colorTheme": "dark",
+        "locale": "en"
       });
 
       document.getElementById('tradingview-widget').appendChild(script);
@@ -33,8 +33,9 @@ const TickerTape = () => {
     <div className="tradingview-widget-container">
       <div id="tradingview-widget" className="tradingview-widget-container__widget"></div>
       <div className="tradingview-widget-copyright">
-        <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank">
-         
+        {/* Correct anchor tag with content */}
+        <a href="https://www.stockarchery.in/" rel="noopener noreferrer" target="_blank">
+          Visit Stock Archery
         </a>
       </div>
     </div>
