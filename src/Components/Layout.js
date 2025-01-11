@@ -4,10 +4,6 @@ import { FaHome  } from "react-icons/fa";
 import TickerTape from '../Widgets/TickerTape'; // Make sure this is correctly imported
 
 const Layout = () => {
-  const boxWidth = 150;
-  const margin = 15;
-  const totalBoxes = 100;
-  const scrollSpeed = 1;
 
   return (
     <div>
