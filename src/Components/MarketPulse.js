@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 import { FaHome } from "react-icons/fa"; // Keep only the used icons
-
-
-import TickerTape from '../Widgets/TickerTape'; 
-import Heatmap from '../Widgets/heatmap'; 
+import TickerTape from "../Widgets/TickerTape"; 
+import Heatmap from "../Widgets/heatmap"; 
 import Crypto from "../Widgets/crypto";
 import Forex from "../Widgets/Forex";
 
 const MarketPulse = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if the user is logged in
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+
+    if (!isLoggedIn) {
+      // Redirect to login page if not logged in
+      navigate("/");
+    }
+  }, [navigate]);
+
   return (
     <div>
       <style>
@@ -168,26 +179,21 @@ const MarketPulse = () => {
       </div>
 
       <div className="content">
-        {/* Ticker Tape added here */}
         <div className="ticker-container">
           <TickerTape />
         </div>
 
-        {/* Heading for Sensex Heatmap */}
         <div className="heading">Sensex Heatmap</div>
 
         <div className="main-container">
-          {/* Render the Heatmap component */}
           <Heatmap />
         </div>
 
         <div className="heading">Crypto Heatmap</div>
         <div className="additional-container">
-          {/* Render any component or content here */}
           <Crypto />
         </div>
 
-        {/* Additional Container 2 */}
         <div className="additional-container">
           <Forex />
         </div>

@@ -1,9 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 import TickerTape from "../Widgets/TickerTape";
 import Chart from "../Widgets/chart";
 import "./HomePage.css"; // Move styles to an external CSS file
 
 const HomePage = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if the user is logged in
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+
+    if (!isLoggedIn) {
+      // Redirect to login page if not logged in
+      navigate("/");
+    }
+  }, [navigate]);
+
   return (
     <div>
       <div className="sidebar">
