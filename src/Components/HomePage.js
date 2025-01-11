@@ -1,29 +1,8 @@
-import React, { useEffect, useState } from "react";
-
-
+import React from "react";
 import TickerTape from '../Widgets/TickerTape';
 import Chart from '../Widgets/chart';
 
 const HomePage = () => {
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
-
-  const handleMouseEnter = () => setIsHovered(true);
-  const handleMouseLeave = () => setIsHovered(false);
-
-  useEffect(() => {
-    const scrollInterval = setInterval(() => {
-      if (!isHovered) {
-        setScrollPosition((prevPosition) => {
-          const newPosition = prevPosition - 1; // Adjust scroll speed as needed
-          return newPosition <= -1000 ? 0 : newPosition;
-        });
-      }
-    }, 10);
-
-    return () => clearInterval(scrollInterval);
-  }, [isHovered]);
-
   return (
     <div>
       <style>
@@ -120,15 +99,16 @@ const HomePage = () => {
             z-index: 1;
             margin-bottom: 20px;
           }
-   .crypto-chart-heading {
-                text-align: center;
-                color: white;
-                 font-size: 24px;
-                font-weight: 600;
-                margin-bottom: 10px;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-}
+
+          .crypto-chart-heading {
+            text-align: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+          }
 
           .main-container {
             width: 1200px;
