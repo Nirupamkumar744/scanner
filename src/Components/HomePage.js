@@ -15,7 +15,7 @@ const HomePage = () => {
         </div>
         <ul className="nav-links">
           <li>
-            <a href="/marketpulse">
+            <a href="https://res.cloudinary.com/dcbvuidqn/image/upload/v1734769382/Add_a_heading__1_-removebg-preview_gpcqii.png">
               <i className="fa fa-chart-line"></i>Market Pulse
             </a>
           </li>
