@@ -36,20 +36,22 @@ const ForexRatesWidget = () => {
 
     // Append the script to the container once the script is loaded
     script.onload = () => {
-      if (currentContainer) {
+      // Ensure the container exists and the script has been loaded properly
+      if (currentContainer && !currentContainer.querySelector("script")) {
         currentContainer.appendChild(script);
       }
     };
 
-    // Append the script to the DOM
-    if (currentContainer) {
+    // Append the script to the DOM only once
+    if (currentContainer && !currentContainer.querySelector("script")) {
+      script.id = "tradingview-widget-script";  // Add ID to check if it's already added
       currentContainer.appendChild(script);
     }
 
     // Cleanup the script when the component unmounts
     return () => {
       if (currentContainer) {
-        currentContainer.innerHTML = "";
+        currentContainer.innerHTML = ""; // Clear the container to clean up
       }
     };
   }, []); // Only run on mount and unmount
