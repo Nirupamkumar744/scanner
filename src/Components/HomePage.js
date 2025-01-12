@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
+
 import TickerTape from "../Widgets/TickerTape";
 import Chart from "../Widgets/chart";
 import "./HomePage.css"; // Move styles to an external CSS file
