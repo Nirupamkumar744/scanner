@@ -1,21 +1,13 @@
-import React, { useEffect } from "react";
-import { useNavigate, NavLink } from "react-router-dom"; // Use NavLink for navigation
-import { FaHome } from "react-icons/fa"; // Import required icons only
-import TickerTape from "../Widgets/TickerTape";
-import Heatmap from "../Widgets/heatmap";
+import React from "react";
+import { FaHome } from "react-icons/fa"; // Keep only the used icons
+
+
+import TickerTape from '../Widgets/TickerTape'; 
+import Heatmap from '../Widgets/heatmap'; 
 import Crypto from "../Widgets/crypto";
 import Forex from "../Widgets/Forex";
 
 const MarketPulse = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-    if (!isLoggedIn) {
-      navigate("/login"); // Redirect unauthorized users to /login
-    }
-  }, [navigate]);
-
   return (
     <div>
       <style>
@@ -95,8 +87,7 @@ const MarketPulse = () => {
             color: gold;
           }
 
-          .nav-links li a:hover,
-          .nav-links li a.active-link {
+          .nav-links li a:hover {
             background: rgba(255, 255, 255, 0.1);
             transform: scale(1.05);
           }
@@ -114,10 +105,25 @@ const MarketPulse = () => {
             margin-bottom: 20px;
           }
 
-          .main-container,
-          .additional-container {
+          .main-container {
             width: 1200px;
             height: 620px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 500;
+          }
+
+          .additional-container {
+            width: 1200px;
+            height: 600px;
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 10px;
@@ -143,48 +149,45 @@ const MarketPulse = () => {
 
       <div className="sidebar">
         <div className="logo">
-          <img
-            src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1734769382/Add_a_heading__1_-removebg-preview_gpcqii.png"
-            alt="Logo"
-          />
+          <img src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1734769382/Add_a_heading__1_-removebg-preview_gpcqii.png" alt="Logo" />
         </div>
         <ul className="nav-links">
-          <li>
-            <NavLink to="/home" activeClassName="active-link">
-              <FaHome style={{ marginRight: "10px", color: "yellow" }} />
-              Home
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/marketpulse" activeClassName="active-link">
-              <i className="fa fa-chart-line"></i> Market Pulse
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/insiderstrategy" activeClassName="active-link">
-              <i className="fa fa-cogs"></i> Insider Strategy
-            </NavLink>
-          </li>
-          {/* Add other links with NavLink */}
+          <li><a href="/home"><FaHome style={{ marginRight: '10px', color: "yellow" }} />Home</a></li>
+          <li><a href="https://stockarchery.in/about"><i className="fa fa-chart-line"></i>Market Pulse</a></li>
+          <li><a href="/insiderstrategy"><i className="fa fa-cogs"></i>Insider Strategy</a></li>
+          <li><a href="/marketpulse"><i className="fa fa-th"></i>Sector Scope</a></li>
+          <li><a href="/marketpulse"><i className="fa fa-signal"></i>Swing Spectrum</a></li>
+          <li><a href="/marketpulse"><i className="fa fa-clock"></i>Option Clock</a></li>
+          <li><a href="/marketpulse"><i className="fa fa-users"></i>FII / DII</a></li>
+          <li><a href="/marketpulse"><i className="fa fa-arrow-up"></i>Index Mover</a></li>
+          <li><a href="/marketpulse"><i className="fa fa-book"></i>Trading Journal</a></li>
+          <li><a href="/marketpulse"><i className="fa fa-graduation-cap"></i>Trade Tutor</a></li>
+          <li><a href="/marketpulse"><i className="fa fa-video"></i>Strategy Video</a></li>
+          <li><a href="/marketpulse"><i className="fa fa-calendar-check"></i>Calculator</a></li>
         </ul>
       </div>
 
       <div className="content">
+        {/* Ticker Tape added here */}
         <div className="ticker-container">
           <TickerTape />
         </div>
 
+        {/* Heading for Sensex Heatmap */}
         <div className="heading">Sensex Heatmap</div>
+
         <div className="main-container">
+          {/* Render the Heatmap component */}
           <Heatmap />
         </div>
 
         <div className="heading">Crypto Heatmap</div>
         <div className="additional-container">
+          {/* Render any component or content here */}
           <Crypto />
         </div>
 
-        <div className="heading">Forex</div>
+        {/* Additional Container 2 */}
         <div className="additional-container">
           <Forex />
         </div>
