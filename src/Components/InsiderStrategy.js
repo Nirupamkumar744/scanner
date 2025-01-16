@@ -189,7 +189,6 @@ const Layout = ({ children }) => {
               <i className="fa fa-chart-line"></i>Market Pulse
             </a>
           </li>
-         
           <li>
             <a href="https://stockarchery.in/about">
               <i className="fa fa-th"></i>Sector Scope
