@@ -1,5 +1,4 @@
 import React from "react";
-
 import TickerTape from "../Widgets/TickerTape";
 import Chart from "../Widgets/chart";
 import "./HomePage.css"; // Move styles to an external CSS file
@@ -66,7 +65,7 @@ const HomePage = () => {
             </a>
           </li>
           <li>
-            <a href="/marketpulse">
+            <a href="/calcu">
               <i className="fa fa-calendar-check"></i>Calculator
             </a>
           </li>
@@ -80,6 +79,18 @@ const HomePage = () => {
         <h2 className="crypto-chart-heading">CRYPTO CHART</h2>
         <div className="main-container">
           <Chart />
+        </div>
+
+        {/* Nifty Charts Container */}
+        <div className="nifty-charts-container">
+          <h2>Nifty Charts</h2>
+          <iframe
+            src="https://tradinglead.in/"
+            width="100%"
+            height="600"
+            style={{ border: "none" }}
+            title="Nifty Chart"
+          ></iframe>
         </div>
       </div>
     </div>

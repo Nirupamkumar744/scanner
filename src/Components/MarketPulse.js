@@ -153,7 +153,7 @@ const MarketPulse = () => {
         </div>
         <ul className="nav-links">
           <li><a href="/home"><FaHome style={{ marginRight: '10px', color: "yellow" }} />Home</a></li>
-          <li><a href="https://stockarchery.in/about"><i className="fa fa-chart-line"></i>Market Pulse</a></li>
+          
           <li><a href="/insiderstrategy"><i className="fa fa-cogs"></i>Insider Strategy</a></li>
           <li><a href="/marketpulse"><i className="fa fa-th"></i>Sector Scope</a></li>
           <li><a href="/marketpulse"><i className="fa fa-signal"></i>Swing Spectrum</a></li>
@@ -163,7 +163,7 @@ const MarketPulse = () => {
           <li><a href="/marketpulse"><i className="fa fa-book"></i>Trading Journal</a></li>
           <li><a href="/marketpulse"><i className="fa fa-graduation-cap"></i>Trade Tutor</a></li>
           <li><a href="/marketpulse"><i className="fa fa-video"></i>Strategy Video</a></li>
-          <li><a href="/marketpulse"><i className="fa fa-calendar-check"></i>Calculator</a></li>
+          <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
         </ul>
       </div>
 

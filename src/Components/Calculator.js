@@ -1,8 +1,134 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaHome } from "react-icons/fa";
 import TickerTape from "../Widgets/TickerTape"; // Ensure this is the correct path
 
-const Layout = () => {
+const Calculator = () => {
+  const [investment, setInvestment] = useState("");
+  const [price, setPrice] = useState("");
+  const [riskPercent, setRiskPercent] = useState("");
+  const [result, setResult] = useState(null);
+
+  const calculate = () => {
+    if (!investment || !price || !riskPercent) {
+      setResult("Please fill all fields correctly.");
+      return;
+    }
+
+    // Calculate the number of shares to buy based on the risk percentage
+    const riskAmount = (investment * riskPercent) / 100;
+    const sharesToBuy = Math.floor(riskAmount / price);  // Number of shares to buy based on the risk tolerance
+
+    setResult({
+      sharesToBuy,
+      riskAmount: riskAmount.toFixed(2),
+    });
+  };
+
+  return (
+    <div className="calculator">
+      <h2>Advanced Stock Market Calculator</h2>
+      <div className="calculator-inputs">
+        <label>
+          Total Capital (₹):
+          <input
+            type="number"
+            placeholder="Enter your total capital"
+            value={investment}
+            onChange={(e) => setInvestment(Number(e.target.value))}
+          />
+        </label>
+        <label>
+          Price per Share (₹):
+          <input
+            type="number"
+            placeholder="Enter price per share"
+            value={price}
+            onChange={(e) => setPrice(Number(e.target.value))}
+          />
+        </label>
+        <label>
+          Risk Percentage (%):
+          <input
+            type="number"
+            placeholder="Enter risk percentage"
+            value={riskPercent}
+            onChange={(e) => setRiskPercent(Number(e.target.value))}
+          />
+        </label>
+        <button onClick={calculate}>Calculate</button>
+      </div>
+      {result && (
+        <div className="calculator-result">
+          {typeof result === "string" ? (
+            <p>{result}</p>
+          ) : (
+            <>
+              <p>Shares to Buy: {result.sharesToBuy}</p>
+              <p>Risk Amount (₹): {result.riskAmount}</p>
+            </>
+          )}
+        </div>
+      )}
+      <style jsx>{`
+        .calculator {
+          background: #2c3e50;
+          color: white;
+          padding: 30px;
+          border-radius: 8px;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+          width: calc(100% - 40px);
+          height: calc(100vh - 40px);
+          margin: 20px auto;
+          font-family: "Poppins", sans-serif;
+        }
+
+        .calculator h2 {
+          text-align: center;
+          margin-bottom: 20px;
+        }
+
+        .calculator-inputs label {
+          display: block;
+          margin-bottom: 15px;
+          font-size: 14px;
+        }
+
+        .calculator-inputs input {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          border: none;
+          border-radius: 4px;
+        }
+
+        .calculator-inputs button {
+          background: #4a69bd;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 4px;
+          cursor: pointer;
+          margin-top: 15px;
+          width: 100%;
+          font-weight: bold;
+        }
+
+        .calculator-inputs button:hover {
+          background: #3b5998;
+        }
+
+        .calculator-result {
+          text-align: center;
+          margin-top: 20px;
+          font-size: 16px;
+          font-weight: bold;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+const Layout = ({ children }) => {
   return (
     <div className="layout-container">
       <div className="sidebar">
@@ -20,7 +146,7 @@ const Layout = () => {
             </a>
           </li>
           <li>
-            <a href="/marketpulse">
+            <a href="https://stockarchery.in/about">
               <i className="fa fa-chart-line"></i>Market Pulse
             </a>
           </li>
@@ -69,11 +195,7 @@ const Layout = () => {
               <i className="fa fa-video"></i>Strategy Video
             </a>
           </li>
-          <li>
-            <a href="/calcu">
-              <i className="fa fa-calendar-check"></i>Calculator
-            </a>
-          </li>
+          
         </ul>
       </div>
 
@@ -81,6 +203,7 @@ const Layout = () => {
         <div className="ticker-container">
           <TickerTape />
         </div>
+        {children}
       </div>
 
       <style jsx>{`
@@ -158,4 +281,12 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+const App = () => {
+  return (
+    <Layout>
+      <Calculator />
+    </Layout>
+  );
+};
+
+export default App;
