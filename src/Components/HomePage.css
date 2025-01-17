@@ -1,4 +1,4 @@
-/* HomePage.css */
+/* Importing Google Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
 body {
@@ -9,10 +9,13 @@ body {
   overflow-x: hidden;
 }
 
+/* Sidebar Styles */
 .sidebar {
   width: 250px;
   height: 100vh;
-  background: linear-gradient(180deg, #2c3e50, #4a69bd);
+  background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099004/Flux_Dev_Create_a_tall_rectangular_banner_background_with_an_u_1_oyb158.jpg');
+  background-size: cover;
+  background-position: center;
   position: fixed;
   top: 0;
   left: 0;
@@ -23,6 +26,7 @@ body {
   overflow-y: auto;
 }
 
+/* Sidebar Scrollbar Customization */
 .sidebar::-webkit-scrollbar {
   width: 8px;
 }
@@ -36,6 +40,7 @@ body {
   background-color: #555;
 }
 
+/* Logo Styling */
 .logo {
   text-align: center;
   margin-bottom: 0;
@@ -47,6 +52,7 @@ body {
   margin-bottom: 0;
 }
 
+/* Navigation Links */
 .nav-links {
   list-style: none;
   padding: 0;
@@ -79,11 +85,18 @@ body {
   transform: scale(1.05);
 }
 
+/* Content Styles */
 .content {
   margin-left: 250px;
   padding: 20px;
+  background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099346/Flux_Dev_Create_an_ultrasmooth_realistic_animated_background_t_3_dg0gcs.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: white;
 }
 
+/* Ticker Container Styling */
 .ticker-container {
   position: relative;
   width: 100%;
@@ -92,6 +105,7 @@ body {
   margin-bottom: 20px;
 }
 
+/* Crypto Chart Heading */
 .crypto-chart-heading {
   text-align: center;
   color: white;
@@ -102,6 +116,7 @@ body {
   letter-spacing: 1px;
 }
 
+/* Main Container Styling */
 .main-container {
   width: 1200px;
   height: 620px;
@@ -118,7 +133,7 @@ body {
   font-weight: 500;
 }
 
-/* Nifty Charts Container */
+/* Nifty Charts Container Styling */
 .nifty-charts-container {
   width: 100%;
   margin: 40px 0;

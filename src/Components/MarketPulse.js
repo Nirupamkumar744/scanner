@@ -23,18 +23,20 @@ const MarketPulse = () => {
           }
 
           .sidebar {
-            width: 250px;
-            height: 100vh;
-            background: linear-gradient(180deg, #2C3E50, #4A69BD);
-            position: fixed;
-            top: 0;
-            left: 0;
-            padding: 20px 0;
-            color: white;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-            z-index: 2;
-            overflow-y: auto;
-          }
+  width: 250px;
+  height: 100vh;
+  background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099004/Flux_Dev_Create_a_tall_rectangular_banner_background_with_an_u_1_oyb158.jpg');
+  background-size: cover;
+  background-position: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 20px 0;
+  color: white;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  overflow-y: auto;
+}
 
           .sidebar::-webkit-scrollbar {
             width: 8px;
@@ -149,7 +151,7 @@ const MarketPulse = () => {
 
       <div className="sidebar">
         <div className="logo">
-          <img src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1734769382/Add_a_heading__1_-removebg-preview_gpcqii.png" alt="Logo" />
+          <img src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737098769/Default_Create_a_round_logo_for_a_stock_market_scanner_or_trad_1_a038e6fd-6af3-4085-9199-449cf7811765_0_vsnsbo.png" alt="Logo" />
         </div>
         <ul className="nav-links">
           <li><a href="/home"><FaHome style={{ marginRight: '10px', color: "yellow" }} />Home</a></li>
