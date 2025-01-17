@@ -175,7 +175,7 @@ const Layout = ({ children }) => {
             </a>
           </li>
           <li>
-            <a href="https://stockarchery.in/about">
+            <a href="/marketpulse">
               <i className="fa fa-chart-line"></i>Market Pulse
             </a>
           </li>
