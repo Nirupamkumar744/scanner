@@ -60,9 +60,8 @@ const HomePage = () => {
             </a>
           </li>
           <li>
-            <a href="/marketpulse">
-              <i className="fa fa-video"></i>Strategy Video
-            </a>
+            <a href="/technical">
+              <i className="fa fa-video"></i>Technial Analysis </a>
           </li>
           <li>
             <a href="/calcu">
@@ -76,10 +75,7 @@ const HomePage = () => {
         <div className="ticker-container">
           <TickerTape />
         </div>
-        <h2 className="crypto-chart-heading">CRYPTO CHART</h2>
-        <div className="main-container">
-          <Chart />
-        </div>
+       
 
         {/* Nifty Charts Container */}
         <div className="nifty-charts-container">
@@ -91,6 +87,11 @@ const HomePage = () => {
             style={{ border: "none" }}
             title="Nifty Chart"
           ></iframe>
+        </div>
+
+        <h2 className="crypto-chart-heading">CRYPTO CHART</h2>
+        <div className="main-container">
+          <Chart />
         </div>
       </div>
     </div>

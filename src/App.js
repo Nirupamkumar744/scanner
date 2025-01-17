@@ -7,6 +7,7 @@ import TickerTape from "./Widgets/TickerTape";
 import MarketPulse from "./Components/MarketPulse";
 import Calculator from "./Components/Calculator";
 import InsiderStrategy from "./Components/InsiderStrategy";
+import Technical from "./Components/Technical"
 
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
         <Route path="/marketpulse" element={<MarketPulse/>} />
         <Route path="/calcu" element={<Calculator/>} />
         <Route path="/insiderstrategy" element ={<InsiderStrategy/>} />
-        
+        <Route path="/technical" element ={<Technical/>} />
         
       </Routes>
     </Router>

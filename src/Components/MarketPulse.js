@@ -164,7 +164,7 @@ const MarketPulse = () => {
           <li><a href="/marketpulse"><i className="fa fa-arrow-up"></i>Index Mover</a></li>
           <li><a href="/marketpulse"><i className="fa fa-book"></i>Trading Journal</a></li>
           <li><a href="/marketpulse"><i className="fa fa-graduation-cap"></i>Trade Tutor</a></li>
-          <li><a href="/marketpulse"><i className="fa fa-video"></i>Strategy Video</a></li>
+          <li><a href="/technical"><i className="fa fa-video"></i>Technical Analysis</a></li>
           <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
         </ul>
       </div>

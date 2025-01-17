@@ -215,8 +215,8 @@ const Layout = ({ children }) => {
             </a>
           </li>
           <li>
-            <a href="https://stockarchery.in/about">
-              <i className="fa fa-video"></i>Strategy Video
+            <a href="/technical">
+              <i className="fa fa-video"></i>Technical Analysis
             </a>
           </li>
         </ul>
