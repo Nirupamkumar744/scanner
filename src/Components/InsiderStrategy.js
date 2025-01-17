@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { FaHome } from "react-icons/fa";
 import TickerTape from "../Widgets/TickerTape"; // Ensure this is the correct path
 
