@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import TickerTape from "../Widgets/TickerTape";
 
 const TechnicalAnalysis = () => {
   const [symbol, setSymbol] = useState("NSE:RELIANCE");
 
   const handleSymbolChange = (e) => {
-    let input = e.target.value.toUpperCase(); // Convert input to uppercase
+    let input = e.target.value.toUpperCase();
     if (!input.startsWith("NSE:")) {
-      input = "NSE:" + input; // Automatically add "NSE:" if not present
+      input = "NSE:" + input;
     }
     setSymbol(input);
   };
 
-  const updateWidget = () => {
+  const updateWidget = useCallback(() => {
     const widgetContainer = document.getElementById("tradingview_widget");
-    widgetContainer.innerHTML = ""; // Clear previous widget
+    widgetContainer.innerHTML = "";
 
     const script = document.createElement("script");
     script.type = "text/javascript";
@@ -33,15 +33,14 @@ const TechnicalAnalysis = () => {
     });
 
     widgetContainer.appendChild(script);
-  };
+  }, [symbol]);
 
   useEffect(() => {
-    updateWidget(); // Automatically load the default widget on mount
-  }, []);
+    updateWidget();
+  }, [updateWidget]);
 
   return (
     <div className="technical-analysis-page">
-      {/* Sidebar */}
       <div className="sidebar">
         <div className="logo">
           <img
@@ -86,7 +85,7 @@ const TechnicalAnalysis = () => {
             </a>
           </li>
           <li>
-            <a href="/marketpulse">
+            <a href="/marketpulse#">
               <i className="fa fa-arrow-up"></i>Index Mover
             </a>
           </li>
@@ -108,7 +107,6 @@ const TechnicalAnalysis = () => {
         </ul>
       </div>
 
-      {/* Content */}
       <div className="content">
         <div className="ticker-container">
           <TickerTape />
@@ -119,7 +117,7 @@ const TechnicalAnalysis = () => {
             <input
               type="text"
               placeholder="Enter Symbol (e.g., RELIANCE)"
-              value={symbol.slice(4)} // Remove the "NSE:" part from the displayed value
+              value={symbol.slice(4)}
               onChange={handleSymbolChange}
             />
             <button onClick={updateWidget}>Search</button>
@@ -128,7 +126,6 @@ const TechnicalAnalysis = () => {
         </div>
       </div>
 
-      {/* Embedded CSS */}
       <style>
         {`
           /* Importing Google Fonts */
@@ -157,19 +154,6 @@ const TechnicalAnalysis = () => {
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
             z-index: 2;
             overflow-y: auto;
-          }
-
-          .sidebar::-webkit-scrollbar {
-            width: 8px;
-          }
-
-          .sidebar::-webkit-scrollbar-thumb {
-            background-color: #888;
-            border-radius: 4px;
-          }
-
-          .sidebar::-webkit-scrollbar-thumb:hover {
-            background-color: #555;
           }
 
           .logo {
