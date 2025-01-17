@@ -1,92 +1,82 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FaHome } from "react-icons/fa";
 import TickerTape from "../Widgets/TickerTape"; // Ensure this is the correct path
 
 const InsiderBar = () => {
-  const [insiderData, setInsiderData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  const API_KEY = "AIzaSyDPwn94kQkwHk3PosdY1gg184lXM_jGoic";
-  const SHEET_ID = "12NfyGohJkZdAN-9ZoYDgsjY2rHxyXMtkySKoDhe1XqE"; // Sheet ID from Google Sheets URL
-  const sheetUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/High-Low-Current%20Market%20Price?key=${API_KEY}`;
-
-  // Fetch data from Google Sheets
-  useEffect(() => {
-    fetch(sheetUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Fetched Data:", data); // Log the data to check the response
-        if (data.values) {
-          const sheetData = data.values.slice(1); // Removing the header row
-          const formattedData = sheetData.map((row) => ({
-            stock: row[0], // Symbol Column (Column A)
-            currentPrice: row[3], // Current Price Column (Column D)
-            chartLink: `https://in.tradingview.com/chart/tioZvgwv/?symbol=NSE%3A${row[0]}`, // TradingView link with stock symbol
-            technicalsLink: `https://in.tradingview.com/symbols/NSE-${row[0]}/technicals/`, // Technicals link with stock symbol
-          }));
-          setInsiderData(formattedData); // Set the fetched data
-        } else {
-          setError("No data found in the sheet.");
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        setError("Failed to fetch data.");
-      })
-      .finally(() => setLoading(false)); // Stop loading once fetch is complete
-  }, []);
+  // Mock data
+  const insiderData = [
+    {
+      stock: "RELIANCE",
+      currentPrice: "2500",
+      chartLink: "https://in.tradingview.com/chart/tioZvgwv/?symbol=NSE%3ARELIANCE",
+      technicalsLink: "https://in.tradingview.com/symbols/NSE-RELIANCE/technicals/",
+    },
+    {
+      stock: "TCS",
+      currentPrice: "3500",
+      chartLink: "https://in.tradingview.com/chart/tioZvgwv/?symbol=NSE%3ATCS",
+      technicalsLink: "https://in.tradingview.com/symbols/NSE-TCS/technicals/",
+    },
+    {
+      stock: "INFY",
+      currentPrice: "1500",
+      chartLink: "https://in.tradingview.com/chart/tioZvgwv/?symbol=NSE%3AINFY",
+      technicalsLink: "https://in.tradingview.com/symbols/NSE-INFY/technicals/",
+    },
+  ];
 
   return (
     <div className="insider-bar">
       <h2>Insider Bar</h2>
 
-      {loading ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <p style={{ color: "red" }}>{error}</p>
-      ) : (
-        <div className="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Symbol</th>
-                <th>Current Price</th>
-                <th>Chart</th>
-                <th>Technicals</th>
+      <div className="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>Current Price</th>
+              <th>Chart</th>
+              <th>Technicals</th>
+            </tr>
+          </thead>
+          <tbody>
+            {insiderData.map((data, index) => (
+              <tr key={index}>
+                <td>{data.stock}</td>
+                <td>{data.currentPrice}</td>
+                <td>
+                  <a
+                    href={data.chartLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src="https://images.emojiterra.com/twitter/v14.0/1024px/1f4c8.png"
+                      alt="Chart Icon"
+                      width="25"
+                      style={{ cursor: "pointer", margin: "0 auto" }}
+                    />
+                  </a>
+                </td>
+                <td>
+                  <a
+                    href={data.technicalsLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src="https://img.icons8.com/ios/452/settings.png"
+                      alt="Technical Icon"
+                      width="25"
+                      style={{ cursor: "pointer", margin: "0 auto" }}
+                    />
+                  </a>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {insiderData.map((data, index) => (
-                <tr key={index}>
-                  <td>{data.stock}</td>
-                  <td>{data.currentPrice}</td>
-                  <td>
-                    <a href={data.chartLink} target="_blank" rel="noopener noreferrer">
-                      <img
-                        src="https://images.emojiterra.com/twitter/v14.0/1024px/1f4c8.png" // Using the provided chart icon
-                        alt="Chart Icon"
-                        width="25"
-                        style={{ cursor: "pointer", margin: "0 auto" }} // Added margin and ensured pointer cursor
-                      />
-                    </a>
-                  </td>
-                  <td>
-                    <a href={data.technicalsLink} target="_blank" rel="noopener noreferrer">
-                      <img
-                        src="https://img.icons8.com/ios/452/settings.png"
-                        alt="Technical Icon"
-                        width="25"
-                        style={{ cursor: "pointer", margin: "0 auto" }} // Same for Technical icon
-                      />
-                    </a>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <style jsx>{`
         .insider-bar {
@@ -118,7 +108,7 @@ const InsiderBar = () => {
         table {
           width: 100%;
           border-collapse: collapse;
-          background: #1c1c1c; /* Dark background */
+          background: #1c1c1c;
         }
 
         th,
@@ -126,7 +116,7 @@ const InsiderBar = () => {
           padding: 12px;
           text-align: center;
           border: 1px solid #444;
-          color: white; /* White text color */
+          color: white;
         }
 
         th {
