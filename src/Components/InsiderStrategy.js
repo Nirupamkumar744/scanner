@@ -1,33 +1,62 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaHome } from "react-icons/fa";
 import TickerTape from "../Widgets/TickerTape"; // Ensure this is the correct path
 
 const InsiderBar = () => {
-  // Mock data
-  const insiderData = [
-    {
-      stock: "RELIANCE",
-      currentPrice: "2500",
-      chartLink: "https://in.tradingview.com/chart/tioZvgwv/?symbol=NSE%3ARELIANCE",
-      technicalsLink: "https://in.tradingview.com/symbols/NSE-RELIANCE/technicals/",
-    },
-    {
-      stock: "TCS",
-      currentPrice: "3500",
-      chartLink: "https://in.tradingview.com/chart/tioZvgwv/?symbol=NSE%3ATCS",
-      technicalsLink: "https://in.tradingview.com/symbols/NSE-TCS/technicals/",
-    },
-    {
-      stock: "INFY",
-      currentPrice: "1500",
-      chartLink: "https://in.tradingview.com/chart/tioZvgwv/?symbol=NSE%3AINFY",
-      technicalsLink: "https://in.tradingview.com/symbols/NSE-INFY/technicals/",
-    },
-  ];
+  const [insiderData, setInsiderData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Fetch data from the Google Sheets API
+  useEffect(() => {
+    const sheetUrl =
+      "https://sheets.googleapis.com/v4/spreadsheets/12NfyGohJkZdAN-9ZoYDgsjY2rHxyXMtkySKoDhe1XqE/values/Sheet1?key=AIzaSyDPwn94kQkwHk3PosdY1gg184lXM_jGoic";  // Your API key is included here
+
+    fetch(sheetUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        // Extract values and map them into the desired format
+        const rows = data.values.slice(1); // Skip header row
+        const formattedData = rows.map((row) => ({
+          stock: row[1], // Column B for stock
+          currentPrice: row[0], // Column A for current price
+          chartLink: `https://in.tradingview.com/chart/tioZvgwv/?symbol=NSE%3A${row[1]}`, // Updated chart link
+          technicalsLink: `https://in.tradingview.com/symbols/NSE-${row[1]}/technicals/`,
+        }));
+        setInsiderData(formattedData);
+      })
+      .catch((error) => console.error("Error fetching data: ", error));
+  }, []);
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredData = insiderData.filter((data) =>
+    data.stock.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const scrollToSymbol = (symbol) => {
+    const element = document.getElementById(symbol);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
 
   return (
     <div className="insider-bar">
-      <h2>Insider Bar</h2>
+      <div className="header">
+        <h2>
+          Inside Bar
+          <span className="tooltip">💡</span>
+        </h2>
+        <input
+          type="text"
+          className="search-box"
+          placeholder="Search Symbol..."
+          value={searchTerm}
+          onChange={handleSearch}
+        />
+      </div>
 
       <div className="table-container">
         <table>
@@ -40,18 +69,14 @@ const InsiderBar = () => {
             </tr>
           </thead>
           <tbody>
-            {insiderData.map((data, index) => (
-              <tr key={index}>
+            {filteredData.map((data, index) => (
+              <tr key={index} id={data.stock}>
                 <td>{data.stock}</td>
                 <td>{data.currentPrice}</td>
                 <td>
-                  <a
-                    href={data.chartLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a href={data.chartLink} target="_blank" rel="noopener noreferrer">
                     <img
-                      src="https://images.emojiterra.com/twitter/v14.0/1024px/1f4c8.png"
+                      src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
                       alt="Chart Icon"
                       width="25"
                       style={{ cursor: "pointer", margin: "0 auto" }}
@@ -59,11 +84,7 @@ const InsiderBar = () => {
                   </a>
                 </td>
                 <td>
-                  <a
-                    href={data.technicalsLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a href={data.technicalsLink} target="_blank" rel="noopener noreferrer">
                     <img
                       src="https://img.icons8.com/ios/452/settings.png"
                       alt="Technical Icon"
@@ -78,31 +99,89 @@ const InsiderBar = () => {
         </table>
       </div>
 
+      <div className="insider-bar-container">
+        <div className="bullish-insider-bar">
+          <h3>Bullish Insider Bar🐂</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Current Price</th>
+                <th>Chart</th>
+                <th>Technicals</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+            </tbody>
+          </table>
+        </div>
+
+        <div className="bearish-insider-bar">
+          <h3>Bearish Insider Bar🐻</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Current Price</th>
+                <th>Chart</th>
+                <th>Technicals</th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* Add any rows for bearish insider data here */}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <style jsx>{`
         .insider-bar {
-          background: #1c1c1c;
-          color: white;
+          background: #121212;
+          color: #f4f4f4;
           padding: 30px;
-          border-radius: 8px;
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+          border-radius: 10px;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
           width: 90%;
           max-width: 100%;
           margin: 20px auto;
-          font-family: "Poppins", sans-serif;
+          font-family: 'Bebas Neue', sans-serif;
+        }
+
+        .header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 30px;
         }
 
         .insider-bar h2 {
-          text-align: center;
-          margin-bottom: 30px;
-          font-size: 24px;
+          font-size: 32px;
+          font-weight: bold;
+        }
+
+        .tooltip {
+          position: relative;
+          cursor: pointer;
+        }
+
+        .search-box {
+          padding: 10px 15px;
+          font-size: 16px;
+          border-radius: 8px;
+          border: 1px solid #444;
+          background: #333;
+          color: white;
+          width: 250px;
         }
 
         .table-container {
-          background: #2c2c2c;
-          padding: 20px;
-          border-radius: 8px;
-          width: 95%;
-          margin: 5px;
+          background: #1c1c1c;
+          border-radius: 10px;
+          width: 100%;
+          height: 400px;
+          overflow-y: auto;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
 
         table {
@@ -116,24 +195,34 @@ const InsiderBar = () => {
           padding: 12px;
           text-align: center;
           border: 1px solid #444;
-          color: white;
+          color: Black;
         }
 
         th {
-          background: #34495e;
+          background: #2c3e50;
+          font-weight: bold;
+          height: 50px;
         }
 
         tbody tr:nth-child(even) {
-          background-color: #2d2d2d;
+          background-color: rgb(110, 244, 251);
         }
 
         tbody tr:nth-child(odd) {
-          background-color: #262626;
+          background-color: rgb(241, 248, 110);
         }
 
         tbody tr:hover {
-          background-color: #34495e;
+          background-color: #1abc9c;
           color: white;
+        }
+
+        tbody td {
+          transition: background-color 0.3s ease;
+        }
+
+        tbody tr:hover td {
+          background-color: #16a085;
         }
 
         a {
@@ -151,6 +240,66 @@ const InsiderBar = () => {
 
         img:hover {
           transform: scale(1.1);
+        }
+
+        /* Table heading fixed and prevents rows from appearing behind */
+        thead {
+          position: sticky;
+          top: 0;
+          z-index: 1;
+          background: #2c3e50;
+        }
+
+        tbody {
+          position: relative;
+        }
+
+        tbody tr {
+          background: transparent;
+        }
+
+        tbody tr:nth-child(even) {
+          background-color: rgb(110, 244, 251);
+        }
+
+        tbody tr:nth-child(odd) {
+          background-color: rgb(241, 248, 110);
+        }
+
+        /* Ensure that rows behind the header are not visible */
+        tbody tr:not(:hover) {
+          opacity: 0.6;
+        }
+
+        .insider-bar-container {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 40px;
+        }
+
+        .bullish-insider-bar,
+        .bearish-insider-bar {
+          background: #2c3e50;
+          color: #f4f4f4;
+          width: 45%;
+          height: 300px;
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .bullish-insider-bar {
+          background-color: #27ae60;
+        }
+
+        .bearish-insider-bar {
+          background-color: #e74c3c;
+        }
+
+        .bullish-insider-bar h3,
+        .bearish-insider-bar h3 {
+          font-size: 24px;
+          font-weight: bold;
         }
       `}</style>
     </div>
@@ -231,7 +380,7 @@ const Layout = ({ children }) => {
 
       <style jsx>{`
         .layout-container {
-          font-family: "Poppins", sans-serif;
+          font-family: 'Poppins', sans-serif;
           margin: 0;
           padding: 0;
           background: black;
@@ -239,20 +388,20 @@ const Layout = ({ children }) => {
         }
 
         .sidebar {
-  width: 250px;
-  height: 100vh;
-  background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099004/Flux_Dev_Create_a_tall_rectangular_banner_background_with_an_u_1_oyb158.jpg');
-  background-size: cover;
-  background-position: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  padding: 20px 0;
-  color: white;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-  z-index: 2;
-  overflow-y: auto;
-}
+          width: 250px;
+          height: 100vh;
+          background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099004/Flux_Dev_Create_a_tall_rectangular_banner_background_with_an_u_1_oyb158.jpg');
+          background-size: cover;
+          background-position: center;
+          position: fixed;
+          top: 0;
+          left: 0;
+          padding: 20px 0;
+          color: white;
+          box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+          z-index: 2;
+          overflow-y: auto;
+        }
 
         .logo img {
           width: 140px;

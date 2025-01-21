@@ -1,129 +1,70 @@
 import React, { useState } from "react";
 import { FaHome } from "react-icons/fa";
-import TickerTape from "../Widgets/TickerTape"; // Ensure this is the correct path
+import TickerTape from "../Widgets/TickerTape";
 
 const Calculator = () => {
   const [investment, setInvestment] = useState("");
-  const [price, setPrice] = useState("");
-  const [riskPercent, setRiskPercent] = useState("");
-  const [result, setResult] = useState(null);
+  const [tenure, setTenure] = useState("");
+  const [rate, setRate] = useState("");
+  const [futureValue, setFutureValue] = useState(null);
 
-  const calculate = () => {
-    if (!investment || !price || !riskPercent) {
-      setResult("Please fill all fields correctly.");
+  const calculateSIP = () => {
+    if (!investment || !tenure || !rate) {
+      setFutureValue("Please fill all fields correctly.");
       return;
     }
-
-    // Calculate the number of shares to buy based on the risk percentage
-    const riskAmount = (investment * riskPercent) / 100;
-    const sharesToBuy = Math.floor(riskAmount / price);  // Number of shares to buy based on the risk tolerance
-
-    setResult({
-      sharesToBuy,
-      riskAmount: riskAmount.toFixed(2),
-    });
+    const r = rate / 100 / 12;
+    const n = tenure * 12;
+    const fv = investment * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
+    setFutureValue(fv.toFixed(2));
   };
 
   return (
-    <div className="calculator">
-      <h2>Advanced Stock Market Calculator</h2>
-      <div className="calculator-inputs">
-        <label>
-          Total Capital (₹):
-          <input
-            type="number"
-            placeholder="Enter your total capital"
-            value={investment}
-            onChange={(e) => setInvestment(Number(e.target.value))}
-          />
-        </label>
-        <label>
-          Price per Share (₹):
-          <input
-            type="number"
-            placeholder="Enter price per share"
-            value={price}
-            onChange={(e) => setPrice(Number(e.target.value))}
-          />
-        </label>
-        <label>
-          Risk Percentage (%):
-          <input
-            type="number"
-            placeholder="Enter risk percentage"
-            value={riskPercent}
-            onChange={(e) => setRiskPercent(Number(e.target.value))}
-          />
-        </label>
-        <button onClick={calculate}>Calculate</button>
-      </div>
-      {result && (
-        <div className="calculator-result">
-          {typeof result === "string" ? (
-            <p>{result}</p>
-          ) : (
-            <>
-              <p>Shares to Buy: {result.sharesToBuy}</p>
-              <p>Risk Amount (₹): {result.riskAmount}</p>
-            </>
-          )}
+    <div className="calculator-container">
+      <div className="calculator">
+        <h2>Investment Calculator</h2>
+        <div className="calculator-inputs">
+          <label>
+            Monthly Investment (₹):
+            <input
+              type="number"
+              placeholder="Enter monthly investment"
+              value={investment}
+              onChange={(e) => setInvestment(Number(e.target.value))}
+            />
+          </label>
+          <label>
+            Investment Tenure (years):
+            <input
+              type="number"
+              placeholder="Enter tenure in years"
+              value={tenure}
+              onChange={(e) => setTenure(Number(e.target.value))}
+            />
+          </label>
+          <label>
+            Expected Return Rate (% per annum):
+            <input
+              type="number"
+              placeholder="Enter expected return"
+              value={rate}
+              onChange={(e) => setRate(Number(e.target.value))}
+            />
+          </label>
+          <div className="button-container">
+            <button onClick={calculateSIP}>Calculate</button>
+          </div>
         </div>
-      )}
-      <style jsx>{`
-        .calculator {
-          background: #2c3e50;
-          color: white;
-          padding: 30px;
-          border-radius: 8px;
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-          width: calc(100% - 40px);
-          height: calc(100vh - 40px);
-          margin: 20px auto;
-          font-family: "Poppins", sans-serif;
-        }
-
-        .calculator h2 {
-          text-align: center;
-          margin-bottom: 20px;
-        }
-
-        .calculator-inputs label {
-          display: block;
-          margin-bottom: 15px;
-          font-size: 14px;
-        }
-
-        .calculator-inputs input {
-          width: 100%;
-          padding: 10px;
-          margin-top: 5px;
-          border: none;
-          border-radius: 4px;
-        }
-
-        .calculator-inputs button {
-          background: #4a69bd;
-          color: white;
-          border: none;
-          padding: 10px 20px;
-          border-radius: 4px;
-          cursor: pointer;
-          margin-top: 15px;
-          width: 100%;
-          font-weight: bold;
-        }
-
-        .calculator-inputs button:hover {
-          background: #3b5998;
-        }
-
-        .calculator-result {
-          text-align: center;
-          margin-top: 20px;
-          font-size: 16px;
-          font-weight: bold;
-        }
-      `}</style>
+        {futureValue && (
+          <div className="calculator-result">
+            {typeof futureValue === "string" ? (
+              <p>{futureValue}</p>
+            ) : (
+              <p>Future Value: ₹{futureValue}</p>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
@@ -141,12 +82,11 @@ const Layout = ({ children }) => {
         <ul className="nav-links">
           <li>
             <a href="/home">
-              <FaHome style={{ marginRight: "10px", color: "yellow" }} />
-              Home
+              <FaHome style={{ marginRight: "10px", color: "yellow" }} /> Home
             </a>
           </li>
           <li>
-            <a href="https://stockarchery.in/about">
+            <a href="/marketpulse">
               <i className="fa fa-chart-line"></i>Market Pulse
             </a>
           </li>
@@ -195,88 +135,14 @@ const Layout = ({ children }) => {
               <i className="fa fa-video"></i>Strategy Video
             </a>
           </li>
-          
         </ul>
       </div>
-
       <div className="content">
         <div className="ticker-container">
           <TickerTape />
         </div>
         {children}
       </div>
-
-      <style jsx>{`
-        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
-
-        .layout-container {
-          font-family: "Poppins", sans-serif;
-          margin: 0;
-          padding: 0;
-          background: black;
-          overflow-x: hidden;
-        }
-
-        .sidebar {
-          width: 250px;
-          height: 100vh;
-          background: linear-gradient(180deg, #2c3e50, #4a69bd);
-          position: fixed;
-          top: 0;
-          left: 0;
-          padding: 20px 0;
-          color: white;
-          box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-          z-index: 2;
-          overflow-y: auto;
-        }
-
-        .logo img {
-          width: 140px;
-          height: 140px;
-        }
-
-        .nav-links {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-        }
-
-        .nav-links li {
-          margin: 10px 0;
-        }
-
-        .nav-links li a {
-          display: flex;
-          align-items: center;
-          padding: 12px 20px;
-          color: white;
-          text-decoration: none;
-          font-size: 16px;
-          font-weight: 500;
-          border-radius: 8px;
-          transition: all 0.3s ease;
-        }
-
-        .nav-links li a i {
-          margin-right: 10px;
-          color: gold;
-        }
-
-        .nav-links li a:hover {
-          background: rgba(255, 255, 255, 0.1);
-          transform: scale(1.05);
-        }
-
-        .content {
-          margin-left: 250px;
-          padding: 20px;
-        }
-
-        .ticker-container {
-          margin-bottom: 20px;
-        }
-      `}</style>
     </div>
   );
 };
@@ -290,3 +156,65 @@ const App = () => {
 };
 
 export default App;
+
+const styles = `
+.calculator-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f5f5;
+}
+.calculator {
+  background: #1e1e2e;
+  color: #ffffff;
+  padding: 30px;
+ 
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 1600px;
+  height: 92%;
+}
+.calculator h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #ffd700;
+}
+.calculator-inputs label {
+  display: block;
+  margin-bottom: 15px;
+}
+.calculator-inputs input {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+.button-container {
+  display: flex;
+  justify-content: center;
+}
+button {
+  padding: 12px 50px;
+  background-color: #ffd700;
+  border: none;
+  color: #1e1e2e;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #ffcc00;
+}
+.calculator-result {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 1.2em;
+  color: #ffd700;
+}
+`;
+
+const styleElement = document.createElement("style");
+styleElement.innerHTML = styles;
+document.head.appendChild(styleElement);
