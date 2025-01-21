@@ -6,8 +6,8 @@ const InsiderBar = () => {
   const [insiderData, setInsiderData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Fetch data from the Google Sheets API
-  useEffect(() => {
+  // Function to fetch data
+  const fetchData = () => {
     const sheetUrl =
       "https://sheets.googleapis.com/v4/spreadsheets/12NfyGohJkZdAN-9ZoYDgsjY2rHxyXMtkySKoDhe1XqE/values/Sheet1?key=AIzaSyDPwn94kQkwHk3PosdY1gg184lXM_jGoic";  // Your API key is included here
 
@@ -25,6 +25,14 @@ const InsiderBar = () => {
         setInsiderData(formattedData);
       })
       .catch((error) => console.error("Error fetching data: ", error));
+  };
+
+  // Fetch data initially and then refresh every 60 seconds
+  useEffect(() => {
+    fetchData(); // Initial fetch
+    const intervalId = setInterval(fetchData, 60000); // Refresh every 60 seconds
+
+    return () => clearInterval(intervalId); // Cleanup interval on component unmount
   }, []);
 
   const handleSearch = (event) => {
