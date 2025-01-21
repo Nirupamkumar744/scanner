@@ -35,6 +35,7 @@ const InsiderBar = () => {
     data.stock.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Function to scroll to the stock symbol
   const scrollToSymbol = (symbol) => {
     const element = document.getElementById(symbol);
     if (element) {
@@ -70,7 +71,7 @@ const InsiderBar = () => {
           </thead>
           <tbody>
             {filteredData.map((data, index) => (
-              <tr key={index} id={data.stock}>
+              <tr key={index} id={data.stock} onClick={() => scrollToSymbol(data.stock)}>
                 <td>{data.stock}</td>
                 <td>{data.currentPrice}</td>
                 <td>
@@ -264,11 +265,6 @@ const InsiderBar = () => {
 
         tbody tr:nth-child(odd) {
           background-color: rgb(241, 248, 110);
-        }
-
-        /* Ensure that rows behind the header are not visible */
-        tbody tr:not(:hover) {
-          opacity: 0.6;
         }
 
         .insider-bar-container {
