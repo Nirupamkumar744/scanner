@@ -65,8 +65,8 @@ const TechnicalAnalysis = () => {
             </a>
           </li>
           <li>
-            <a href="/marketpulse">
-              <i className="fa fa-th"></i>Sector Scope
+            <a href="/heat">
+              <i className="fa fa-th"></i>Heatmap
             </a>
           </li>
           <li>

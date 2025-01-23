@@ -158,7 +158,7 @@ const MarketPulse = () => {
           
           <li><a href="/insiderstrategy"><i className="fa fa-cogs"></i>Insider Strategy</a></li>
           <li><a href="/marketpulse"><i className="fa fa-th"></i>Sector Scope</a></li>
-          <li><a href="/marketpulse"><i className="fa fa-signal"></i>Swing Spectrum</a></li>
+          <li><a href="/heat"><i className="fa fa-signal"></i>Heatmap</a></li>
           <li><a href="/marketpulse"><i className="fa fa-clock"></i>Option Clock</a></li>
           <li><a href="/marketpulse"><i className="fa fa-users"></i>FII / DII</a></li>
           <li><a href="/marketpulse"><i className="fa fa-arrow-up"></i>Index Mover</a></li>

@@ -333,13 +333,13 @@ const Layout = ({ children }) => {
             </a>
           </li>
           <li>
-            <a href="https://stockarchery.in/about">
+            <a href="/marketpulse">
               <i className="fa fa-th"></i>Sector Scope
             </a>
           </li>
           <li>
-            <a href="https://stockarchery.in/about">
-              <i className="fa fa-signal"></i>Swing Spectrum
+            <a href="/heat">
+              <i className="fa fa-signal"></i>Heatmap
             </a>
           </li>
           <li>

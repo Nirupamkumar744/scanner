@@ -96,6 +96,16 @@ body {
   color: white;
 }
 
+.crypto-chart-heading {
+  color: white;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
 /* Ticker Container Styling */
 .ticker-container {
   position: relative;
@@ -105,32 +115,93 @@ body {
   margin-bottom: 20px;
 }
 
-/* Crypto Chart Heading */
-.crypto-chart-heading {
-  text-align: center;
-  color: white;
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 10px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-/* Main Container Styling */
-.main-container {
-  width: 1200px;
-  height: 620px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+/* Gainers and Losers Table Container */
+.gainers-losers-container {
+  width: 1150px; /* Adjusted width */
+  height: 620px; /* Increased height */
+  background: black;
+  border-radius: 12px; /* Rounded corners */
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
   margin: 20px auto;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+/* Gainers Container & Losers Container Styling */
+.gainers-container,
+.losers-container {
+  width: 48%;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   color: white;
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 16px;
+  padding: 10px;
+  overflow: hidden; /* Prevent scrollbars */
+  max-height: 600px; /* Restrict height */
+}
+
+/* Modern Table Styling */
+.gainers-table, .losers-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* Ensure fixed layout to align header with rows */
+  max-height: 500px; 
+  overflow: hidden;
+  display: block;
+  border-radius: 10px;
+}
+
+/* Vibrant Table Header */
+.gainers-table th, .losers-table th {
+  width: 48.33%; /* Equal width for each column */
+  padding: 12px 20px;
+  background-color: #0066cc; /* Vibrant blue header */
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-align: center; /* Center align the headers */
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  box-sizing: border-box;
+}
+
+/* Vibrant Table Cells */
+.gainers-table td, .losers-table td {
+  width: 48.33%;
+  padding: 12px 20px;
+  color: white;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  word-wrap: break-word;
+  overflow: hidden;
+  box-sizing: border-box;
+  text-align: center; /* Center align the table data */
+}
+
+/* Table Body with Scrollable Content */
+.gainers-table tbody, .losers-table tbody {
+  display: block;
+  max-height: 400px; /* Scrollable body */
+  overflow-y: auto; /* Vertical scroll for body */
+}
+
+/* Remove Horizontal Scroll and Invisible Scrollbar */
+.gainers-table::-webkit-scrollbar, .losers-table::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.gainers-table::-webkit-scrollbar-thumb, .losers-table::-webkit-scrollbar-thumb {
+  background-color: transparent; /* Make the thumb transparent */
+}
+
+/* Scrollbar Thumb Hover Styling */
+.gainers-table::-webkit-scrollbar-thumb:hover, .losers-table::-webkit-scrollbar-thumb:hover {
+  background-color: #007c33; /* Darker green when hovered */
 }
 
 /* Nifty Charts Container Styling */
@@ -155,4 +226,21 @@ body {
   height: 600px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   border-radius: 8px;
+}
+
+/* Main Container Styling */
+.main-container {
+  width: 1200px;
+  height: 620px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  margin: 20px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
 }

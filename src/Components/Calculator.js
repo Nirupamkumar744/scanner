@@ -75,7 +75,7 @@ const Layout = ({ children }) => {
       <div className="sidebar">
         <div className="logo">
           <img
-            src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1734769382/Add_a_heading__1_-removebg-preview_gpcqii.png"
+            src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737098769/Default_Create_a_round_logo_for_a_stock_market_scanner_or_trad_1_a038e6fd-6af3-4085-9199-449cf7811765_0_vsnsbo.png"
             alt="Logo"
           />
         </div>
@@ -101,8 +101,8 @@ const Layout = ({ children }) => {
             </a>
           </li>
           <li>
-            <a href="https://stockarchery.in/about">
-              <i className="fa fa-signal"></i>Swing Spectrum
+            <a href="/heat">
+              <i className="fa fa-signal"></i>Heatmap
             </a>
           </li>
           <li>
