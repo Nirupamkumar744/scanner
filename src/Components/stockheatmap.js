@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TickerTape from "../Widgets/TickerTape";
 
-// Define the stock API URL
 const STOCK_API_URL = 'https://web-production-a7ae.up.railway.app/get_stock_data';
 
 const stockCategories = {
@@ -76,9 +75,7 @@ const Heatmap = () => {
   const [stocksData, setStocksData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [clickedStock, setClickedStock] = useState(null);
 
-  // Fetch stock data from the API
   const fetchData = async () => {
     try {
       const response = await axios.get(STOCK_API_URL);
@@ -102,21 +99,23 @@ const Heatmap = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Get the color based on the percentage change
   const getColor = (percentageChange) => {
     return percentageChange > 0 ? 'green' : percentageChange < 0 ? 'red' : 'yellow';
   };
 
-  const handleStockClick = (symbol) => {
-    setClickedStock(symbol);
-    setTimeout(() => {
-      setClickedStock(null); // Reset after 2 seconds
-    }, 2000);
+  const calculateBlockSize = (percentageChange, maxMomentum) => {
+    // Normalize the block size based on the largest momentum in the sector
+    const absoluteChange = Math.abs(percentageChange); 
+    return (absoluteChange / maxMomentum) * 100;  // Proportional scaling based on max momentum
+  };
+
+  const calculateTotalMomentum = (categoryData) => {
+    return categoryData.reduce((total, stock) => total + Math.abs(stock.percentageChange), 0);
   };
 
   return (
     <div className="heatmap-wrapper">
-      <TickerTape /> {/* TickerTape component at the top */}
+      <TickerTape />
       <div className="heatmap-container">
         {loading ? (
           <p>Loading...</p>
@@ -124,121 +123,152 @@ const Heatmap = () => {
           <p style={{ color: 'red' }}>{error}</p>
         ) : (
           <div className="grid-container">
-            {Object.keys(stockCategories).map((category, index) => (
-              <div key={index} className="category-container">
-                <div
-                  className="category-header"
-                  style={{
-                    backgroundColor: 'grey',
-                    padding: '5px 10px',
-                    marginBottom: '10px',
-                  }}
-                >
-                  <h3 style={{ margin: 0, color: 'yellow', fontSize: 'px', fontWeight: 'bold' }}>
-                    {category}
-                  </h3>
-                </div>
-                <div className="category-grid">
-                  {stockCategories[category].map((symbol, i) => {
-                    const stockData = stocksData[symbol];
-                    const percentageChange = stockData ? stockData.percentage_change : null;
-                    const isClicked = symbol === clickedStock;
-                    return (
-                      <div
-                        key={i}
-                        className="stock-block"
-                        onClick={() => handleStockClick(symbol)}
-                        style={{
-                          backgroundColor: getColor(percentageChange),
-                          transform: isClicked ? 'scale(1.5)' : 'scale(1)',
-                          zIndex: isClicked ? 10 : 1, // Make the clicked block appear above others
-                          transition: 'transform 0.3s ease-in-out',
-                        }}
-                      >
-                        <p>{symbol}</p>
-                        <p>{percentageChange !== null ? `${percentageChange.toFixed(2)}%` : "N/A"}</p>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
+            {Object.keys(stockCategories)
+              .map((category) => {
+                const categoryStocks = stockCategories[category];
+                const categoryData = categoryStocks
+                  .map((symbol) => ({
+                    symbol,
+                    percentageChange: stocksData[symbol]?.percentage_change ?? null,
+                  }))
+                  .filter((stock) => stock.percentageChange !== null);
+
+                const maxMomentum = Math.max(...categoryData.map(stock => Math.abs(stock.percentageChange)));
+
+                return {
+                  category,
+                  categoryData,
+                  maxMomentum,
+                };
+              })
+              .map((categoryObj, index) => {
+                const { category, categoryData, maxMomentum } = categoryObj;
+
+                // Sorting the data within the sector by momentum
+                const sortedCategoryData = categoryData.sort((a, b) => {
+                  return Math.abs(b.percentageChange) - Math.abs(a.percentageChange);
+                });
+
+                return (
+                  <div
+                    key={index}
+                    className="category-container"
+                    style={{
+                      backgroundColor: '#28282B',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
+                  >
+                    <div className="category-header">
+                      <h3>{category}</h3>
+                    </div>
+                    <div className="category-grid">
+                      {sortedCategoryData.map((stock, i) => {
+                        const blockSize = calculateBlockSize(stock.percentageChange, maxMomentum);
+                        return (
+                          <div
+                            key={i}
+                            className="stock-block"
+                            style={{
+                              backgroundColor: getColor(stock.percentageChange),
+                              flexGrow: blockSize,
+                              height: `${blockSize}px`,
+                              transition: 'all 0.3s ease-in-out',
+                              margin: '1px',
+                              minWidth: '80px', 
+                              minHeight: '50px', 
+                              display: 'flex',
+                              flexDirection: 'column',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              textAlign: 'center',
+                              padding: '5px',
+                              borderRadius: '5px',
+                            }}
+                          >
+                            <p>{stock.symbol}</p>
+                            <p>{stock.percentageChange.toFixed(2)}%</p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
           </div>
         )}
       </div>
 
       <style jsx>{`
-        .heatmap-wrapper {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          width: 100%;
-          padding: 10px;
-          overflow-x: hidden;
-          background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099346/Flux_Dev_Create_an_ultrasmooth_realistic_animated_background_t_3_dg0gcs.jpg');
-          background-size: cover;
-          background-position: center;
-          background-attachment: fixed;
-        }
-        .heatmap-container {
-          width: 100%;
-          max-width: 1700px;
-          margin: 0 auto;
-          padding: 20px;
-          background: rgba(7, 7, 7, 0.8); /* Slight transparency for readability */
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          border: 3px solid black;
-          border-radius: 10px;
-        }
-        .grid-container {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 20px;
-          width: 100%;
-          padding: 10px;
-        }
-        .category-container {
-          display: flex;
-          flex-direction: column;
-          margin: 2px;
-          border: 2px solid black;
-          padding: 10px;
-          width: 420px;
-          background-color: #d1a7a7; /* Fallback color */
-          background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737711825/premium_photo-1675802520884-45ad9a50c2c9_mj1xun.jpg');
-          background-size: cover;
-          background-position: center;
-          border-radius: 10px;
-        }
-        .category-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 10px;
-          width: 100%;
-        }
-        .stock-block {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          color: white;
-          border-radius: 8px;
-          cursor: pointer;
-          padding: 10px;
-          font-size: 12px;
-          transition: all 0.3s ease-in-out;
-        }
-        .stock-block p {
-          margin: 0;
-          font-size: 10px;
-          color: black;
-        }
-        .stock-block.green { background-color: #4caf50; }
-        .stock-block.red { background-color: #d32f2f; }
-        .stock-block.yellow { background-color: #ffeb3b; color: black; }
-      `}</style>
+  .heatmap-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 99%;
+    background-color: #111;
+    padding: 20px;
+    background-color: #301934;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .heatmap-container {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .category-container {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    padding: 10px;
+  }
+
+  .category-header h3 {
+    color: white;
+    margin: 0 0 10px 0;
+  }
+
+  .category-grid {
+    display: flex;
+    gap: 2px;
+    flex-wrap: wrap;
+  }
+
+  .stock-block {
+    flex: 1 1 auto;
+    background: gray;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    padding: 5px;
+    transition: transform 0.3s ease-in-out; /* Smooth transition */
+  }
+
+  .stock-block:hover {
+    transform: scale(1.2); /* Zoom effect on hover */
+    z-index: 1; /* Bring the hovered block to the front */
+  }
+
+  .stock-block p {
+    margin: 0;
+    font-size: 12px;
+    color: black;
+  }
+`}</style>
     </div>
   );
 };
