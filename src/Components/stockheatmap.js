@@ -109,9 +109,7 @@ const Heatmap = () => {
     return (absoluteChange / maxMomentum) * 100;  // Proportional scaling based on max momentum
   };
 
-  const calculateTotalMomentum = (categoryData) => {
-    return categoryData.reduce((total, stock) => total + Math.abs(stock.percentageChange), 0);
-  };
+  
 
   return (
     <div className="heatmap-wrapper">
