@@ -1,276 +1,243 @@
 import React, { useState, useEffect } from "react";
-import { FaHome } from "react-icons/fa";
 import axios from "axios";
-import TickerTape from "../Widgets/TickerTape"; // Ensure this is the correct path
-import './StockHeatmap.css';
+import TickerTape from "../Widgets/TickerTape";
 
+// Define the stock API URL
 const STOCK_API_URL = 'https://web-production-a7ae.up.railway.app/get_stock_data';
 
+const stockCategories = {
+  Banks: [
+    "AXISBANK.NS", "BANDHANBNK.NS", "BANKBARODA.NS", "BANKINDIA.NS", "HDFCBANK.NS", 
+    "ICICIBANK.NS", "IDFCFIRSTB.NS", "NAUKRI.NS", "RBLBANK.NS", "SBIN.NS", "YESBANK.NS"
+  ],
+  NBFCs: [
+    "BAJFINANCE.NS", "BAJAJFINSV.NS", "MUTHOOTFIN.NS", "CHOLAFIN.NS", "HDFCLIFE.NS",
+    "ICICIGI.NS", "ICICIPRULI.NS", "PFC.NS", "RECLTD.NS", "SBICARD.NS", "SBILIFE.NS"
+  ],
+  OilAndGas: [
+    "BPCL.NS", "GAIL.NS", "IOC.NS", "OIL.NS", "PETRONET.NS", "ADANIPORTS.NS", "ADANIGREEN.NS"
+  ],
+  PowerGenerationAndDistribution: [
+    "NTPC.NS", "POWERGRID.NS", "TATAPOWER.NS", "NHPC.NS", "SJVN.NS"
+  ],
+  Cement: [
+    "ULTRACEMCO.NS", "AMBUJACEM.NS", "ACC.NS", "JKCEMENT.NS", "RAMCOCEM.NS"
+  ],
+  MetalsAndMining: [
+    "HINDALCO.NS", "JSWSTEEL.NS", "TATASTEEL.NS", "SAIL.NS", "JINDALSTEL.NS", "NMDC.NS", 
+    "NATIONALUM.NS", "GRASIM.NS"
+  ],
+  SoftwareAndITServices: [
+    "INFY.NS", "TCS.NS", "HCLTECH.NS", "TECHM.NS", "WIPRO.NS", "KPITTECH.NS", 
+    "LTTS.NS", "MPHASIS.NS", "PERSISTENT.NS", "CYIENT.NS", "COFORGE.NS"
+  ],
+  Automobiles: [
+    "BAJAJ-AUTO.NS", "ASHOKLEY.NS", "EICHERMOT.NS", "HEROMOTOCO.NS", "M&M.NS", "MARUTI.NS", 
+    "MRF.NS", "TATAMOTORS.NS"
+  ],
+  Retail: [
+    "DMART.NS", "PVRINOX.NS", "VBL.NS", "PAGEIND.NS", "ZOMATO.NS", "TRENT.NS"
+  ],
+  ConsumerGoods: [
+    "ASIANPAINT.NS", "HINDUNILVR.NS", "BRITANNIA.NS", "GODREJCP.NS", "MARICO.NS", "NESTLEIND.NS", 
+    "DABUR.NS", "LUPIN.NS"
+  ],
+  Pharmaceuticals: [
+    "CIPLA.NS", "DRREDDY.NS", "SUNPHARMA.NS", "AARTIIND.NS", "AUROPHARMA.NS", "LAURUSLABS.NS", 
+    "BIOCON.NS"
+  ],
+  HealthcareProvidersAndServices: [
+    "APOLLOHOSP.NS", "LALPATHLAB.NS", "MAXHEALTH.NS"
+  ],
+  TelecomProviders: [
+    "BHARTIARTL.NS", "IDEA.NS", "INDUSTOWER.NS"
+  ],
+  RealEstateDevelopment: [
+    "DLF.NS", "GODREJPROP.NS", "OBEROIRLTY.NS", "LODHA.NS"
+  ],
+  GasAndWaterUtilities: [
+    "IGL.NS", "GUJGASLTD.NS"
+  ],
+  OtherUtilities: [
+    "CONCOR.NS", "HUDCO.NS"
+  ],
+  InfrastructureAndEngineering: [
+     "HAL.NS", "BOSCHLTD.NS", "SIEMENS.NS", "ABBOTINDIA.NS", "BHEL.NS", "PERSISTENT.NS"
+  ],
+  Fertilizers: [
+    "CHAMBLFERT.NS", "PIIND.NS", "COROMANDEL.NS"
+  ],
+  OtherStocks: [
+    "ZOMATO.NS", "PAYTM.NS", "NYKAA.NS", "IRCTC.NS", "MGL.NS", "METROPOLIS.NS", "INDIAMART.NS"
+  ]
+};
+
 const Heatmap = () => {
-  const [stocks, setStocks] = useState(() => {
-    const cachedData = localStorage.getItem('stockData');
-    return cachedData ? JSON.parse(cachedData) : [];
-  });
-  const [loading, setLoading] = useState(stocks.length === 0);
+  const [stocksData, setStocksData] = useState({});
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [clickedStock, setClickedStock] = useState(null);
 
-  const fetchDataWithRetry = async (retries = 3, delay = 5000) => {
-    for (let i = 0; i < retries; i++) {
-      try {
-        setLoading(true);
-        const response = await axios.get(STOCK_API_URL, { timeout: 20000 });
-
-        if (response.status === 200) {
-          const stockData = response.data.data;
-          const validStockData = Object.keys(stockData).reduce((acc, symbol) => {
-            const stock = stockData[symbol];
-            if (!isNaN(stock.current_price) && !isNaN(stock.percentage_change)) {
-              acc.push({ symbol, ...stock });
-            }
-            return acc;
-          }, []);
-
-          localStorage.setItem('stockData', JSON.stringify(validStockData));
-          setStocks(validStockData);
-          setError(null);
-          return;
-        } else {
-          throw new Error('Failed to fetch data');
-        }
-      } catch (error) {
-        console.error(`Attempt ${i + 1} failed:`, error.message);
-        if (i === retries - 1) {
-          setError('Error: Unable to fetch data after multiple attempts. Please try again later.');
-        }
-        await new Promise((res) => setTimeout(res, delay * (i + 1)));
+  // Fetch stock data from the API
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(STOCK_API_URL);
+      if (response.status === 200) {
+        const stockData = response.data.data;
+        setStocksData(stockData);
+        setError(null);
+      } else {
+        throw new Error('Failed to fetch data');
       }
+    } catch (error) {
+      setError('Error: Unable to fetch data.');
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchDataWithRetry();
-    const interval = setInterval(fetchDataWithRetry, 60000);
+    fetchData();
+    const interval = setInterval(fetchData, 60000); // Refresh every 60 seconds
     return () => clearInterval(interval);
   }, []);
 
+  // Get the color based on the percentage change
   const getColor = (percentageChange) => {
-    return percentageChange > 0
-      ? 'rgb(34, 177, 76)'  // Green (Softened)
-      : percentageChange < 0
-      ? 'rgb(237, 28, 36)'  // Red (Softened)
-      : 'rgb(255, 242, 0)'; // Yellow (Softened)
+    return percentageChange > 0 ? 'green' : percentageChange < 0 ? 'red' : 'yellow';
+  };
+
+  const handleStockClick = (symbol) => {
+    setClickedStock(symbol);
+    setTimeout(() => {
+      setClickedStock(null); // Reset after 2 seconds
+    }, 2000);
   };
 
   return (
-    <div className="layout-container">
-      <div className="sidebar">
-        <div className="logo">
-          <img
-            src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737098769/Default_Create_a_round_logo_for_a_stock_market_scanner_or_trad_1_a038e6fd-6af3-4085-9199-449cf7811765_0_vsnsbo.png"
-            alt="Logo"
-          />
-        </div>
-        <ul className="nav-links">
-                  <li>
-                    <a href="/home">
-                      <FaHome style={{ marginRight: "10px", color: "yellow" }} />
-                      Home
-                    </a>
-                  </li>
-                  <li>
-                    <a href="/marketpulse">
-                      <i className="fa fa-chart-line"></i>Market Pulse
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://stockarchery.in/about">
-                      <i className="fa fa-th"></i>Sector Scope
-                    </a>
-                  </li>
-                  
-                  <li>
-                    <a href="https://stockarchery.in/about">
-                      <i className="fa fa-clock"></i>Option Clock
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://stockarchery.in/about">
-                      <i className="fa fa-users"></i>FII / DII
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://stockarchery.in/about">
-                      <i className="fa fa-arrow-up"></i>Index Mover
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://stockarchery.in/about">
-                      <i className="fa fa-book"></i>Trading Journal
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://stockarchery.in/about">
-                      <i className="fa fa-graduation-cap"></i>Trade Tutor
-                    </a>
-                  </li>
-                  <li>
-                    <a href="/technical">
-                      <i className="fa fa-video"></i>Technical Analysis
-                    </a>
-                  </li>
-                </ul>
-      </div>
-
-      <div className="content">
-        <div className="ticker-container">
-          <TickerTape />
-        </div>
-        <div className="heatmap-container">
-          {loading && stocks.length === 0 ? (
-            <p>Loading...</p>
-          ) : error ? (
-            <p style={{ color: 'red' }}>{error}</p>
-          ) : (
-            <div className="stock-blocks">
-              {stocks.map((stock) => (
+    <div className="heatmap-wrapper">
+      <TickerTape /> {/* TickerTape component at the top */}
+      <div className="heatmap-container">
+        {loading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p style={{ color: 'red' }}>{error}</p>
+        ) : (
+          <div className="grid-container">
+            {Object.keys(stockCategories).map((category, index) => (
+              <div key={index} className="category-container">
                 <div
-                  key={stock.symbol}
-                  className="stock-block"
-                  style={{ backgroundColor: getColor(stock.percentage_change) }}
+                  className="category-header"
+                  style={{
+                    backgroundColor: 'grey',
+                    padding: '5px 10px',
+                    marginBottom: '10px',
+                  }}
                 >
-                  <div className="stock-info">
-                    <p>{stock.symbol}</p>
-                    <p>{stock.percentage_change.toFixed(2)}%</p>
-                  </div>
+                  <h3 style={{ margin: 0, color: 'yellow', fontSize: 'px', fontWeight: 'bold' }}>
+                    {category}
+                  </h3>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
+                <div className="category-grid">
+                  {stockCategories[category].map((symbol, i) => {
+                    const stockData = stocksData[symbol];
+                    const percentageChange = stockData ? stockData.percentage_change : null;
+                    const isClicked = symbol === clickedStock;
+                    return (
+                      <div
+                        key={i}
+                        className="stock-block"
+                        onClick={() => handleStockClick(symbol)}
+                        style={{
+                          backgroundColor: getColor(percentageChange),
+                          transform: isClicked ? 'scale(1.5)' : 'scale(1)',
+                          zIndex: isClicked ? 10 : 1, // Make the clicked block appear above others
+                          transition: 'transform 0.3s ease-in-out',
+                        }}
+                      >
+                        <p>{symbol}</p>
+                        <p>{percentageChange !== null ? `${percentageChange.toFixed(2)}%` : "N/A"}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <style jsx>{`
-        .layout-container {
-          font-family: 'Poppins', sans-serif;
-          margin: 0;
-          padding: 0;
-          background: black;
-          overflow-x: hidden;
-        }
-
-        .sidebar {
-          width: 250px;
-          height: 100vh;
-          background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099004/Flux_Dev_Create_a_tall_rectangular_banner_background_with_an_u_1_oyb158.jpg');
-          background-size: cover;
-          background-position: center;
-          position: fixed;
-          top: 0;
-          left: 0;
-          padding: 20px 0;
-          color: white;
-          box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-          z-index: 2;
-          overflow-y: auto;
-        }
-
-        .logo img {
-          width: 140px;
-          height: 140px;
-        }
-
-        .nav-links {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-        }
-
-        .nav-links li {
-          margin: 10px 0;
-        }
-
-        .nav-links li a {
-          display: flex;
-          align-items: center;
-          padding: 12px 20px;
-          color: white;
-          text-decoration: none;
-          font-size: 16px;
-          font-weight: 500;
-          border-radius: 8px;
-          transition: all 0.3s ease;
-        }
-
-        .nav-links li a:hover {
-          background: rgba(255, 255, 255, 0.1);
-          transform: scale(1.05);
-        }
-
-        .content {
-          margin-left: 250px;
-          padding: 20px;
-        }
-
-        .ticker-container {
-          margin-bottom: 20px;
-        }
-
-        /* Heatmap styles */
-        .heatmap-container {
-          padding: 20px;
-          font-family: 'Arial', sans-serif;
+        .heatmap-wrapper {
           display: flex;
           flex-direction: column;
-          align-items: center;
-          background: black;
-          border-radius: 10px;
-          box-shadow: none;  /* Removed shadow */
-          max-height: 80vh;
-          overflow-y: auto;
-        }
-
-        .heatmap-container p {
-          font-size: 20px;
-          color: #fff;
-          font-weight: bold;
-          margin-top: 20px;
-          animation: fadeIn 2s ease-out;
-        }
-
-        .stock-blocks {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-          gap: 5px;  /* Small gap between blocks */
           justify-content: center;
           width: 100%;
-        }
-
-        .stock-block {
           padding: 10px;
+          overflow-x: hidden;
+          background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099346/Flux_Dev_Create_an_ultrasmooth_realistic_animated_background_t_3_dg0gcs.jpg');
+          background-size: cover;
+          background-position: center;
+          background-attachment: fixed;
+        }
+        .heatmap-container {
+          width: 100%;
+          max-width: 1700px;
+          margin: 0 auto;
+          padding: 20px;
+          background: rgba(7, 7, 7, 0.8); /* Slight transparency for readability */
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          border: 3px solid black;
+          border-radius: 10px;
+        }
+        .grid-container {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 20px;
+          width: 100%;
+          padding: 10px;
+        }
+        .category-container {
+          display: flex;
+          flex-direction: column;
+          margin: 2px;
+          border: 2px solid black;
+          padding: 10px;
+          width: 420px;
+          background-color: #d1a7a7; /* Fallback color */
+          background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737711825/premium_photo-1675802520884-45ad9a50c2c9_mj1xun.jpg');
+          background-size: cover;
+          background-position: center;
+          border-radius: 10px;
+        }
+        .category-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 10px;
+          width: 100%;
+        }
+        .stock-block {
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          width: 90px;  /* Fixed width for square block */
-          height: 90px;  /* Fixed height for square block */
-          transition: all 0.3s ease;
+          color: white;
+          border-radius: 8px;
+          cursor: pointer;
+          padding: 10px;
+          font-size: 12px;
+          transition: all 0.3s ease-in-out;
         }
-
-        .stock-info p {
-          margin: 5px 0;
-          color: #fff;
+        .stock-block p {
+          margin: 0;
           font-size: 10px;
-          font-weight: bold;
+          color: black;
         }
-
-        @keyframes fadeIn {
-          0% {
-            opacity: 0;
-          }
-          100% {
-            opacity: 1;
-          }
-        }
+        .stock-block.green { background-color: #4caf50; }
+        .stock-block.red { background-color: #d32f2f; }
+        .stock-block.yellow { background-color: #ffeb3b; color: black; }
       `}</style>
     </div>
   );
