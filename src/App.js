@@ -9,6 +9,7 @@ import Calculator from "./Components/Calculator";
 import InsiderStrategy from "./Components/InsiderStrategy";
 import Technical from "./Components/Technical"
 import StockHeatmap from "./Components/stockheatmap";
+import TradeJournal from "./Components/tradejournal";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/insiderstrategy" element ={<InsiderStrategy/>} />
         <Route path="/technical" element ={<Technical/>} />
         <Route path="/heat" element ={<StockHeatmap />} />
+        <Route path="/tradejournal" element ={<TradeJournal/>} />
       </Routes>
     </Router>
   );

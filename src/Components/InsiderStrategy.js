@@ -358,7 +358,7 @@ const Layout = ({ children }) => {
             </a>
           </li>
           <li>
-            <a href="https://stockarchery.in/about">
+            <a href="/tradejournal">
               <i className="fa fa-book"></i>Trading Journal
             </a>
           </li>
