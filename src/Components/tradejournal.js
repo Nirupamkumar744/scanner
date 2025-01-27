@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import TickerTape from "../Widgets/TickerTape";
-
+import { FaHome } from "react-icons/fa";
 // CSS styles moved outside the component to avoid dependency warnings
 const styles = `
   /* Importing Google Fonts */
@@ -330,18 +330,19 @@ const TradeJournal = () => {
           <img src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737098769/Default_Create_a_round_logo_for_a_stock_market_scanner_or_trad_1_a038e6fd-6af3-4085-9199-449cf7811765_0_vsnsbo.png" alt="Logo" />
         </div>
         <ul className="nav-links">
-        <li><a href="/marketpulse"><i className="fa fa-chart-line"></i>Market Pulse</a></li>
-        <li><a href="/marketpulse"><i className="fa fa-chart-line"></i>Market Pulse</a></li>
+        <li><a href="/home"><FaHome style={{ marginRight: "10px", color: "yellow" }} />
+              Home
+            </a>
+          </li>
+        <li><a href="/marketpulse"><i className="fa fa-chart-line"></i>Crypto/Forex</a></li>
         <li><a href="/insiderstrategy"><i className="fa fa-cogs"></i>Insider Strategy</a></li>
-        <li><a href="/marketpulse"><i className="fa fa-th"></i>Sector Scope</a></li>
+        
         <li><a href="/heat"><i className="fa fa-signal"></i>Heatmap</a></li>
-        <li><a href="/marketpulse"><i className="fa fa-clock"></i>Option Clock</a></li>
-        <li><a href="/marketpulse"><i className="fa fa-users"></i>FII / DII</a></li>
-        <li><a href="/marketpulse#"><i className="fa fa-arrow-up"></i>Index Mover</a></li>
+        
         <li><a href="/marketpulse"><i className="fa fa-book"></i>Trading Journal</a></li>
-        <li><a href="/marketpulse"><i className="fa fa-graduation-cap"></i>Trade Tutor</a></li>
+        
         <li><a href="/technical"><i className="fa fa-video"></i>Technical Analysis</a></li>
-  <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
+        <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
         </ul>
       </div>
 

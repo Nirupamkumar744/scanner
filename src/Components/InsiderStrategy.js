@@ -321,58 +321,17 @@ const Layout = ({ children }) => {
           />
         </div>
         <ul className="nav-links">
-          <li>
-            <a href="/home">
-              <FaHome style={{ marginRight: "10px", color: "yellow" }} />
-              Home
-            </a>
-          </li>
-          <li>
-            <a href="/marketpulse">
-              <i className="fa fa-chart-line"></i>Market Pulse
-            </a>
-          </li>
-          <li>
-            <a href="/marketpulse">
-              <i className="fa fa-th"></i>Sector Scope
-            </a>
-          </li>
-          <li>
-            <a href="/heat">
-              <i className="fa fa-signal"></i>Heatmap
-            </a>
-          </li>
-          <li>
-            <a href="https://stockarchery.in/about">
-              <i className="fa fa-clock"></i>Option Clock
-            </a>
-          </li>
-          <li>
-            <a href="https://stockarchery.in/about">
-              <i className="fa fa-users"></i>FII / DII
-            </a>
-          </li>
-          <li>
-            <a href="https://stockarchery.in/about">
-              <i className="fa fa-arrow-up"></i>Index Mover
-            </a>
-          </li>
-          <li>
-            <a href="/tradejournal">
-              <i className="fa fa-book"></i>Trading Journal
-            </a>
-          </li>
-          <li>
-            <a href="https://stockarchery.in/about">
-              <i className="fa fa-graduation-cap"></i>Trade Tutor
-            </a>
-          </li>
-          <li>
-            <a href="/technical">
-              <i className="fa fa-video"></i>Technical Analysis
-            </a>
-          </li>
-        </ul>
+               <li><a href="/home"><FaHome style={{ marginRight: "10px", color: "yellow" }} />
+                     Home
+                   </a>
+                 </li>
+               <li><a href="/marketpulse"><i className="fa fa-chart-line"></i>Crypto/Forex</a></li>
+               <li><a href="/insiderstrategy"><i className="fa fa-cogs"></i>Insider Strategy</a></li> 
+               <li><a href="/heat"><i className="fa fa-signal"></i>Heatmap</a></li>
+               <li><a href="/marketpulse"><i className="fa fa-book"></i>Trading Journal</a></li>
+               <li><a href="/technical"><i className="fa fa-video"></i>Technical Analysis</a></li>
+               <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
+               </ul>
       </div>
 
       <div className="content">
@@ -391,53 +350,78 @@ const Layout = ({ children }) => {
           overflow-x: hidden;
         }
 
-        .sidebar {
-          width: 250px;
-          height: 100vh;
-          background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099004/Flux_Dev_Create_a_tall_rectangular_banner_background_with_an_u_1_oyb158.jpg');
-          background-size: cover;
-          background-position: center;
-          position: fixed;
-          top: 0;
-          left: 0;
-          padding: 20px 0;
-          color: white;
-          box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-          z-index: 2;
-          overflow-y: auto;
-        }
+         .sidebar {
+    width: 250px;
+    height: 100vh;
+    background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099004/Flux_Dev_Create_a_tall_rectangular_banner_background_with_an_u_1_oyb158.jpg');
+    background-size: cover;
+    background-position: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 20px 0;
+    color: white;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+    overflow-y: auto;
+  }
 
-        .logo img {
-          width: 140px;
-          height: 140px;
-        }
+  .sidebar::-webkit-scrollbar {
+    width: 8px;
+  }
 
-        .nav-links {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-        }
+  .sidebar::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+  }
 
-        .nav-links li {
-          margin: 10px 0;
-        }
+  .sidebar::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+  }
 
-        .nav-links li a {
-          display: flex;
-          align-items: center;
-          padding: 12px 20px;
-          color: white;
-          text-decoration: none;
-          font-size: 16px;
-          font-weight: 500;
-          border-radius: 8px;
-          transition: all 0.3s ease;
-        }
+  .logo {
+    text-align: center;
+    margin-bottom: 0;
+  }
 
-        .nav-links li a:hover {
-          background: rgba(255, 255, 255, 0.1);
-          transform: scale(1.05);
-        }
+  .logo img {
+    width: 140px;
+    height: 140px;
+    margin-bottom: 0;
+  }
+
+  .nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav-links li {
+    margin: 10px 0;
+  }
+
+  .nav-links li a {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .nav-links li a i {
+    margin-right: 10px;
+    color: gold;
+  }
+
+  .nav-links li a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+  }
+
 
         .content {
           margin-left: 250px;

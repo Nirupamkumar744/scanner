@@ -56,7 +56,7 @@ const TechnicalAnalysis = () => {
           </li>
           <li>
             <a href="/marketpulse">
-              <i className="fa fa-chart-line"></i>Market Pulse
+              <i className="fa fa-chart-line"></i>Crypto/Forex
             </a>
           </li>
           <li>
@@ -69,36 +69,13 @@ const TechnicalAnalysis = () => {
               <i className="fa fa-th"></i>Heatmap
             </a>
           </li>
-          <li>
-            <a href="/marketpulse">
-              <i className="fa fa-signal"></i>Swing Spectrum
-            </a>
-          </li>
-          <li>
-            <a href="/marketpulse">
-              <i className="fa fa-clock"></i>Option Clock
-            </a>
-          </li>
-          <li>
-            <a href="/marketpulse">
-              <i className="fa fa-users"></i>FII / DII
-            </a>
-          </li>
-          <li>
-            <a href="/marketpulse#">
-              <i className="fa fa-arrow-up"></i>Index Mover
-            </a>
-          </li>
+          
           <li>
             <a href="/marketpulse">
               <i className="fa fa-book"></i>Trading Journal
             </a>
           </li>
-          <li>
-            <a href="/marketpulse">
-              <i className="fa fa-graduation-cap"></i>Trade Tutor
-            </a>
-          </li>
+          
           <li>
             <a href="/calcu">
               <i className="fa fa-calendar-check"></i>Calculator
