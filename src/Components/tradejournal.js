@@ -1,9 +1,12 @@
-import React, { useState } from "react";
-import TickerTape from "../Widgets/TickerTape";
+import React, { useState, useCallback, useEffect } from "react";
+import TickerTape from "../Widgets/TickerTape"; // Import the TickerTape component
 import { FaHome } from "react-icons/fa";
+import { db } from "./firebase"; // Assuming your firebase is set up in the firebase.js file
+import { doc, setDoc, collection } from "firebase/firestore"; // Import Firestore functions
+import { getAuth } from "firebase/auth"; // Import Firebase Auth
+
 // CSS styles moved outside the component to avoid dependency warnings
 const styles = `
-  /* Importing Google Fonts */
   @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
   body {
@@ -14,7 +17,6 @@ const styles = `
     overflow-x: hidden;
   }
 
-  /* Sidebar Styles */
   .sidebar {
     width: 250px;
     height: 100vh;
@@ -118,7 +120,7 @@ const styles = `
   .rectangle-container {
     margin: 20px auto;
     width: 98%;
-    height: 980px;
+    height: 1080px;
     background: black;
     border: 2px solid gold;
     border-radius: 12px;
@@ -188,7 +190,6 @@ const styles = `
     background: red !important;
   }
 
-  /* Modal Styling */
   .trade-calculator-modal {
     position: fixed;
     top: 0;
@@ -248,12 +249,12 @@ const styles = `
   }
 
   .modal-buttons button:first-child {
-    background-color: #f44336; /* Red for Close */
+    background-color: #f44336;
     color: white;
   }
 
   .modal-buttons button:last-child {
-    background-color: #4caf50; /* Green for Submit */
+    background-color: #4caf50;
     color: white;
   }
 
@@ -268,15 +269,15 @@ const styles = `
   }
 
   .add-trade-button {
-    background-color: rgb(247, 203, 59); /* Yellow for Add Trade */
+    background-color: rgb(247, 203, 59);
     color: black;
     font-size: 14px;
     padding: 8px 15px;
     border: none;
-    border-radius: 30px; /* Round corners */
+    border-radius: 30px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    position: absolute; /* Position it on the top-right corner */
+    position: absolute;
     top: 20px;
     right: 20px;
   }
@@ -287,7 +288,6 @@ const styles = `
 `;
 
 const TradeJournal = () => {
-  // State to control modal visibility and trade data
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tradeType, setTradeType] = useState("");
   const [stockName, setStockName] = useState("");
@@ -296,53 +296,89 @@ const TradeJournal = () => {
   const [sellPrice, setSellPrice] = useState("");
   const [profitLoss, setProfitLoss] = useState(null);
 
-  // Function to handle opening the modal
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
-  // Function to handle closing the modal
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  // Function to calculate profit or loss
-  const calculateProfitLoss = () => {
+  const calculateProfitLoss = useCallback(() => {
     let profitOrLoss = 0;
-
     if (tradeType === "long") {
       profitOrLoss = sellPrice - buyPrice;
     } else if (tradeType === "short") {
       profitOrLoss = buyPrice - sellPrice;
     }
-
     const totalProfitLoss = profitOrLoss * quantity;
     setProfitLoss(totalProfitLoss);
+  }, [tradeType, buyPrice, sellPrice, quantity]);
+
+  const saveTrade = async () => {
+    try {
+      const user = getAuth().currentUser;
+      if (!user) {
+        alert("User not authenticated");
+        return;
+      }
+      const userEmail = user.email.replace(/[^a-zA-Z0-9]/g, "_");
+      const tradesRef = collection(db, "users", userEmail, "Trade");
+      const tradeRef = doc(tradesRef);
+      await setDoc(tradeRef, {
+        tradeType,
+        stockName,
+        quantity,
+        buyPrice,
+        sellPrice,
+        profitLoss,
+        timestamp: new Date(),
+      });
+      alert("Trade saved successfully!");
+      closeModal();
+    } catch (error) {
+      console.error("Error saving trade: ", error.message);
+      alert(`Error saving trade: ${error.message}`);
+    }
   };
+
+  useEffect(() => {
+    if (buyPrice && sellPrice && quantity) {
+      calculateProfitLoss();
+    }
+  }, [buyPrice, sellPrice, quantity, calculateProfitLoss]);
+
+  const getMonthDays = (month, year) => {
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDay = new Date(year, month, 1).getDay();
+    const days = [];
+    for (let i = 0; i < firstDay; i++) {
+      days.push(null);
+    }
+    for (let i = 1; i <= daysInMonth; i++) {
+      days.push(i);
+    }
+    return days;
+  };
+
+  const months = Array.from({ length: 12 }, (_, index) => {
+    const month = new Date(2025, index, 1); // Example year 2025
+    return {
+      name: month.toLocaleString("default", { month: "long" }),
+      days: getMonthDays(index, 2025),
+    };
+  });
 
   return (
     <>
       <style>{styles}</style>
 
-      {/* Sidebar and content */}
       <div className="sidebar">
         <div className="logo">
           <img src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737098769/Default_Create_a_round_logo_for_a_stock_market_scanner_or_trad_1_a038e6fd-6af3-4085-9199-449cf7811765_0_vsnsbo.png" alt="Logo" />
         </div>
         <ul className="nav-links">
-        <li><a href="/home"><FaHome style={{ marginRight: "10px", color: "yellow" }} />
-              Home
-            </a>
-          </li>
-        <li><a href="/marketpulse"><i className="fa fa-chart-line"></i>Crypto/Forex</a></li>
-        <li><a href="/insiderstrategy"><i className="fa fa-cogs"></i>Insider Strategy</a></li>
-        
-        <li><a href="/heat"><i className="fa fa-signal"></i>Heatmap</a></li>
-        
-        <li><a href="/marketpulse"><i className="fa fa-book"></i>Trading Journal</a></li>
-        
-        <li><a href="/technical"><i className="fa fa-video"></i>Technical Analysis</a></li>
-        <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
+          <li><a href="/home"><FaHome style={{ marginRight: "10px", color: "gold" }} />Home</a></li>
+          <li><a href="/marketpulse"><i className="fa fa-chart-line"></i>Crypto/Forex</a></li>
+          <li><a href="/insiderstrategy"><i className="fa fa-cogs"></i>Insider Strategy</a></li>
+          <li><a href="/heat"><i className="fa fa-signal"></i>Heatmap</a></li>
+          <li><a href="/technical"><i className="fa fa-video"></i>Technical Analysis</a></li>
+          <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
         </ul>
       </div>
 
@@ -350,21 +386,17 @@ const TradeJournal = () => {
         <div className="ticker-container">
           <TickerTape />
         </div>
-
-        <h1 className="heading">Trade Journal</h1>
-
         <div className="rectangle-container">
-          <h2>Trade Details</h2>
+          <h2>Trade Journal</h2>
           <button className="add-trade-button" onClick={openModal}>Add Trade</button>
           <div className="calendar-grid">
-            {/* Months and Days (dynamic calendar render) */}
-            {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map((month, idx) => (
-              <div className="month" key={idx}>
-                <h3>{month}</h3>
+            {months.map((month, index) => (
+              <div className="month" key={index}>
+                <h3>{month.name}</h3>
                 <div className="month-days">
-                  {[...Array(30).keys()].map((day, index) => (
-                    <div key={index} className={`month-day ${index % 7 === 0 || (index + 1) % 7 === 0 ? 'weekend' : ''}`}>
-                      {index + 1}
+                  {month.days.map((day, idx) => (
+                    <div key={idx} className={`month-day ${day === null ? "empty" : ""} ${idx % 7 === 5 || idx % 7 === 6 ? "weekend" : ""}`}>
+                      {day || ""}
                     </div>
                   ))}
                 </div>
@@ -374,58 +406,52 @@ const TradeJournal = () => {
         </div>
       </div>
 
-      {/* Modal for trade calculation */}
       {isModalOpen && (
         <div className="trade-calculator-modal">
           <div className="modal-content">
             <h2>Trade Calculator</h2>
-            <label>Stock Name</label>
-            <input
-              type="text"
-              value={stockName}
-              onChange={(e) => setStockName(e.target.value)}
-              placeholder="Enter stock name"
-            />
             <label>Trade Type</label>
-            <select
-              value={tradeType}
-              onChange={(e) => setTradeType(e.target.value)}
-            >
-              <option value="">Select Type</option>
+            <select onChange={(e) => setTradeType(e.target.value)} value={tradeType}>
+              <option value="">Select Trade Type</option>
               <option value="long">Long</option>
               <option value="short">Short</option>
             </select>
+            <label>Stock Name</label>
+            <input
+              type="text"
+              placeholder="Enter stock name"
+              value={stockName}
+              onChange={(e) => setStockName(e.target.value)}
+            />
             <label>Quantity</label>
             <input
               type="number"
-              value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
               placeholder="Enter quantity"
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
             />
             <label>Buy Price</label>
             <input
               type="number"
-              value={buyPrice}
-              onChange={(e) => setBuyPrice(e.target.value)}
               placeholder="Enter buy price"
+              value={buyPrice}
+              onChange={(e) => setBuyPrice(Number(e.target.value))}
             />
             <label>Sell Price</label>
             <input
               type="number"
-              value={sellPrice}
-              onChange={(e) => setSellPrice(e.target.value)}
               placeholder="Enter sell price"
+              value={sellPrice}
+              onChange={(e) => setSellPrice(Number(e.target.value))}
             />
+            <div>
+              <strong>Profit/Loss: </strong>
+              <span>{profitLoss}</span>
+            </div>
             <div className="modal-buttons">
               <button onClick={closeModal}>Close</button>
-              <button onClick={calculateProfitLoss}>Submit</button>
+              <button onClick={saveTrade}>Save Trade</button>
             </div>
-
-            {profitLoss !== null && (
-              <div className="profit-loss-display">
-                <h3>Profit/Loss: {profitLoss}</h3>
-              </div>
-            )}
           </div>
         </div>
       )}
