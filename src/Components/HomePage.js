@@ -210,23 +210,6 @@ const HomePage = () => {
         border-radius: 8px;
         color: #2e2e2e;
         border: 2px solid #ffcc00;
-        display: flex;
-        justify-content: space-between; /* Place containers side by side */
-      }
-
-      /* Square Container Styling */
-      .square-container {
-        width: 48%; /* Take up 48% of the width */
-        height: 200px; /* Set fixed height */
-        background-color: #f4f4f4;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: #333;
-        font-size: 18px;
-        font-weight: 500;
       }
 
       /* Table Styling */
@@ -302,80 +285,93 @@ const HomePage = () => {
         </div>
         <ul className="nav-links">
           {/* Navigation Links */}
-          <li><a href="/heat"><i className="fa fa-home"></i>Heatmap</a></li>
-          <li><a href="/scanner"><i className="fa fa-chart-line"></i>Trade Scanner</a></li>
-          <li><a href="/portfolio"><i className="fa fa-briefcase"></i>Portfolio</a></li>
-          <li><a href="/trade-journal"><i className="fa fa-book"></i>Trade Journal</a></li>
+          <li><a href="/heat"><i className="fa fa-signal"></i>Heatmap</a></li>
+          <li><a href="/marketpulse"><i className="fa fa-chart-line"></i>Crypto/Forex</a></li>
+          <li><a href="/insiderstrategy"><i className="fa fa-cogs"></i>Insider Strategy</a></li> 
+          <li><a href="/tradejournal"><i className="fa fa-book"></i>Trading Journal</a></li>
+          <li><a href="/technical"><i className="fa fa-video"></i>Technial Analysis</a></li>
+          <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
         </ul>
       </div>
 
-      {/* Main Content */}
+      {/* Content */}
       <div className="content">
+        {/* Ticker Tape */}
         <div className="ticker-container">
           <TickerTape />
         </div>
 
-        {/* Dynamic content that appears after the typing animation */}
-        {animationFinished && (
-          <div className="ticker-container-right">
-            <div className="logo-right">
-              <img
-                src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737712480/premium_photo-1676493456341-d36f91c572fc_qtoxtw.jpg"
-                alt="Logo"
-              />
-            </div>
-            <div className="typing-effect">
-              Welcome to Flux! We provide the latest market insights.
-            </div>
+        {/* Golden Rectangular Container Below Ticker Tape */}
+        <div className="ticker-container-right">
+          {/* Typing Heading on the Left Side */}
+          <div className={`typing-effect ${animationFinished ? "finished" : ""}`}>
+            Welcome to the Stock Market Dashboard!
           </div>
-        )}
 
-        {/* Ticker Container Bottom */}
+          {/* Typing Paragraph Below the Heading */}
+          <div className="typing-effect-paragraph">
+            This is a golden container placed below the ticker tape with a glowing effect.
+          </div>
+
+          {/* Logo Image on the right side */}
+          <div className="logo-right">
+            <img
+              src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737098769/Default_Create_a_round_logo_for_a_stock_market_scanner_or_trad_1_a038e6fd-6af3-4085-9199-449cf7811765_0_vsnsbo.png"
+              alt="Logo"
+            />
+          </div>
+        </div>
+
+        {/* Ticker Container Bottom with Loosers and Gainers Tables */}
         <div className="ticker-container-bottom">
-          <div className="square-container">
-            {/* Placeholder for some content */}
-            <h2>Loosers</h2>
-            <table className="table">
-              <thead>
+          {/* Loosers Table */}
+          <h3>Loosers</h3>
+          <table className="table">
+            <thead>
+              <tr className="header">
+                <th>Stock</th>
+                <th>Price</th>
+                <th>Change</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Stock A</td>
+                <td>$100</td>
+                <td>-5%</td>
+              </tr>
+              <tr>
+                <td>Stock B</td>
+                <td>$50</td>
+                <td>-4%</td>
+              </tr>
+            </tbody>
+          </table>
+
+          {/* Gainers Table */}
+          <h3>Gainers</h3>
+          <table className="table">
+            <thead>
+
                 <tr className="header">
-                  <th>Stock</th>
-                  <th>Change</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Stock 1</td>
-                  <td>-2.5%</td>
-                </tr>
-                <tr>
-                  <td>Stock 2</td>
-                  <td>-1.8%</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div className="square-container">
-            {/* Placeholder for some content */}
-            <h2>Gainers</h2>
-            <table className="table">
-              <thead>
-                <tr className="header">
-                  <th>Stock</th>
-                  <th>Change</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Stock 3</td>
-                  <td>+3.5%</td>
-                </tr>
-                <tr>
-                  <td>Stock 4</td>
-                  <td>+4.0%</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                <th>Stock</th>
+                <th>Price</th>
+                <th>Change</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Stock C</td>
+                <td>$120</td>
+                <td>+6%</td>
+              </tr>
+              <tr>
+                <td>Stock D</td>
+                <td>$75</td>
+                <td>+4.5%</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -383,3 +379,4 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
