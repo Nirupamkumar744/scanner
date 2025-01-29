@@ -79,6 +79,7 @@ const stockCategories = {
 };
 
 
+
 const Heatmap = () => {
   const [stocksData, setStocksData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -103,13 +104,22 @@ const Heatmap = () => {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 20000); // Refresh every 60 seconds
+    const interval = setInterval(fetchData, 10000); // Refresh every 60 seconds
     return () => clearInterval(interval);
   }, []);
 
   const getColor = (percentageChange) => {
-    return percentageChange > 0 ? 'green' : percentageChange < 0 ? 'red' : 'yellow';
+    if (percentageChange > 0) {
+      // Darker green for larger positive values, lighter green for smaller positive values
+      return percentageChange > 5 ? '#007A00' : '#76FF7A'; // Dark green for > 5%, light green for smaller positive changes
+    } else if (percentageChange < 0) {
+      // Darker red for larger negative values, lighter red for smaller negative values
+      return percentageChange < -5 ? '#8B0000' : '#C6011F'; // Dark red for < -5%, light red for smaller negative changes
+    } else {
+      return 'yellow'; // Yellow for 0% change
+    }
   };
+  
 
   const calculateBlockSize = (percentageChange, maxMomentum) => {
     // Normalize the block size based on the largest momentum in the sector

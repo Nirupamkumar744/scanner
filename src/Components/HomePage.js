@@ -199,6 +199,65 @@ const HomePage = () => {
           opacity: 1;
         }
       }
+
+      /* Bottom Container for Loosers and Gainers Tables */
+      .ticker-container-bottom {
+        width: 97.5%;
+        background-color: white;
+        margin-top: 20px;
+        padding: 15px;
+        box-shadow: 0 4px 20px rgba(255, 215, 0, 0.5);
+        border-radius: 8px;
+        color: #2e2e2e;
+        border: 2px solid #ffcc00;
+        display: flex;
+        justify-content: space-between; /* Place containers side by side */
+      }
+
+      /* Square Container Styling */
+      .square-container {
+        width: 48%; /* Take up 48% of the width */
+        height: 200px; /* Set fixed height */
+        background-color: #f4f4f4;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #333;
+        font-size: 18px;
+        font-weight: 500;
+      }
+
+      /* Table Styling */
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      .table th, .table td {
+        padding: 10px;
+        text-align: center;
+        border: 1px solid #ddd;
+      }
+
+      .table th {
+        background-color: #f4f4f4;
+      }
+
+      .table tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      .table tr:hover {
+        background-color: #f1f1f1;
+      }
+
+      .table .header {
+        background-color: #ffcc00;
+        color: black;
+      }
     `;
 
     const styleSheet = document.createElement("style");
@@ -243,40 +302,43 @@ const HomePage = () => {
         </div>
         <ul className="nav-links">
           {/* Navigation Links */}
-          <li><a href="/heat"><i className="fa fa-signal"></i>Heatmap</a></li>
-          <li><a href="/marketpulse"><i className="fa fa-chart-line"></i>Crypto/Forex</a></li>
-          <li><a href="/insiderstrategy"><i className="fa fa-cogs"></i>Insider Strategy</a></li> 
-          <li><a href="/tradejournal"><i className="fa fa-book"></i>Trading Journal</a></li>
-          <li><a href="/technical"><i className="fa fa-video"></i>Technial Analysis</a></li>
-          <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
+          <li><a href="/heat"><i className="fa fa-home"></i>Heatmap</a></li>
+          <li><a href="/scanner"><i className="fa fa-chart-line"></i>Trade Scanner</a></li>
+          <li><a href="/portfolio"><i className="fa fa-briefcase"></i>Portfolio</a></li>
+          <li><a href="/trade-journal"><i className="fa fa-book"></i>Trade Journal</a></li>
         </ul>
       </div>
 
-      {/* Content */}
+      {/* Main Content */}
       <div className="content">
-        {/* Ticker Tape */}
         <div className="ticker-container">
           <TickerTape />
         </div>
 
-        {/* Golden Rectangular Container Below Ticker Tape */}
+        {/* Golden Rectangular Container for Ticker */}
         <div className="ticker-container-right">
-          {/* Typing Heading on the Left Side */}
-          <div className={`typing-effect ${animationFinished ? "finished" : ""}`}>
-            Welcome to the Stock Market Dashboard!
-          </div>
-
-          {/* Typing Paragraph Below the Heading */}
-          <div className="typing-effect-paragraph">
-            This is a golden container placed below the ticker tape with a glowing effect.
-          </div>
-
-          {/* Logo Image on the right side */}
           <div className="logo-right">
             <img
-              src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737098769/Default_Create_a_round_logo_for_a_stock_market_scanner_or_trad_1_a038e6fd-6af3-4085-9199-449cf7811765_0_vsnsbo.png"
-              alt="Logo"
+              src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737997674/fluxTraderLogo_yje9un.png"
+              alt="Flux Trader Logo"
             />
+          </div>
+
+          <div className="typing-effect">
+            Flux Trader - Empowering Your Stock Trading Journey
+          </div>
+          <div className="typing-effect-paragraph">
+            Unlock the potential of the stock market with real-time insights, trading strategies, and personalized tools.
+          </div>
+        </div>
+
+        {/* Ticker Container Bottom with Square Containers */}
+        <div className="ticker-container-bottom">
+          <div className="square-container">
+            Square Container 1
+          </div>
+          <div className="square-container">
+            Square Container 2
           </div>
         </div>
       </div>
