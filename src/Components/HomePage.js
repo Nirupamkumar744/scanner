@@ -315,30 +315,66 @@ const HomePage = () => {
           <TickerTape />
         </div>
 
-        {/* Golden Rectangular Container for Ticker */}
-        <div className="ticker-container-right">
-          <div className="logo-right">
-            <img
-              src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737997674/fluxTraderLogo_yje9un.png"
-              alt="Flux Trader Logo"
-            />
+        {/* Dynamic content that appears after the typing animation */}
+        {animationFinished && (
+          <div className="ticker-container-right">
+            <div className="logo-right">
+              <img
+                src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737712480/premium_photo-1676493456341-d36f91c572fc_qtoxtw.jpg"
+                alt="Logo"
+              />
+            </div>
+            <div className="typing-effect">
+              Welcome to Flux! We provide the latest market insights.
+            </div>
           </div>
+        )}
 
-          <div className="typing-effect">
-            Flux Trader - Empowering Your Stock Trading Journey
-          </div>
-          <div className="typing-effect-paragraph">
-            Unlock the potential of the stock market with real-time insights, trading strategies, and personalized tools.
-          </div>
-        </div>
-
-        {/* Ticker Container Bottom with Square Containers */}
+        {/* Ticker Container Bottom */}
         <div className="ticker-container-bottom">
           <div className="square-container">
-            Square Container 1
+            {/* Placeholder for some content */}
+            <h2>Loosers</h2>
+            <table className="table">
+              <thead>
+                <tr className="header">
+                  <th>Stock</th>
+                  <th>Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Stock 1</td>
+                  <td>-2.5%</td>
+                </tr>
+                <tr>
+                  <td>Stock 2</td>
+                  <td>-1.8%</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
           <div className="square-container">
-            Square Container 2
+            {/* Placeholder for some content */}
+            <h2>Gainers</h2>
+            <table className="table">
+              <thead>
+                <tr className="header">
+                  <th>Stock</th>
+                  <th>Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Stock 3</td>
+                  <td>+3.5%</td>
+                </tr>
+                <tr>
+                  <td>Stock 4</td>
+                  <td>+4.0%</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
