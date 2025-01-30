@@ -1,9 +1,6 @@
 import React from "react";
 import { FaHome } from "react-icons/fa"; // Keep only the used icons
-
-
 import TickerTape from '../Widgets/TickerTape'; 
-import Heatmap from '../Widgets/heatmap'; 
 import Crypto from "../Widgets/crypto";
 import Forex from "../Widgets/Forex";
 
@@ -94,11 +91,17 @@ const MarketPulse = () => {
             transform: scale(1.05);
           }
 
-          .content {
-            margin-left: 250px;
-            padding: 20px;
-          }
-
+           .content {
+    margin-left: 250px;
+    padding: 20px;
+    background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1738238118/360_F_293943271_zd4kkAHnnryKiyIdRMAX2McgijQ0mrOb_d18vhh.jpg');
+    background-size: cover; /* Ensure the background covers the entire area */
+    background-position: center; /* Center the background image */
+    background-repeat: no-repeat; /* Prevent the background from repeating */
+    color: white; /* Set text color to white for better contrast */
+    min-height: 100vh; /* Ensure the content area takes at least full viewport height */
+    position: relative; /* Maintain relative positioning */
+}
           .ticker-container {
             position: relative;
             width: 100%;
@@ -173,13 +176,7 @@ const MarketPulse = () => {
           <TickerTape />
         </div>
 
-        {/* Heading for Sensex Heatmap */}
-        <div className="heading">Sensex Heatmap</div>
-
-        <div className="main-container">
-          {/* Render the Heatmap component */}
-          <Heatmap />
-        </div>
+        
 
         <div className="heading">Crypto Heatmap</div>
         <div className="additional-container">

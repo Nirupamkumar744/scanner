@@ -1,44 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FaHome } from "react-icons/fa";
 import TickerTape from "../Widgets/TickerTape"; // Ensure this is the correct path
 
+
 const InsiderBar = () => {
-  const [insiderData, setInsiderData] = useState([]);
+  const [insiderData] = useState([
+    // Sample hardcoded data
+    {
+      stock: "TCS",
+      currentPrice: "3500",
+      chartLink: "https://in.tradingview.com/chart/tioZvgwv/?symbol=NSE%3ATCS",
+      technicalsLink: "https://in.tradingview.com/symbols/NSE-TCS/technicals/",
+    },
+    {
+      stock: "INFY",
+      currentPrice: "1600",
+      chartLink: "https://in.tradingview.com/chart/tioZvgwv/?symbol=NSE%3AINFY",
+      technicalsLink: "https://in.tradingview.com/symbols/NSE-INFY/technicals/",
+    },
+    // Add more static stock data here if needed
+  ]);
+
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Function to fetch data
-  const fetchData = () => {
-    const sheetUrl =
-      "https://sheets.googleapis.com/v4/spreadsheets/12NfyGohJkZdAN-9ZoYDgsjY2rHxyXMtkySKoDhe1XqE/values/Sheet1?key=AIzaSyDPwn94kQkwHk3PosdY1gg184lXM_jGoic";  // Your API key is included here
-
-    fetch(sheetUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        // Extract values and map them into the desired format
-        const rows = data.values.slice(1); // Skip header row
-        const formattedData = rows.map((row) => ({
-          stock: row[1], // Column B for stock
-          currentPrice: row[0], // Column A for current price
-          chartLink: `https://in.tradingview.com/chart/tioZvgwv/?symbol=NSE%3A${row[1]}`, // Updated chart link
-          technicalsLink: `https://in.tradingview.com/symbols/NSE-${row[1]}/technicals/`,
-        }));
-        setInsiderData(formattedData);
-      })
-      .catch((error) => console.error("Error fetching data: ", error));
-  };
-
-  // Fetch data initially and then refresh every 60 seconds
-  useEffect(() => {
-    fetchData(); // Initial fetch
-    const intervalId = setInterval(fetchData, 60000); // Refresh every 60 seconds
-
-    return () => clearInterval(intervalId); // Cleanup interval on component unmount
-  }, []);
-
+  // Handle search input
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
 
+  // Filter the insider data based on the search term
   const filteredData = insiderData.filter((data) =>
     data.stock.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -108,41 +98,7 @@ const InsiderBar = () => {
         </table>
       </div>
 
-      <div className="insider-bar-container">
-        <div className="bullish-insider-bar">
-          <h3>Bullish Insider Bar🐂</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Symbol</th>
-                <th>Current Price</th>
-                <th>Chart</th>
-                <th>Technicals</th>
-              </tr>
-            </thead>
-            <tbody>
-              
-            </tbody>
-          </table>
-        </div>
-
-        <div className="bearish-insider-bar">
-          <h3>Bearish Insider Bar🐻</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Symbol</th>
-                <th>Current Price</th>
-                <th>Chart</th>
-                <th>Technicals</th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* Add any rows for bearish insider data here */}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      
 
       <style jsx>{`
         .insider-bar {
@@ -275,36 +231,7 @@ const InsiderBar = () => {
           background-color: rgb(241, 248, 110);
         }
 
-        .insider-bar-container {
-          display: flex;
-          justify-content: space-between;
-          margin-top: 40px;
-        }
-
-        .bullish-insider-bar,
-        .bearish-insider-bar {
-          background: #2c3e50;
-          color: #f4f4f4;
-          width: 45%;
-          height: 300px;
-          padding: 20px;
-          border-radius: 10px;
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .bullish-insider-bar {
-          background-color: #27ae60;
-        }
-
-        .bearish-insider-bar {
-          background-color: #e74c3c;
-        }
-
-        .bullish-insider-bar h3,
-        .bearish-insider-bar h3 {
-          font-size: 24px;
-          font-weight: bold;
-        }
+        
       `}</style>
     </div>
   );

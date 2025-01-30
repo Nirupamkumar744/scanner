@@ -2,9 +2,75 @@ import React, { useEffect, useState } from "react";
 import TickerTape from "../Widgets/TickerTape";
 
 const HomePage = () => {
-  const [animationFinished, setAnimationFinished] = useState(false);
+  const [gainers, setGainers] = useState(() => {
+    const savedGainers = localStorage.getItem("gainers");
+    return savedGainers ? JSON.parse(savedGainers) : [];
+  });
 
-  // Dynamically inject styles into the head
+  const [losers, setLosers] = useState(() => {
+    const savedLosers = localStorage.getItem("losers");
+    return savedLosers ? JSON.parse(savedLosers) : [];
+  });
+
+  const fetchGainers = async () => {
+    try {
+      const response = await fetch("https://web-production-abe34.up.railway.app/gainers");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log("Gainers data:", data); // Log the fetched data
+      
+      const formattedData = data.map(item => ({
+        stock: item[0].replace('.NS', ''), // Remove .NS from the stock symbol
+        price: item[1].current_price, // Current price from the object
+        change: item[1].percentage_change // Percentage change from the object
+      }));
+      
+      setGainers(formattedData);
+      localStorage.setItem("gainers", JSON.stringify(formattedData)); // Save to local storage
+    } catch (error) {
+      console.error("Error fetching gainers:", error);
+    }
+  };
+
+  const fetchLosers = async () => {
+    try {
+      const response = await fetch("https://web-production-abe34.up.railway.app/losers");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log("Losers data:", data); // Log the fetched data
+      
+      const formattedData = data.map(item => ({
+        stock: item[0].replace('.NS', ''), // Remove .NS from the stock symbol
+        price: item[1].current_price, // Current price from the object
+        change: item[1].percentage_change // Percentage change from the object
+      }));
+      
+      setLosers(formattedData);
+      localStorage.setItem("losers", JSON.stringify(formattedData)); // Save to local storage
+    } catch (error) {
+      console.error("Error fetching losers:", error);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch data initially
+    fetchGainers();
+    fetchLosers();
+
+    // Set up interval to fetch data every 10 seconds
+    const intervalId = setInterval(() => {
+      fetchGainers();
+      fetchLosers();
+    }, 10000); // 10000 milliseconds = 10 seconds
+
+    // Cleanup function to clear the interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
+
   useEffect(() => {
     const styles = `
       /* Importing Google Fonts */
@@ -35,9 +101,8 @@ const HomePage = () => {
         overflow-y: auto;
       }
 
-      /* Sidebar Scrollbar Customization */
       .sidebar::-webkit-scrollbar {
-        width: 8px;
+        width: 4px; /* Set scrollbar width to 4px */
       }
 
       .sidebar::-webkit-scrollbar-thumb {
@@ -49,7 +114,6 @@ const HomePage = () => {
         background-color: #555;
       }
 
-      /* Logo Styling */
       .logo {
         text-align: center;
         margin-bottom: 0;
@@ -61,7 +125,6 @@ const HomePage = () => {
         margin-bottom: 0;
       }
 
-      /* Navigation Links */
       .nav-links {
         list-style: none;
         padding: 0;
@@ -94,11 +157,10 @@ const HomePage = () => {
         transform: scale(1.05);
       }
 
-      /* Content Styles */
       .content {
         margin-left: 250px;
         padding: 20px;
-        background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737711825/premium_photo-1675802520884-45ad9a50c2c9_mj1xun.jpg');
+        background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1738238118/360_F_293943271_zd4kkAHnnryKiyIdRMAX2McgijQ0mrOb_d18vhh.jpg');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -107,7 +169,6 @@ const HomePage = () => {
         position: relative;
       }
 
-      /* Ticker Container Styling */
       .ticker-container {
         position: relative;
         width: 100%;
@@ -116,130 +177,121 @@ const HomePage = () => {
         margin-bottom: 20px;
       }
 
-      /* Golden Rectangular Container Below Ticker Tape */
       .ticker-container-right {
-        width: 97.5%;
-        height: 450px;
-        background: white;
-        box-shadow: 0 4px 20px rgba(255, 215, 0, 0.5);
-        padding: 15px;
-        border-radius: 8px;
-        color: #2e2e2e;
-        margin-top: 20px;
-        border: 2px solid #ffcc00;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        position: relative;
+       width: 97.5%;
+    height: auto; /* Allow height to adjust based on content */
+    background: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1738238118/360_F_293943271_zd4kkAHnnryKiyIdRMAX2McgijQ0mrOb_d18vhh.jpg') no-repeat center center; 
+    background-size: cover; /* Ensure the background covers the entire container */
+    box-shadow: 0 4px 20px rgba(255, 215, 0, 0.5);
+    padding: 15px;
+    border-radius: 8px;
+    color: #2e2e2e;
+    margin-top: 20px;
+    border: 2px solid #ffcc00;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
       }
 
-      /* Logo Image Styling Inside Right Container */
-      .ticker-container-right .logo-right {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        bottom: 15px;
+      .Gainer,
+      .Looser {
+        flex: 1;
+        margin: 0 10px;
+        padding: 20px;
+        background: #f5f5f5;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         display: flex;
-        justify-content: center;
+        flex-direction: column;
         align-items: center;
-      }
-
-      .ticker-container-right .logo-right img {
-        width: 460px;
-        height: 460px;
-        object-fit: contain;
-      }
-
-      /* Typing Animation Styling for Heading */
-      .typing-effect {
-        font-size: 42px;
-        font-weight: 600;
-        color: rgb(0, 7, 70);
-        white-space: nowrap;
-        overflow: hidden;
-        width: 0;
-        animation: typing-heading 4s steps(30) 1s forwards;
-      }
-
-      /* Typing Animation Styling for Paragraph */
-      .typing-effect-paragraph {
-        font-size: 22px;
-        font-weight: 400;
-        color: rgb(0, 7, 70);
-        white-space: nowrap;
-        overflow: hidden;
-        width: 0;
-        animation: typing-paragraph 4s steps(40) 5s forwards, fadeIn 3s 9s forwards;
-      }
-
-      /* Keyframes for Typing animation for Heading */
-      @keyframes typing-heading {
-        from {
-          width: 0;
-        }
-        to {
-          width: 100%;
-        }
-      }
-
-      /* Keyframes for Typing animation for Paragraph */
-      @keyframes typing-paragraph {
-        from {
-          width: 0;
-        }
-        to {
-          width: 100%;
-        }
-      }
-
-      /* Keyframes for Fade-in Effect */
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-
-      /* Bottom Container for Loosers and Gainers Tables */
-      .ticker-container-bottom {
-        width: 97.5%;
-        background-color: white;
-        margin-top: 20px;
-        padding: 15px;
-        box-shadow: 0 4px 20px rgba(255, 215, 0, 0.5);
-        border-radius: 8px;
         color: #2e2e2e;
-        border: 2px solid #ffcc00;
+        font-size: 18px;
+        overflow: hidden; /* Ensure content doesn't overflow */
       }
 
-      /* Table Styling */
+      .table-container {
+        width: 100%;
+        overflow-y: auto; /* Enable vertical scrolling */
+        max-height: 400px; /* Set a max height for the table */
+        scroll-behavior: smooth; /* Enable smooth scrolling */
+      }
+
       .table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 20px;
+        border-radius: 8px;
+        overflow: hidden; /* Ensure rounded corners are visible */
       }
 
-      .table th, .table td {
-        padding: 10px;
-        text-align: center;
-        border: 1px solid #ddd;
+      th, td {
+        padding: 12px 15px; /* Increased padding for better spacing */
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        font-size: 16px;
       }
 
-      .table th {
-        background-color: #f4f4f4;
+      th {
+        background-color:rgb(0, 0, 0);
+        color: #fff;
+        font-weight: bold;
+        position: sticky; /* Make header sticky */
+        top: 0; /* Stick to the top */
+        z-index: 1; /* Ensure it stays above other content */
       }
 
-      .table tr:nth-child(even) {
-        background-color: #f9f9f9;
+      tr:nth-child(even) {
+        background-color:rgb(68, 219, 214);
       }
 
-      .table tr:hover {
+      tr:hover {
         background-color: #f1f1f1;
+        transform: scale(1.02);
+        transition: all 0.3s ease-in-out;
       }
 
-      .table .header {
-        background-color: #ffcc00;
-        color: black;
+      td {
+        color: #333;
+      }
+
+      td.green {
+        color: #28a745;
+      }
+
+      td.red {
+        color: #dc3545;
+      }
+
+      .table-container::-webkit-scrollbar {
+        width: 4px; /* Set scrollbar width to 4px */
+      }
+
+      .table-container::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 4px;
+      }
+
+      .table-container::-webkit-scrollbar-thumb:hover {
+        background-color: #555;
+      }
+
+      .heading {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .gainer-heading {
+        color: #28a745; /* Green color for Gainers heading */
+      }
+
+      .loser-heading {
+        color: #dc3545; /* Red color for Losers heading */
+      }
+
+      .chart-icon {
+        width: 30px; /* Set width for the chart icon */
+        height: 30px; /* Set height for the chart icon */
+        cursor: pointer; /* Change cursor to pointer on hover */
       }
     `;
 
@@ -249,33 +301,12 @@ const HomePage = () => {
     document.head.appendChild(styleSheet);
 
     return () => {
-      document.head.removeChild(styleSheet); // Clean up on component unmount
-    };
-  }, []);
-
-  useEffect(() => {
-    const typingEffect = document.querySelector(".typing-effect");
-
-    const handleAnimationEnd = () => {
-      setAnimationFinished(true); // Set state when animation ends
-    };
-
-    // Add event listener to handle animation end
-    if (typingEffect) {
-      typingEffect.addEventListener("animationend", handleAnimationEnd);
-    }
-
-    // Clean up the event listener
-    return () => {
-      if (typingEffect) {
-        typingEffect.removeEventListener("animationend", handleAnimationEnd);
-      }
+      document.head.removeChild(styleSheet);
     };
   }, []);
 
   return (
     <div>
-      {/* Sidebar */}
       <div className="sidebar">
         <div className="logo">
           <img
@@ -284,94 +315,91 @@ const HomePage = () => {
           />
         </div>
         <ul className="nav-links">
-          {/* Navigation Links */}
           <li><a href="/heat"><i className="fa fa-signal"></i>Heatmap</a></li>
           <li><a href="/marketpulse"><i className="fa fa-chart-line"></i>Crypto/Forex</a></li>
-          <li><a href="/insiderstrategy"><i className="fa fa-cogs"></i>Insider Strategy</a></li> 
+          <li><a href="/insiderstrategy"><i className="fa fa-cogs"></i>Insider Strategy</a></li>
           <li><a href="/tradejournal"><i className="fa fa-book"></i>Trading Journal</a></li>
-          <li><a href="/technical"><i className="fa fa-video"></i>Technial Analysis</a></li>
+          <li><a href="/technical"><i className="fa fa-video"></i>Technical Analysis</a></li>
           <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
         </ul>
       </div>
 
-      {/* Content */}
       <div className="content">
-        {/* Ticker Tape */}
         <div className="ticker-container">
           <TickerTape />
         </div>
 
-        {/* Golden Rectangular Container Below Ticker Tape */}
         <div className="ticker-container-right">
-          {/* Typing Heading on the Left Side */}
-          <div className={`typing-effect ${animationFinished ? "finished" : ""}`}>
-            Welcome to the Stock Market Dashboard!
+          <div className="Gainer">
+            <div className="heading gainer-heading">GAINERS</div>
+            <div className="table-container">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Stock</th>
+                    <th>Price (₹)</th>
+                    <th>Change (%)</th>
+                    <th>Chart</th> {/* New Chart column */}
+                  </tr>
+                </thead>
+                <tbody>
+                  {gainers.map((gainer, index) => (
+                    <tr key={index}>
+                      <td>{gainer.stock}</td>
+                      <td>₹{gainer.price.toFixed(2)}</td>
+                      <td className={gainer.change > 0 ? 'green' : 'red'}>
+                        {gainer.change.toFixed(2)}%
+                      </td>
+                      <td>
+                        <a href={`https://in.tradingview.com/chart/tioZvgwv/?symbol=NSE%3A${gainer.stock.toUpperCase()}`} target="_blank" rel="noopener noreferrer">
+                          <img
+                            src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
+                            alt="Chart"
+                            className="chart-icon"
+                          />
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-
-          {/* Typing Paragraph Below the Heading */}
-          <div className="typing-effect-paragraph">
-            This is a golden container placed below the ticker tape with a glowing effect.
+          <div className="Looser">
+            <div className="heading loser-heading">LOSERS</div>
+            <div className="table-container">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Stock</th>
+                    <th>Price (₹)</th>
+                    <th>Change (%)</th>
+                    <th>Chart</th> {/* New Chart column */}
+                  </tr>
+                </thead>
+                <tbody>
+                  {losers.map((loser, index) => (
+                    <tr key={index}>
+                      <td>{loser.stock}</td>
+                      <td>₹{loser.price.toFixed(2)}</td>
+                      <td className={loser.change < 0 ? 'red' : 'green'}>
+                        {loser.change.toFixed(2)}%
+                      </td>
+                      <td>
+                        <a href={`https://in.tradingview.com/chart/tioZvgwv/?symbol=NSE%3A${loser.stock.toUpperCase()}`} target="_blank" rel ="noopener noreferrer">
+                          <img
+                            src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
+                            alt="Chart"
+                            className="chart-icon"
+                          />
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-
-          {/* Logo Image on the right side */}
-          <div className="logo-right">
-            <img
-              src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737098769/Default_Create_a_round_logo_for_a_stock_market_scanner_or_trad_1_a038e6fd-6af3-4085-9199-449cf7811765_0_vsnsbo.png"
-              alt="Logo"
-            />
-          </div>
-        </div>
-
-        {/* Ticker Container Bottom with Loosers and Gainers Tables */}
-        <div className="ticker-container-bottom">
-          {/* Loosers Table */}
-          <h3>Loosers</h3>
-          <table className="table">
-            <thead>
-              <tr className="header">
-                <th>Stock</th>
-                <th>Price</th>
-                <th>Change</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Stock A</td>
-                <td>$100</td>
-                <td>-5%</td>
-              </tr>
-              <tr>
-                <td>Stock B</td>
-                <td>$50</td>
-                <td>-4%</td>
-              </tr>
-            </tbody>
-          </table>
-
-          {/* Gainers Table */}
-          <h3>Gainers</h3>
-          <table className="table">
-            <thead>
-
-                <tr className="header">
-                <th>Stock</th>
-                <th>Price</th>
-                <th>Change</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Stock C</td>
-                <td>$120</td>
-                <td>+6%</td>
-              </tr>
-              <tr>
-                <td>Stock D</td>
-                <td>$75</td>
-                <td>+4.5%</td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
     </div>
@@ -379,4 +407,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-

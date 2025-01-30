@@ -92,13 +92,14 @@ const styles = `
   .content {
     margin-left: 250px;
     padding: 20px;
-    background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737711825/premium_photo-1675802520884-45ad9a50c2c9_mj1xun.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    color: white;
-    min-height: 100vh;
-  }
+    background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1738238118/360_F_293943271_zd4kkAHnnryKiyIdRMAX2McgijQ0mrOb_d18vhh.jpg');
+    background-size: cover; /* Ensure the background covers the entire area */
+    background-position: center; /* Center the background image */
+    background-repeat: no-repeat; /* Prevent the background from repeating */
+    color: white; /* Set text color to white for better contrast */
+    min-height: 100vh; /* Ensure the content area takes at least full viewport height */
+    position: relative; /* Maintain relative positioning */
+}
 
   .ticker-container {
     position: relative;
