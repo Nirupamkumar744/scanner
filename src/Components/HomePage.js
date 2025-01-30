@@ -57,7 +57,7 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    // Fetch data initially
+    // Fetch data initially when the component mounts
     fetchGainers();
     fetchLosers();
 
@@ -116,7 +116,7 @@ const HomePage = () => {
 
       .logo {
         text-align: center;
-        margin-bottom: 0;
+        margin -bottom: 0;
       }
 
       .logo img {
@@ -178,19 +178,19 @@ const HomePage = () => {
       }
 
       .ticker-container-right {
-       width: 97.5%;
-    height: auto; /* Allow height to adjust based on content */
-    background: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1738238118/360_F_293943271_zd4kkAHnnryKiyIdRMAX2McgijQ0mrOb_d18vhh.jpg') no-repeat center center; 
-    background-size: cover; /* Ensure the background covers the entire container */
-    box-shadow: 0 4px 20px rgba(255, 215, 0, 0.5);
-    padding: 15px;
-    border-radius: 8px;
-    color: #2e2e2e;
-    margin-top: 20px;
-    border: 2px solid #ffcc00;
-    display: flex;
-    justify-content: space-between;
-    position: relative;
+        width: 97.5%;
+        height: auto; /* Allow height to adjust based on content */
+        background: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1738238118/360_F_293943271_zd4kkAHnnryKiyIdRMAX2McgijQ0mrOb_d18vhh.jpg') no-repeat center center; 
+        background-size: cover; /* Ensure the background covers the entire container */
+        box-shadow: 0 4px 20px rgba(255, 215, 0, 0.5);
+        padding: 15px;
+        border-radius: 8px;
+        color: #2e2e2e;
+        margin-top: 20px;
+        border: 2px solid #ffcc00;
+        display: flex;
+        justify-content: space-between;
+        position: relative;
       }
 
       .Gainer,
@@ -231,7 +231,7 @@ const HomePage = () => {
       }
 
       th {
-        background-color:rgb(0, 0, 0);
+        background-color: rgb(0, 0, 0);
         color: #fff;
         font-weight: bold;
         position: sticky; /* Make header sticky */
@@ -240,7 +240,7 @@ const HomePage = () => {
       }
 
       tr:nth-child(even) {
-        background-color:rgb(68, 219, 214);
+        background-color: rgb(68, 219, 214);
       }
 
       tr:hover {
@@ -262,7 +262,7 @@ const HomePage = () => {
       }
 
       .table-container::-webkit-scrollbar {
-        width: 4px; /* Set scrollbar width to 4px */
+        width: 4px; /* Set scrollbar width to4px */
       }
 
       .table-container::-webkit-scrollbar-thumb {
@@ -386,7 +386,7 @@ const HomePage = () => {
                         {loser.change.toFixed(2)}%
                       </td>
                       <td>
-                        <a href={`https://in.tradingview.com/chart/tioZvgwv/?symbol=NSE%3A${loser.stock.toUpperCase()}`} target="_blank" rel ="noopener noreferrer">
+                        <a href={`https://in.tradingview.com/chart/tioZvgwv/?symbol=NSE%3A${loser.stock.toUpperCase()}`} target="_blank" rel="noopener noreferrer">
                           <img
                             src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
                             alt="Chart"
