@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TickerTape from "../Widgets/TickerTape";
 
-const STOCK_API_URL = 'https://web-production-a7ae.up.railway.app/get_stock_data';
+const STOCK_API_URL = 'https://web-production-96a94.up.railway.app/get_stock_data';
 
 const stockCategories = {
   Banks: [
