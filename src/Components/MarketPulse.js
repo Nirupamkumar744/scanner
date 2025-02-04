@@ -175,7 +175,7 @@ const MarketPulse = () => {
         <div className="ticker-container">
           <TickerTape />
         </div>
-
+       
         
 
         <div className="heading">Crypto Heatmap</div>

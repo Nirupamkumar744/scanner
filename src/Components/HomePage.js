@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import TickerTape from "../Widgets/TickerTape";
+import TickerTape from "../Widgets/TickerTape"; // Ensure this component exists
 
 const HomePage = () => {
   const [gainers, setGainers] = useState(() => {
@@ -12,60 +12,68 @@ const HomePage = () => {
     return savedLosers ? JSON.parse(savedLosers) : [];
   });
 
-  const fetchGainers = async () => {
+  const fetchStockData = async () => {
     try {
-      const response = await fetch("https://web-production-abe34.up.railway.app/gainers");
+      const response = await fetch("https://web-production-467e.up.railway.app/stocks");
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log("Gainers data:", data); // Log the fetched data
-      
-      const formattedData = data.map(item => ({
-        stock: item[0].replace('.NS', ''), // Remove .NS from the stock symbol
-        price: item[1].current_price, // Current price from the object
-        change: item[1].percentage_change // Percentage change from the object
-      }));
-      
-      setGainers(formattedData);
-      localStorage.setItem("gainers", JSON.stringify(formattedData)); // Save to local storage
-    } catch (error) {
-      console.error("Error fetching gainers:", error);
-    }
-  };
+      console.log("Fetched Stock Data:", data); // Log the fetched data
 
-  const fetchLosers = async () => {
-    try {
-      const response = await fetch("https://web-production-abe34.up.railway.app/losers");
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      const gainersList = [];
+      const losersList = [];
+
+      // Iterate through the stock data for gainers
+      for (const stock in data.gainers) {
+        const stockData = data.gainers[stock];
+        const formattedStock = {
+          stock: stock.replace('.NS', ''), // Remove .NS from the stock symbol
+          price: stockData.current_price, // Current price from the object
+          change: stockData.percentage_change // Percentage change from the object
+        };
+
+        gainersList.push(formattedStock);
       }
-      const data = await response.json();
-      console.log("Losers data:", data); // Log the fetched data
-      
-      const formattedData = data.map(item => ({
-        stock: item[0].replace('.NS', ''), // Remove .NS from the stock symbol
-        price: item[1].current_price, // Current price from the object
-        change: item[1].percentage_change // Percentage change from the object
-      }));
-      
-      setLosers(formattedData);
-      localStorage.setItem("losers", JSON.stringify(formattedData)); // Save to local storage
+
+      // Iterate through the stock data for losers
+      for (const stock in data.losers) {
+        const stockData = data.losers[stock];
+        const formattedStock = {
+          stock: stock.replace('.NS', ''), // Remove .NS from the stock symbol
+          price: stockData.current_price, // Current price from the object
+          change: stockData.percentage_change // Percentage change from the object
+        };
+
+        losersList.push(formattedStock);
+      }
+
+      console.log("Gainers List:", gainersList); // Log gainers list
+      console.log("Losers List:", losersList); // Log losers list
+
+      // Sort gainers in descending order
+      gainersList.sort((a, b) => b.change - a.change);
+      // Sort losers in ascending order
+      losersList.sort((a, b) => a.change - b.change);
+
+      setGainers(gainersList);
+      setLosers(losersList);
+      localStorage.setItem("gainers", JSON.stringify(gainersList)); // Save to local storage
+      localStorage.setItem("losers", JSON.stringify(losersList)); // Save to local storage
     } catch (error) {
-      console.error("Error fetching losers:", error);
+      console.error("Error fetching stock data:", error);
     }
   };
 
   useEffect(() => {
     // Fetch data initially when the component mounts
-    fetchGainers();
-    fetchLosers();
+    fetchStockData();
 
-    // Set up interval to fetch data every 10 seconds
+    // Set up interval to fetch data every 60 seconds
     const intervalId = setInterval(() => {
-      fetchGainers();
-      fetchLosers();
-    }, 10000); // 10000 milliseconds = 10 seconds
+      console.log("Fetching new data..."); // Log when fetching new data
+      fetchStockData();
+    }, 60000); // 60000 milliseconds = 60 seconds
 
     // Cleanup function to clear the interval on component unmount
     return () => clearInterval(intervalId);
@@ -102,7 +110,7 @@ const HomePage = () => {
       }
 
       .sidebar::-webkit-scrollbar {
-        width: 4px; /* Set scrollbar width to 4px */
+        width : 4px; /* Set scrollbar width to 4px */
       }
 
       .sidebar::-webkit-scrollbar-thumb {
@@ -116,7 +124,7 @@ const HomePage = () => {
 
       .logo {
         text-align: center;
-        margin -bottom: 0;
+        margin-bottom: 0;
       }
 
       .logo img {
@@ -262,7 +270,7 @@ const HomePage = () => {
       }
 
       .table-container::-webkit-scrollbar {
-        width: 4px; /* Set scrollbar width to4px */
+        width: 4px; /* Set scrollbar width to 4px */
       }
 
       .table-container::-webkit-scrollbar-thumb {
@@ -309,10 +317,7 @@ const HomePage = () => {
     <div>
       <div className="sidebar">
         <div className="logo">
-          <img
-            src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737098769/Default_Create_a_round_logo_for_a_stock_market_scanner_or_trad_1_a038e6fd-6af3-4085-9199-449cf7811765_0_vsnsbo.png"
-            alt="Logo"
-          />
+          <img src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737098769/Default_Create_a_round_logo_for_a_stock_market_scanner_or_trad_1_a038e6fd-6af3-4085-9199-449cf7811765_0_vsnsbo.png" alt="Logo" />
         </div>
         <ul className="nav-links">
           <li><a href="/heat"><i className="fa fa-signal"></i>Heatmap</a></li>
@@ -323,15 +328,13 @@ const HomePage = () => {
           <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
         </ul>
       </div>
-
       <div className="content">
         <div className="ticker-container">
-          <TickerTape />
+          <TickerTape gainers={gainers} losers={losers} />
         </div>
-
         <div className="ticker-container-right">
           <div className="Gainer">
-            <div className="heading gainer-heading">GAINERS</div>
+            <h2 className="heading gainer-heading">Top Gainers</h2>
             <div className="table-container">
               <table className="table">
                 <thead>
@@ -339,7 +342,7 @@ const HomePage = () => {
                     <th>Stock</th>
                     <th>Price (₹)</th>
                     <th>Change (%)</th>
-                    <th>Chart</th> {/* New Chart column */}
+                    <th>Chart</th> {/* Added Chart column */}
                   </tr>
                 </thead>
                 <tbody>
@@ -366,7 +369,7 @@ const HomePage = () => {
             </div>
           </div>
           <div className="Looser">
-            <div className="heading loser-heading">LOSERS</div>
+            <h2 className="heading loser-heading">Top Losers</h2>
             <div className="table-container">
               <table className="table">
                 <thead>
@@ -374,7 +377,7 @@ const HomePage = () => {
                     <th>Stock</th>
                     <th>Price (₹)</th>
                     <th>Change (%)</th>
-                    <th>Chart</th> {/* New Chart column */}
+                    <th>Chart</th> {/* Added Chart column */}
                   </tr>
                 </thead>
                 <tbody>

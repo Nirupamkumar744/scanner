@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import TickerTape from "../Widgets/TickerTape";
 
-const STOCK_API_URL = 'https://web-production-a7ae.up.railway.app/get_stock_data';
+const STOCK_API_URL = "https://web-production-96a94.up.railway.app/get_stock_data";
 
+// Complete stock categories with all symbols
 const stockCategories = {
   Banks: [
     "AXISBANK.NS", "AUBANK.NS", "BANDHANBNK.NS", "BANKBARODA.NS", "BANKINDIA.NS", "CANBK.NS", 
@@ -12,7 +13,7 @@ const stockCategories = {
   ],
   NBFCs: [
     "ABCAPITAL.NS", "ANGELONE.NS", "BAJFINANCE.NS", "BAJAJFINSV.NS", "CANFINHOME.NS", "CHOLAFIN.NS", 
-    "HDFCAMC.NS", "HDFCLIFE.NS", "ICICIGI.NS", "ICICIPRULI.NS", "LICIHSGFIN.NS", "M&MFIN.NS", 
+    "HDFCAMC.NS", "HDFCLIFE.NS", "ICICIGI.NS", "ICICIPRULI.NS", "M&MFIN.NS", 
     "MANAPPURAM.NS", "MUTHOOTFIN.NS", "PEL.NS", "PFC.NS", "POONAWALLA.NS", "RECLTD.NS", "SBICARD.NS", 
     "SBILIFE.NS", "SHRIRAMFIN.NS"
   ],
@@ -44,7 +45,7 @@ const stockCategories = {
   ],
   ConsumerGoods: [
     "ASIANPAINT.NS", "BERGEPAINT.NS", "BRITANNIA.NS", "COLPAL.NS", "DABUR.NS", "GODREJCP.NS", 
-    "HINDUNILVR.NS", "ITC.NS", "MARICO.NS", "NESTLEIND.NS", "TATACONSUM.NS", "UBL.NS", "UNITEDSPR.NS", 
+    "HINDUNILVR.NS", "ITC.NS", "MARICO.NS", "NESTLEIND.NS", "TATACONSUM.NS", "UBL.NS", 
     "VOLTAS.NS"
   ],
   Pharmaceuticals: [
@@ -67,7 +68,7 @@ const stockCategories = {
     "CONCOR.NS", "CESC.NS", "HUDCO.NS", "IRFC.NS"
   ],
   InfrastructureAndEngineering: [
-    "ABBOTINDIA.NS", "BEL.NS", "CGPOWER.NS", "CUMMINSIND.NS", "HAL.NS", "L&T.NS", "SIEMENS.NS", "TIINDIA.NS"
+    "ABBOTINDIA.NS", "BEL.NS", "CGPOWER.NS", "CUMMINSIND.NS", "HAL.NS", "SIEMENS.NS", "TIINDIA.NS"
   ],
   Fertilizers: [
     "CHAMBLFERT.NS", "COROMANDEL.NS", "GNFC.NS", "PIIND.NS"
@@ -78,25 +79,26 @@ const stockCategories = {
   ]
 };
 
-
-
 const Heatmap = () => {
   const [stocksData, setStocksData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState("");
 
   const fetchData = async () => {
     try {
       const response = await axios.get(STOCK_API_URL);
-      if (response.status === 200) {
-        const stockData = response.data.data;
-        setStocksData(stockData);
+      if (response.status === 200 && response.data.stocks) {
+        console.log("Fetched data:", response.data.stocks); // Debugging
+        setStocksData(response.data.stocks);
+        setLastUpdated(response.data.last_updated);
         setError(null);
       } else {
-        throw new Error('Failed to fetch data');
+        throw new Error("Invalid API response");
       }
     } catch (error) {
-      setError('Error: Unable to fetch data.');
+      console.error("Error fetching stock data:", error);
+      setError("Error: Unable to fetch data.");
     } finally {
       setLoading(false);
     }
@@ -104,187 +106,69 @@ const Heatmap = () => {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 10000); // Refresh every 60 seconds
+    const interval = setInterval(fetchData, 10000); // Refresh every 10 seconds
     return () => clearInterval(interval);
   }, []);
 
   const getColor = (percentageChange) => {
-    if (percentageChange > 0) {
-      // Darker green for larger positive values, lighter green for smaller positive values
-      return percentageChange > 5 ? '#007A00' : '#76FF7A'; // Dark green for > 5%, light green for smaller positive changes
-    } else if (percentageChange < 0) {
-      // Darker red for larger negative values, lighter red for smaller negative values
-      return percentageChange < -5 ? '#8B0000' : '#C6011F'; // Dark red for < -5%, light red for smaller negative changes
-    } else {
-      return 'yellow'; // Yellow for 0% change
-    }
-  };
-  
-
-  const calculateBlockSize = (percentageChange, maxMomentum) => {
-    // Normalize the block size based on the largest momentum in the sector
-    const absoluteChange = Math.abs(percentageChange); 
-    return (absoluteChange / maxMomentum) * 100;  // Proportional scaling based on max momentum
+    if (percentageChange > 5) return "#007A00";  // Dark green for >5% increase
+    if (percentageChange > 0) return "#76FF7A";  // Light green for small increase
+    if (percentageChange < -5) return "#8B0000"; // Dark red for >5% drop
+    if (percentageChange < 0) return "#C6011F";  // Light red for small drop
+    return "#ccc"; // Neutral color for no change
   };
 
-  
+  const StockBlock = ({ symbol, price, change, color }) => (
+    <div style={{
+      backgroundColor: color,
+      padding: "10px",
+      margin: "5px",
+      borderRadius: "5px",
+      textAlign: "center",
+      width: "120px",
+      height: "120px",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+    }}>
+      <strong>{symbol}</strong>
+      <p>₹{price.toFixed(2)}</p>
+      <p>{change.toFixed(2)}%</p>
+    </div>
+  );
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+  if (!stocksData || Object.keys(stocksData).length === 0) return <div>No stock data available.</div>;
 
   return (
-    <div className="heatmap-wrapper">
+    <div>
       <TickerTape />
-      <div className="heatmap-container">
-        {loading ? (
-          <p>Loading...</p>
-        ) : error ? (
-          <p style={{ color: 'red' }}>{error}</p>
-        ) : (
-          <div className="grid-container">
-            {Object.keys(stockCategories)
-              .map((category) => {
-                const categoryStocks = stockCategories[category];
-                const categoryData = categoryStocks
-                  .map((symbol) => ({
-                    symbol,
-                    percentageChange: stocksData[symbol]?.percentage_change ?? null,
-                  }))
-                  .filter((stock) => stock.percentageChange !== null);
-
-                const maxMomentum = Math.max(...categoryData.map(stock => Math.abs(stock.percentageChange)));
-
-                return {
-                  category,
-                  categoryData,
-                  maxMomentum,
-                };
-              })
-              .map((categoryObj, index) => {
-                const { category, categoryData, maxMomentum } = categoryObj;
-
-                // Sorting the data within the sector by momentum
-                const sortedCategoryData = categoryData.sort((a, b) => {
-                  return Math.abs(b.percentageChange) - Math.abs(a.percentageChange);
-                });
-
-                return (
-                  <div
-                    key={index}
-                    className="category-container"
-                    style={{
-                      backgroundColor: '#28282B',
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                    }}
-                  >
-                    <div className="category-header">
-                      <h3>{category}</h3>
-                    </div>
-                    <div className="category-grid">
-                      {sortedCategoryData.map((stock, i) => {
-                        const blockSize = calculateBlockSize(stock.percentageChange, maxMomentum);
-                        return (
-                          <div
-                            key={i}
-                            className="stock-block"
-                            style={{
-                              backgroundColor: getColor(stock.percentageChange),
-                              flexGrow: blockSize,
-                              height: `${blockSize}px`,
-                              transition: 'all 0.3s ease-in-out',
-                              margin: '1px',
-                              minWidth: '80px', 
-                              minHeight: '50px', 
-                              display: 'flex',
-                              flexDirection: 'column',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                              textAlign: 'center',
-                              padding: '5px',
-                              borderRadius: '5px',
-                            }}
-                          >
-                            <p>{stock.symbol}</p>
-                            <p>{stock.percentageChange.toFixed(2)}%</p>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
+      <h2>Stock Heatmap</h2>
+      <p style={{ fontSize: "14px", color: "#999" }}>Last Updated: {lastUpdated}</p>
+      {Object.entries(stockCategories).map(([category, stocks]) => (
+        <div key={category} style={{ marginBottom: "20px" }}>
+          <h3>{category}</h3>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", justifyContent: "center" }}>
+            {stocks.map(symbol => (
+              stocksData[symbol] ? (
+                <StockBlock
+                  key={symbol}
+                  symbol={symbol}
+                  price={stocksData[symbol].current_price}
+                  change={stocksData[symbol].percentage_change}
+                  color={getColor(stocksData[symbol].percentage_change)}
+                />
+              ) : (
+                <div key={symbol} style={{ width: "120px", height: "120px", textAlign: "center", padding: "10px", margin: "5px", borderRadius: "5px", backgroundColor: "#ddd", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                  No Data
+                </div>
+              )
+            ))}
           </div>
-        )}
-      </div>
-
-      <style jsx>{`
-  .heatmap-wrapper {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 99%;
-    background-color: #111;
-    padding: 20px;
-    background-color: #301934;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-  }
-
-  .heatmap-container {
-    width: 100%;
-    height: 100%;
-    margin: 0 auto;
-    padding: 20px;
-    box-sizing: border-box;
-  }
-
-  .grid-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-
-  .category-container {
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 10px;
-    padding: 10px;
-  }
-
-  .category-header h3 {
-    color: white;
-    margin: 0 0 10px 0;
-  }
-
-  .category-grid {
-    display: flex;
-    gap: 2px;
-    flex-wrap: wrap;
-  }
-
-  .stock-block {
-    flex: 1 1 auto;
-    background: gray;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: white;
-    padding: 5px;
-    transition: transform 0.3s ease-in-out; /* Smooth transition */
-  }
-
-  .stock-block:hover {
-    transform: scale(1.2); /* Zoom effect on hover */
-    z-index: 1; /* Bring the hovered block to the front */
-  }
-
-  .stock-block p {
-    margin: 0;
-    font-size: 12px;
-    color: black;
-  }
-`}</style>
+        </div>
+      ))}
     </div>
   );
 };
