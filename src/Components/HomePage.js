@@ -15,7 +15,7 @@ const HomePage = () => {
   const fetchStockData = async () => {
     try {
       const response = await fetch("https://web-production-467e.up.railway.app/stocks");
-      if (!response.ok) {
+      if (!response.ok) { 
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
