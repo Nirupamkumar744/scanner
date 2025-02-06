@@ -15,7 +15,7 @@ const HomePage = () => {
   const fetchStockData = async () => {
     try {
       const response = await fetch("https://web-production-467e.up.railway.app/stocks");
-      if (!response.ok) { 
+      if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
@@ -110,7 +110,7 @@ const HomePage = () => {
       }
 
       .sidebar::-webkit-scrollbar {
-        width : 4px; /* Set scrollbar width to 4px */
+        width: 4px; /* Set scrollbar width to 4px */
       }
 
       .sidebar::-webkit-scrollbar-thumb {
@@ -252,7 +252,7 @@ const HomePage = () => {
       }
 
       tr:hover {
-        background-color: #f1f1f1;
+ background-color: #f1f1f1;
         transform: scale(1.02);
         transition: all 0.3s ease-in-out;
       }
@@ -372,8 +372,7 @@ const HomePage = () => {
             <h2 className="heading loser-heading">Top Losers</h2>
             <div className="table-container">
               <table className="table">
-                <thead>
-                  <tr>
+                <thead <tr>
                     <th>Stock</th>
                     <th>Price (₹)</th>
                     <th>Change (%)</th>
