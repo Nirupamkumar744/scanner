@@ -368,40 +368,41 @@ const HomePage = () => {
               </table>
             </div>
           </div>
-          <div className="Looser">
-            <h2 className="heading loser-heading">Top Losers</h2>
-            <div className="table-container">
-              <table className="table">
-                <thead <tr>
-                    <th>Stock</th>
-                    <th>Price (₹)</th>
-                    <th>Change (%)</th>
-                    <th>Chart</th> {/* Added Chart column */}
-                  </tr>
-                </thead>
-                <tbody>
-                  {losers.map((loser, index) => (
-                    <tr key={index}>
-                      <td>{loser.stock}</td>
-                      <td>₹{loser.price.toFixed(2)}</td>
-                      <td className={loser.change < 0 ? 'red' : 'green'}>
-                        {loser.change.toFixed(2)}%
-                      </td>
-                      <td>
-                        <a href={`https://in.tradingview.com/chart/tioZvgwv/?symbol=NSE%3A${loser.stock.toUpperCase()}`} target="_blank" rel="noopener noreferrer">
-                          <img
-                            src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
-                            alt="Chart"
-                            className="chart-icon"
-                          />
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+         <div className="Looser">
+  <h2 className="heading loser-heading">Top Losers</h2>
+  <div className="table-container">
+    <table className="table">
+      <thead>
+        <tr> {/* Corrected this line */}
+          <th>Stock</th>
+          <th>Price (₹)</th>
+          <th>Change (%)</th>
+          <th>Chart</th> {/* Added Chart column */}
+        </tr>
+      </thead>
+      <tbody>
+        {losers.map((loser, index) => (
+          <tr key={index}>
+            <td>{loser.stock}</td>
+            <td>₹{loser.price.toFixed(2)}</td>
+            <td className={loser.change < 0 ? 'red' : 'green'}>
+              {loser.change.toFixed(2)}%
+            </td>
+            <td>
+              <a href={`https://in.tradingview.com/chart/tioZvgwv/?symbol=NSE%3A${loser.stock.toUpperCase()}`} target="_blank" rel="noopener noreferrer">
+                <img
+                  src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
+                  alt="Chart"
+                  className="chart-icon"
+                />
+              </a>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
         </div>
       </div>
     </div>
