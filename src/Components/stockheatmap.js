@@ -4,7 +4,7 @@ import TickerTape from "../Widgets/TickerTape";
 
 
 
-const STOCK_API_URL = 'https://web-production-467e.up.railway.app/stocks';
+const STOCK_API_URL = 'https://lngra-production.up.railway.app/api/stocks';
 
 // Complete stock categories with all symbols
 const stockCategories = {

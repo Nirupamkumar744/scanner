@@ -16,8 +16,12 @@ const HomePage = () => {
 
   const fetchStockData = async () => {
     try {
-      const response = await fetch("https://web-production-467e.up.railway.app/stocks");
-      if (!response.ok) { 
+
+      const response = await fetch("https://lngra-production.up.railway.app/api/stocks");
+
+    
+
+      if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
@@ -248,11 +252,19 @@ tr:nth-child(even) {
     background-color: rgb(68, 219, 214);
 }
 
+<<<<<<< HEAD
+tr:hover {
+    background-color: #f1f1f1;
+    transform: scale(1.02);
+    transition: all 0.3s ease-in-out;
+}
+=======
       tr:hover {
-        background-color: #f1f1f1;
+ background-color: #f1f1f1;
         transform: scale(1.02);
         transition: all 0.3s ease-in-out;
       }
+>>>>>>> 791f9c2107f192a11d43c0b5c63ca3251f7644f2
 
 td {
     color: #333;
