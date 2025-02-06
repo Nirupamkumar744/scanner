@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import TickerTape from "../Widgets/TickerTape";
-
-
+import TickerTape from "../Widgets/TickerTape"; // Ensure this component exists
 
 const STOCK_API_URL = 'https://lngra-production.up.railway.app/api/stocks';
 
@@ -46,34 +44,13 @@ const stockCategories = {
     "ABFRL.NS", "DMART.NS", "NYKAA.NS", "PAGEIND.NS", "PAYTM.NS", "TRENT.NS", "VBL.NS", "ZOMATO.NS"
   ],
   ConsumerGoods: [
-    "ASIANPAINT.NS", "BERGEPAINT.NS", "BRITANNIA.NS", "COLPAL.NS", "DABUR.NS", "GODREJCP.NS", 
-    "HINDUNILVR.NS", "ITC.NS", "MARICO.NS", "NESTLEIND.NS", "TATACONSUM.NS", "UBL.NS", 
-    "VOLTAS.NS"
+    "ASIANPAINT.NS", "BERGEPAINT.NS", "BRITANNIA.NS", "COLPAL.NS", "DAB UR.NS", "HINDUNILVR.NS", "ITC.NS", "NESTLEIND.NS", "P&GHEALTH.NS", "TATAMOTORS.NS"
   ],
   Pharmaceuticals: [
-    "ALKEM.NS", "APLLTD.NS", "AUROPHARMA.NS", "BIOCON.NS", "CIPLA.NS", "DIVISLAB.NS", "DRREDDY.NS", 
-    "GLENMARK.NS", "GRANULES.NS", "LAURUSLABS.NS", "LUPIN.NS", "SUNPHARMA.NS", "SYNGENE.NS", "TORNTPHARM.NS"
+    "ABBOTTINDIA.NS", "CIPLA.NS", "DRREDDY.NS", "LUPIN.NS", "SUNPHARMA.NS", "WOCKPHARMA.NS"
   ],
-  HealthcareProvidersAndServices: [
-    "APOLLOHOSP.NS", "LALPATHLAB.NS", "MAXHEALTH.NS", "METROPOLIS.NS"
-  ],
-  TelecomProviders: [
-    "BHARTIARTL.NS", "HFCL.NS", "IDEA.NS", "INDUSTOWER.NS"
-  ],
-  RealEstateDevelopment: [
-    "DLF.NS", "GODREJPROP.NS", "LODHA.NS", "OBEROIRLTY.NS", "PRESTIGE.NS"
-  ],
-  GasAndWaterUtilities: [
-    "GUJGASLTD.NS", "IGL.NS", "MGL.NS"
-  ],
-  OtherUtilities: [
-    "CONCOR.NS", "CESC.NS", "HUDCO.NS", "IRFC.NS"
-  ],
-  InfrastructureAndEngineering: [
-    "ABBOTINDIA.NS", "BEL.NS", "CGPOWER.NS", "CUMMINSIND.NS", "HAL.NS", "SIEMENS.NS", "TIINDIA.NS"
-  ],
-  Fertilizers: [
-    "CHAMBLFERT.NS", "COROMANDEL.NS", "GNFC.NS", "PIIND.NS"
+  Telecom: [
+    "BHARTIARTL.NS", "RELIANCE.NS", "VODAFONEIDEA.NS"
   ],
   OtherStocks: [
     "BSE.NS", "DELHIVERY.NS", "GMRAIRPORT.NS", "IRCTC.NS", "KEI.NS", "NAVINFLUOR.NS", "POLYCAB.NS", 
@@ -92,8 +69,15 @@ const Heatmap = () => {
       const response = await axios.get(STOCK_API_URL);
       if (response.status === 200 && response.data.stocks) {
         console.log("Fetched data:", response.data.stocks); // Debugging
-        setStocksData(response.data.stocks);
-        setLastUpdated(response.data.last_updated);
+        const formattedStocks = response.data.stocks.reduce((acc, stock) => {
+          acc[stock.symbol] = {
+            current_price: stock.currentPrice,
+            percentage_change: stock.percentageChange
+          };
+          return acc;
+        }, {});
+        setStocksData(formattedStocks);
+        setLastUpdated(new Date().toLocaleString()); // Update last updated time
         setError(null);
       } else {
         throw new Error("Invalid API response");
@@ -150,24 +134,22 @@ const Heatmap = () => {
       <h2>Stock Heatmap</h2>
       <p style={{ fontSize: "14px", color: "#999" }}>Last Updated: {lastUpdated}</p>
       {Object.entries(stockCategories).map(([category, stocks]) => (
-        <div key={category} style={{ marginBottom: "20px" }}>
+        <div key={category}>
           <h3>{category}</h3>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", justifyContent: "center" }}>
-            {stocks.map(symbol => (
-              stocksData[symbol] ? (
+          <div style={{ display: "flex", flexWrap: "wrap" }}>
+            {stocks.map((symbol) => {
+              const stock = stocksData[symbol];
+              const color = stock ? getColor(stock.percentage_change) : "#ccc";
+              return (
                 <StockBlock
                   key={symbol}
                   symbol={symbol}
-                  price={stocksData[symbol].current_price}
-                  change={stocksData[symbol].percentage_change}
-                  color={getColor(stocksData[symbol].percentage_change)}
+                  price={stock ? stock.current_price : 0}
+                  change={stock ? stock.percentage_change : 0}
+                  color={color}
                 />
-              ) : (
-                <div key={symbol} style={{ width: "120px", height: "120px", textAlign: "center", padding: "10px", margin: "5px", borderRadius: "5px", backgroundColor: "#ddd", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                  No Data
-                </div>
-              )
-            ))}
+              );
+            })}
           </div>
         </div>
       ))}
