@@ -12,10 +12,12 @@ const HomePage = () => {
     return savedLosers ? JSON.parse(savedLosers) : [];
   });
 
+  const [error, setError] = useState(null); // State to handle errors
+
   const fetchStockData = async () => {
     try {
-      const response = await fetch("https://web-production-467e.up.railway.app/stocks");
-      if (!response.ok) { 
+      const response = await fetch("https://lngra-production.up.railway.app/api/stocks");
+      if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
@@ -24,29 +26,21 @@ const HomePage = () => {
       const gainersList = [];
       const losersList = [];
 
-      // Iterate through the stock data for gainers
-      for (const stock in data.gainers) {
-        const stockData = data.gainers[stock];
+      // Iterate through the stock data
+      data.stocks.forEach(stock => {
         const formattedStock = {
-          stock: stock.replace('.NS', ''), // Remove .NS from the stock symbol
-          price: stockData.current_price, // Current price from the object
-          change: stockData.percentage_change // Percentage change from the object
+          stock: stock.symbol.replace('.NS', ''), // Remove .NS from the stock symbol
+          price: stock.currentPrice, // Current price from the object
+          change: stock.percentageChange // Percentage change from the object
         };
 
-        gainersList.push(formattedStock);
-      }
-
-      // Iterate through the stock data for losers
-      for (const stock in data.losers) {
-        const stockData = data.losers[stock];
-        const formattedStock = {
-          stock: stock.replace('.NS', ''), // Remove .NS from the stock symbol
-          price: stockData.current_price, // Current price from the object
-          change: stockData.percentage_change // Percentage change from the object
-        };
-
-        losersList.push(formattedStock);
-      }
+        // Classify stocks into gainers and losers
+        if (stock.percentageChange > 0) {
+          gainersList.push(formattedStock);
+        } else {
+          losersList.push(formattedStock);
+        }
+      });
 
       console.log("Gainers List:", gainersList); // Log gainers list
       console.log("Losers List:", losersList); // Log losers list
@@ -62,6 +56,7 @@ const HomePage = () => {
       localStorage.setItem("losers", JSON.stringify(losersList)); // Save to local storage
     } catch (error) {
       console.error("Error fetching stock data:", error);
+      setError("Failed to fetch stock data. Please try again later."); // Set error message
     }
   };
 
@@ -95,7 +90,7 @@ const HomePage = () => {
       /* Sidebar Styles */
       .sidebar {
         width: 250px;
-        height: 100vh;
+ height: 100vh;
         background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099004/Flux_Dev_Create_a_tall_rectangular_banner_background_with_an_u_1_oyb158.jpg');
         background-size: cover;
         background-position: center;
@@ -110,7 +105,7 @@ const HomePage = () => {
       }
 
       .sidebar::-webkit-scrollbar {
-        width : 4px; /* Set scrollbar width to 4px */
+        width: 4px; /* Set scrollbar width to 4px */
       }
 
       .sidebar::-webkit-scrollbar-thumb {
@@ -225,41 +220,43 @@ const HomePage = () => {
       }
 
       .table {
-        width: 100%;
-        border-collapse: collapse;
-        border-radius: 8px;
-        overflow: hidden; /* Ensure rounded corners are visible */
-      }
+    width: 100%;
+    border-collapse: collapse; /* Ensure borders are collapsed */
+    border-radius: 8px;
+    overflow: hidden; /* Ensure rounded corners are visible */
+    box-sizing: border-box; /* Include padding and border in width/height */
+}
 
-      th, td {
-        padding: 12px 15px; /* Increased padding for better spacing */
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-        font-size: 16px;
-      }
+th, td {
+    padding: 12px 15px; /* Consistent padding */
+    text-align: left; /* Align text to the left */
+    border-bottom: 1px solid #ddd; /* Bottom border for rows */
+    font-size: 16px;
+    box-sizing: border-box; /* Include padding and border in width/height */
+}
 
-      th {
-        background-color: rgb(0, 0, 0);
-        color: #fff;
-        font-weight: bold;
-        position: sticky; /* Make header sticky */
-        top: 0; /* Stick to the top */
-        z-index: 1; /* Ensure it stays above other content */
-      }
+th {
+    background-color: rgb(0, 0, 0);
+    color: #fff;
+    font-weight: bold;
+    position: sticky; /* Make header sticky */
+    top: 0; /* Stick to the top */
+    z-index: 1; /* Ensure it stays above other content */
+}
 
-      tr:nth-child(even) {
-        background-color: rgb(68, 219, 214);
-      }
+tr:nth-child(even) {
+    background-color: rgb(68, 219, 214);
+}
 
-      tr:hover {
-        background-color: #f1f1f1;
-        transform: scale(1.02);
-        transition: all 0.3s ease-in-out;
-      }
+tr:hover {
+    background-color: #f1f1f1;
+    transform: scale(1.02);
+    transition: all 0.3s ease-in-out;
+}
 
-      td {
-        color: #333;
-      }
+td {
+    color: #333;
+}
 
       td.green {
         color: #28a745;
@@ -285,7 +282,7 @@ const HomePage = () => {
       .heading {
         font-size: 24px;
         font-weight: bold;
-        margin-bottom: 10px;
+        margin-bottom: 10px; /* Fixed margin */
       }
 
       .gainer-heading {
@@ -311,7 +308,7 @@ const HomePage = () => {
     return () => {
       document.head.removeChild(styleSheet);
     };
-  }, []);
+  }, []); // Run only once on mount
 
   return (
     <div>
@@ -329,6 +326,7 @@ const HomePage = () => {
         </ul>
       </div>
       <div className="content">
+        {error && <div className="error-message">{error}</div>} {/* Display error message if exists */}
         <div className="ticker-container">
           <TickerTape gainers={gainers} losers={losers} />
         </div>
