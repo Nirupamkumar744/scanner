@@ -1,45 +1,63 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaHome } from "react-icons/fa";
 import TickerTape from "../Widgets/TickerTape"; // Ensure this is the correct path
 
-
 const InsiderBar = () => {
-  const [insiderData] = useState([
-    // Sample hardcoded data
-    {
-      stock: "TCS",
-      currentPrice: "3500",
-      chartLink: "https://in.tradingview.com/chart/tioZvgwv/?symbol=NSE%3ATCS",
-      technicalsLink: "https://in.tradingview.com/symbols/NSE-TCS/technicals/",
-    },
-    {
-      stock: "INFY",
-      currentPrice: "1600",
-      chartLink: "https://in.tradingview.com/chart/tioZvgwv/?symbol=NSE%3AINFY",
-      technicalsLink: "https://in.tradingview.com/symbols/NSE-INFY/technicals/",
-    },
-    // Add more static stock data here if needed
-  ]);
-
+  const [insiderData, setInsiderData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Handle search input
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("https://insiderbartradingg-production.up.railway.app/run-manual");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+
+        // Filter stocks with insideBar: true
+        const filteredData = Object.entries(data)
+          .filter(([key, value]) => value.insideBar)
+          .map(([key, value]) => {
+            const stockSymbol = key.replace('.NS', ''); // Remove .NS from the stock symbol
+            return {
+              stock: stockSymbol,
+              currentPrice: value.motherCandle.high, // Assuming you want to show the high of the mother candle as the current price
+              chartLink: `https://in.tradingview.com/chart/?symbol=${stockSymbol}`, // Use stockSymbol without .NS
+              technicalsLink: `https://in.tradingview.com/symbols/${stockSymbol}/technicals/`, // Use stockSymbol without .NS
+            };
+          });
+
+        setInsiderData(filteredData);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  // Filter the insider data based on the search term
   const filteredData = insiderData.filter((data) =>
     data.stock.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Function to scroll to the stock symbol
   const scrollToSymbol = (symbol) => {
     const element = document.getElementById(symbol);
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   };
+
+  if (loading) return <div className="loading">Loading...</div>;
+  if (error) return <div className="error">Error: {error.message}</div>;
 
   return (
     <div className="insider-bar">
@@ -71,14 +89,14 @@ const InsiderBar = () => {
             {filteredData.map((data, index) => (
               <tr key={index} id={data.stock} onClick={() => scrollToSymbol(data.stock)}>
                 <td>{data.stock}</td>
-                <td>{data.currentPrice}</td>
+                <td>{data.currentPrice.toFixed(2)}</td>
                 <td>
                   <a href={data.chartLink} target="_blank" rel="noopener noreferrer">
                     <img
                       src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
                       alt="Chart Icon"
                       width="25"
-                      style={{ cursor: "pointer", margin: "0 auto" }}
+                      className="icon"
                     />
                   </a>
                 </td>
@@ -88,7 +106,7 @@ const InsiderBar = () => {
                       src="https://img.icons8.com/ios/452/settings.png"
                       alt="Technical Icon"
                       width="25"
-                      style={{ cursor: "pointer", margin: "0 auto" }}
+                      className="icon"
                     />
                   </a>
                 </td>
@@ -97,8 +115,6 @@ const InsiderBar = () => {
           </tbody>
         </table>
       </div>
-
-      
 
       <style jsx>{`
         .insider-bar {
@@ -138,6 +154,12 @@ const InsiderBar = () => {
           background: #333;
           color: white;
           width: 250px;
+          transition: border-color 0.3s;
+        }
+
+        .search-box:focus {
+          border-color: #1abc9c;
+          outline: none;
         }
 
         .table-container {
@@ -152,42 +174,38 @@ const InsiderBar = () => {
         table {
           width: 100%;
           border-collapse: collapse;
-          background: #1c1c1c;
+          background: #fff; /* Table background color */
         }
 
         th,
         td {
           padding: 12px;
           text-align: center;
-          border: 1px solid #444;
-          color: Black;
+          border: 1px solid #ddd; /* Light border color */
+          color: black; /* Font color */
         }
 
         th {
-          background: #2c3e50;
+          background: #f2f2f2; /* Header background color */
           font-weight: bold;
           height: 50px;
         }
 
         tbody tr:nth-child(even) {
-          background-color: rgb(110, 244, 251);
+          background-color: rgba(144, 238, 144, 0.5); /* Light green for even rows */
         }
 
         tbody tr:nth-child(odd) {
-          background-color: rgb(241, 248, 110);
+          background-color: #ffffff; /* White for odd rows */
         }
 
         tbody tr:hover {
-          background-color: #1abc9c;
-          color: white;
+          background-color: #1abc9c; /* Hover effect color */
+          color: white; /* Font color on hover */
         }
 
         tbody td {
           transition: background-color 0.3s ease;
-        }
-
-        tbody tr:hover td {
-          background-color: #16a085;
         }
 
         a {
@@ -198,40 +216,27 @@ const InsiderBar = () => {
           opacity: 0.7;
         }
 
-        img {
+        .icon {
           border-radius: 50%;
           transition: transform 0.3s ease;
         }
 
-        img:hover {
+        .icon:hover {
           transform: scale(1.1);
         }
 
-        /* Table heading fixed and prevents rows from appearing behind */
         thead {
           position: sticky;
           top: 0;
           z-index: 1;
-          background: #2c3e50;
+          background: #f2f2f2; /* Header background color */
         }
 
-        tbody {
-          position: relative;
+        .loading, .error {
+          color: #f4f4f4;
+          text-align: center;
+          margin-top: 20px;
         }
-
-        tbody tr {
-          background: transparent;
-        }
-
-        tbody tr:nth-child(even) {
-          background-color: rgb(110, 244, 251);
-        }
-
-        tbody tr:nth-child(odd) {
-          background-color: rgb(241, 248, 110);
-        }
-
-        
       `}</style>
     </div>
   );
@@ -248,17 +253,19 @@ const Layout = ({ children }) => {
           />
         </div>
         <ul className="nav-links">
-               <li><a href="/home"><FaHome style={{ marginRight: "10px", color: "yellow" }} />
-                     Home
-                   </a>
-                 </li>
-               <li><a href="/marketpulse"><i className="fa fa-chart-line"></i>Crypto/Forex</a></li>
-               <li><a href="/insiderstrategy"><i className="fa fa-cogs"></i>Insider Strategy</a></li> 
-               <li><a href="/heat"><i className="fa fa-signal"></i>Heatmap</a></li>
-               <li><a href="/marketpulse"><i className="fa fa-book"></i>Trading Journal</a></li>
-               <li><a href="/technical"><i className="fa fa-video"></i>Technical Analysis</a></li>
-               <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
-               </ul>
+          <li>
+            <a href="/home">
+              <FaHome style={{ marginRight: "10px", color: "yellow" }} />
+              Home
+            </a>
+          </li>
+          <li><a href="/marketpulse"><i className="fa fa-chart-line"></i>Crypto/Forex</a></li>
+          <li><a href="/insiderstrategy"><i className="fa fa-cogs"></i>Insider Strategy</a></li>
+          <li><a href="/heat"><i className="fa fa-signal"></i>Heatmap</a></li>
+          <li><a href="/marketpulse"><i className="fa fa-book"></i>Trading Journal</a></li>
+          <li><a href="/technical"><i className="fa fa-video"></i>Technical Analysis</a></li>
+          <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
+        </ul>
       </div>
 
       <div className="content">
@@ -277,78 +284,77 @@ const Layout = ({ children }) => {
           overflow-x: hidden;
         }
 
-         .sidebar {
-    width: 250px;
-    height: 100vh;
-    background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099004/Flux_Dev_Create_a_tall_rectangular_banner_background_with_an_u_1_oyb158.jpg');
-    background-size: cover;
-    background-position: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding: 20px 0;
-    color: white;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-    z-index: 2;
-    overflow-y: auto;
-  }
+        .sidebar {
+          width: 250px;
+          height: 100vh;
+          background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099004/Flux_Dev_Create_a_tall_rectangular_banner_background_with_an_u_1_oyb158.jpg');
+          background-size: cover;
+          background-position: center;
+          position: fixed;
+          top: 0;
+          left: 0;
+          padding: 20px 0;
+          color: white;
+          box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+          z-index: 2;
+          overflow-y: auto;
+        }
 
-  .sidebar::-webkit-scrollbar {
-    width: 8px;
-  }
+        .sidebar::-webkit-scrollbar {
+          width: 8px;
+        }
 
-  .sidebar::-webkit-scrollbar-thumb {
-    background-color: #888;
-    border-radius: 4px;
-  }
+        .sidebar::-webkit-scrollbar-thumb {
+          background-color: #888;
+          border-radius: 4px;
+        }
 
-  .sidebar::-webkit-scrollbar-thumb:hover {
-    background-color: #555;
-  }
+        .sidebar::-webkit-scrollbar-thumb:hover {
+          background-color: #555;
+        }
 
-  .logo {
-    text-align: center;
-    margin-bottom: 0;
-  }
+        .logo {
+          text-align: center;
+          margin-bottom: 0;
+        }
 
-  .logo img {
-    width: 140px;
-    height: 140px;
-    margin-bottom: 0;
-  }
+        .logo img {
+          width: 140px;
+          height: 140px;
+          margin-bottom: 0;
+        }
 
-  .nav-links {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
+        .nav-links {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
 
-  .nav-links li {
-    margin: 10px 0;
-  }
+        .nav-links li {
+          margin: 10px 0;
+        }
 
-  .nav-links li a {
-    display: flex;
-    align-items: center;
-    padding: 12px 20px;
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: 500;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-  }
+        .nav-links li a {
+          display: flex;
+          align-items: center;
+          padding: 12px 20px;
+          color: white;
+          text-decoration: none;
+          font-size: 16px;
+          font-weight: 500;
+          border-radius: 8px;
+          transition: all 0.3s ease;
+        }
 
-  .nav-links li a i {
-    margin-right: 10px;
-    color: gold;
-  }
+        .nav-links li a i {
+          margin-right: 10px;
+          color: gold;
+        }
 
-  .nav-links li a:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: scale(1.05);
-  }
-
+        .nav-links li a:hover {
+          background: rgba(255, 255, 255, 0.1);
+          transform: scale(1.05);
+        }
 
         .content {
           margin-left: 250px;
