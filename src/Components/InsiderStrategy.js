@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { FaHome } from "react-icons/fa";
 import TickerTape from "../Widgets/TickerTape"; // Ensure this is the correct path
 
@@ -7,7 +7,6 @@ const InsiderBar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [lastFetchTime, setLastFetchTime] = useState(null);
 
   const fetchData = async () => {
     try {
@@ -17,7 +16,6 @@ const InsiderBar = () => {
       }
       const data = await response.json();
       setInsiderData(data);
-      setLastFetchTime(new Date()); // Store the last fetch time
     } catch (error) {
       setError(error);
     } finally {
@@ -25,46 +23,55 @@ const InsiderBar = () => {
     }
   };
 
+  const scheduleNextFetch = useCallback(() => {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+
+    // Define the next fetch times
+    const fetchTimes = [
+      { hour: 11, minute: 18 },
+      { hour: 12, minute: 18 },
+      { hour: 13, minute: 18 },
+      { hour: 14, minute: 18 },
+      { hour: 15, minute: 18 },
+    ];
+
+    // Find the next fetch time
+    let nextFetchTime = null;
+
+    for (const time of fetchTimes) {
+      if (hours < time.hour || (hours === time.hour && minutes < time.minute)) {
+        nextFetchTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), time.hour, time.minute);
+        break;
+      }
+    }
+
+    // If no next fetch time is found, schedule for the next day at 11:18 AM
+    if (!nextFetchTime) {
+      nextFetchTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 11, 18);
+    }
+
+    // Calculate the delay until the next fetch time
+    const delay = nextFetchTime - now;
+
+    // Schedule the next fetch
+    setTimeout(() => {
+      fetchData();
+      scheduleNextFetch(); // Schedule the next fetch after this one
+    }, delay);
+  }, []); // No dependencies, as it doesn't rely on any external state
+
   useEffect(() => {
-    const checkFetchTime = () => {
-      const now = new Date();
-      const hours = now.getHours();
-      const minutes = now.getMinutes();
-
-      // Check if it's one of the specified fetch times
-      if (
-        (hours === 11 && minutes === 18) ||
-        (hours === 12 && minutes === 18) ||
-        (hours === 13 && minutes === 18) ||
-        (hours === 14 && minutes === 18) ||
-        (hours === 15 && minutes === 18)
-      ) {
-        fetchData();
-      }
-
-      // If it's after 3:18 PM, keep showing the last fetched data
-      if (hours === 15 && minutes > 18) {
-        if (lastFetchTime) {
-          // If we have fetched data before, we can keep showing it
-          setLoading(false);
-        }
-      }
-
-      // If it's after 3:18 PM and before 11:18 AM the next day, do nothing
-      if (hours < 11 && (hours !== 0 || minutes !== 0)) {
-        // Do nothing, wait for the next fetch at 11:18 AM
-      }
-    };
-
     // Initial fetch
     fetchData();
+    scheduleNextFetch(); // Schedule the first fetch
 
-    // Set an interval to check every minute
-    const intervalId = setInterval(checkFetchTime, 60000);
-
-    // Cleanup interval on component unmount
-    return () => clearInterval(intervalId);
-  }, [lastFetchTime]);
+    // Cleanup function to clear any timeouts if the component unmounts
+    return () => {
+      // No need to clear timeout since we are scheduling a new one each time
+    };
+  }, [scheduleNextFetch]); // Add scheduleNextFetch to the dependency array
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
