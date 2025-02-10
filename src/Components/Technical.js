@@ -60,15 +60,16 @@ const TechnicalAnalysis = () => {
             </a>
           </li>
           <li>
-            <a href="/insiderstrategy">
-              <i className="fa fa-cogs"></i>Insider Strategy
-            </a>
-          </li>
-          <li>
             <a href="/heat">
               <i className="fa fa-th"></i>Heatmap
             </a>
           </li>
+          <li>
+            <a href="/insiderstrategy">
+              <i className="fa fa-cogs"></i>Insider Strategy
+            </a>
+          </li>
+         
           
           <li>
             <a href="/marketpulse">

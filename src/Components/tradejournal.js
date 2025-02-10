@@ -375,9 +375,9 @@ const TradeJournal = () => {
         </div>
         <ul className="nav-links">
           <li><a href="/home"><FaHome style={{ marginRight: "10px", color: "gold" }} />Home</a></li>
+          <li><a href="/heat"><i className="fa fa-signal"></i>Heatmap</a></li>
           <li><a href="/marketpulse"><i className="fa fa-chart-line"></i>Crypto/Forex</a></li>
           <li><a href="/insiderstrategy"><i className="fa fa-cogs"></i>Insider Strategy</a></li>
-          <li><a href="/heat"><i className="fa fa-signal"></i>Heatmap</a></li>
           <li><a href="/technical"><i className="fa fa-video"></i>Technical Analysis</a></li>
           <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
         </ul>
