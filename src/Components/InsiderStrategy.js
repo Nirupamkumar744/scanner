@@ -7,46 +7,71 @@ const InsiderBar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [lastFetchTime, setLastFetchTime] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch("https://insiderbartradingg-production.up.railway.app/inside-bars");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setInsiderData(data);
+      setLastFetchTime(new Date()); // Store the last fetch time
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("https://insiderbartradingg-production.up.railway.app/run-manual");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
+    const checkFetchTime = () => {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+
+      // Check if it's one of the specified fetch times
+      if (
+        (hours === 11 && minutes === 18) ||
+        (hours === 12 && minutes === 18) ||
+        (hours === 13 && minutes === 18) ||
+        (hours === 14 && minutes === 18) ||
+        (hours === 15 && minutes === 18)
+      ) {
+        fetchData();
+      }
+
+      // If it's after 3:18 PM, keep showing the last fetched data
+      if (hours === 15 && minutes > 18) {
+        if (lastFetchTime) {
+          // If we have fetched data before, we can keep showing it
+          setLoading(false);
         }
-        const data = await response.json();
+      }
 
-        // Filter stocks with insideBar: true
-        const filteredData = Object.entries(data)
-          .filter(([key, value]) => value.insideBar)
-          .map(([key, value]) => {
-            const stockSymbol = key.replace('.NS', ''); // Remove .NS from the stock symbol
-            return {
-              stock: stockSymbol,
-              currentPrice: value.motherCandle.high, // Assuming you want to show the high of the mother candle as the current price
-              chartLink: `https://in.tradingview.com/chart/?symbol=${stockSymbol}`, // Use stockSymbol without .NS
-              technicalsLink: `https://in.tradingview.com/symbols/${stockSymbol}/technicals/`, // Use stockSymbol without .NS
-            };
-          });
-
-        setInsiderData(filteredData);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
+      // If it's after 3:18 PM and before 11:18 AM the next day, do nothing
+      if (hours < 11 && (hours !== 0 || minutes !== 0)) {
+        // Do nothing, wait for the next fetch at 11:18 AM
       }
     };
 
+    // Initial fetch
     fetchData();
-  }, []);
+
+    // Set an interval to check every minute
+    const intervalId = setInterval(checkFetchTime, 60000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
+  }, [lastFetchTime]);
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
 
   const filteredData = insiderData.filter((data) =>
-    data.stock.toLowerCase().includes(searchTerm.toLowerCase())
+    data.symbol.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const scrollToSymbol = (symbol) => {
@@ -83,15 +108,16 @@ const InsiderBar = () => {
               <th>Current Price</th>
               <th>Chart</th>
               <th>Technicals</th>
+              <th>Breakout</th> {/* New column for Breakout */}
             </tr>
           </thead>
           <tbody>
             {filteredData.map((data, index) => (
-              <tr key={index} id={data.stock} onClick={() => scrollToSymbol(data.stock)}>
-                <td>{data.stock}</td>
-                <td>{data.currentPrice.toFixed(2)}</td>
+              <tr key={index} id={data.symbol} onClick={() => scrollToSymbol(data.symbol)}>
+                <td>{data.symbol}</td>
+                <td>{data.motherCandle.high.toFixed(2)}</td>
                 <td>
-                  <a href={data.chartLink} target="_blank" rel="noopener noreferrer">
+                  <a href={`https://in.tradingview.com/chart/?symbol=${data.symbol.replace('.NS', '')}`} target="_blank" rel="noopener noreferrer">
                     <img
                       src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
                       alt="Chart Icon"
@@ -101,7 +127,7 @@ const InsiderBar = () => {
                   </a>
                 </td>
                 <td>
-                  <a href={data.technicalsLink} target="_blank" rel="noopener noreferrer">
+                  <a href={`https://in.tradingview.com/symbols/${data.symbol.replace('.NS', '')}/technicals/`} target="_blank" rel="noopener noreferrer">
                     <img
                       src="https://img.icons8.com/ios/452/settings.png"
                       alt="Technical Icon"
@@ -109,6 +135,11 @@ const InsiderBar = () => {
                       className="icon"
                     />
                   </a>
+                </td>
+                <td>
+                  <span style={{ color: data.type === "Bearish Inside Bar" ? "red" : data.type === "Bullish Inside Bar" ? "green" : "black" }}>
+                    {data.type === "Bearish Inside Bar" ? "Bearish" : data.type === "Bullish Inside Bar" ? "Bullish" : "Neutral"}
+                  </span>
                 </td>
               </tr>
             ))}
