@@ -121,7 +121,7 @@ const InsiderBar = () => {
           <tbody>
             {filteredData.map((data, index) => (
               <tr key={index} id={data.symbol} onClick={() => scrollToSymbol(data.symbol)}>
-                <td>{data.symbol}</td>
+                <td>{data.symbol.replace('.NS', '')}</td> {/* Remove .NS from symbol */}
                 <td>{data.motherCandle.high.toFixed(2)}</td>
                 <td>
                   <a href={`https://in.tradingview.com/chart/?symbol=${data.symbol.replace('.NS', '')}`} target="_blank" rel="noopener noreferrer">
@@ -144,7 +144,7 @@ const InsiderBar = () => {
                   </a>
                 </td>
                 <td>
-                  <span style={{ color: data.type === "Bearish Inside Bar" ? "red" : data.type === "Bullish Inside Bar" ? "green" : "black" }}>
+                  <span style={{ color: data.type === "Bearish Inside Bar" ? "red" : data.type === "Bullish Inside Bar" ? "green" : "black", fontWeight: 'bold' }}>
                     {data.type === "Bearish Inside Bar" ? "Bearish" : data.type === "Bullish Inside Bar" ? "Bullish" : "Neutral"}
                   </span>
                 </td>
