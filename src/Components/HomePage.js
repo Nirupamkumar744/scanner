@@ -252,17 +252,11 @@ tr:nth-child(even) {
     background-color: rgb(68, 219, 214);
 }
 
-<<<<<<< HEAD
-tr:hover {
-    background-color: #f1f1f1;
-    transform: scale(1.02);
-    transition: all 0.3s ease-in-out;
-}
       tr:hover {
  background-color: #f1f1f1;
         transform: scale(1.02);
         transition: all 0.3s ease-in-out;
-
+      }
 
 td {
     color: #333;
