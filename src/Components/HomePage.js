@@ -258,13 +258,11 @@ tr:hover {
     transform: scale(1.02);
     transition: all 0.3s ease-in-out;
 }
-=======
       tr:hover {
  background-color: #f1f1f1;
         transform: scale(1.02);
         transition: all 0.3s ease-in-out;
-      }
->>>>>>> 791f9c2107f192a11d43c0b5c63ca3251f7644f2
+
 
 td {
     color: #333;

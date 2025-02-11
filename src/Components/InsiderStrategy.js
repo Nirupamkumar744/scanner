@@ -163,7 +163,7 @@ const InsiderBar = () => {
 
       {/* New Highorder Container */}
       <div className="Highorder">
-        <h3>HOM STOCKS 🚀</h3>
+        <h2 className="highorder-heading">HOM STOCKS 🚀</h2>
         <div className="highorder-table-container">
           <table>
             <thead>
@@ -226,6 +226,12 @@ const InsiderBar = () => {
           font-weight: bold;
         }
 
+        .highorder-heading {
+          font-size: 32px; /* Match the size of the INSIDER BAR heading */
+          font-weight: bold;
+          margin-bottom: 20px; /* Space below the heading */
+        }
+
         .tooltip {
           position: relative;
           cursor: pointer;
@@ -257,7 +263,7 @@ const InsiderBar = () => {
         }
 
         .Highorder {
-          background:rgb(101, 250, 128);
+          background: #1c1c1c;
           border-radius: 10px;
           padding: 20px;
           margin-top: 20px; /* Space between table and Highorder */
