@@ -127,7 +127,7 @@ const InsiderBar = () => {
           </thead>
           <tbody>
             {filteredData.map((data, index) => (
-              <tr key={index} id={data.symbol} onClick={() => scrollToSymbol(data.symbol)}>
+              <tr key={index } id={data.symbol} onClick={() => scrollToSymbol(data.symbol)}>
                 <td>{data.symbol.replace('.NS', '')}</td> {/* Remove .NS from symbol */}
                 <td>{data.motherCandle.high.toFixed(2)}</td>
                 <td>
@@ -391,7 +391,7 @@ const Layout = ({ children }) => {
         .sidebar {
           width: 250px;
           height: 100vh;
-          background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099004/Flux_Dev_Create_a_tall_rectangular_banner_background_with_an_u_1_oyb158.jpg');
+          background-image: url ('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099004/Flux_Dev_Create_a_tall_rectangular_banner_background_with_an_u_1_oyb158.jpg');
           background-size: cover;
           background-position: center;
           position: fixed;
