@@ -16,9 +16,12 @@ const InsiderBar = () => {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      setInsiderData(data);
+      // Filter for stocks with isInsideBar: true
+      const filteredData = data.filter(item => item.isInsideBar === true);
+      setInsiderData(filteredData);
+
       // Filter for high order data with change of 0.5% or more
-      const filteredHighOrderData = data.filter(item => {
+      const filteredHighOrderData = filteredData.filter(item => {
         const changeValue = parseFloat(item.motherCandle.change);
         return changeValue >= 0.5;
       });
@@ -123,11 +126,11 @@ const InsiderBar = () => {
               <th>Chart</th>
               <th>Technicals</th>
               <th>Breakout</th> {/* New column for Breakout */}
-            </tr>
+ </tr>
           </thead>
           <tbody>
             {filteredData.map((data, index) => (
-              <tr key={index } id={data.symbol} onClick={() => scrollToSymbol(data.symbol)}>
+              <tr key={index} id={data.symbol} onClick={() => scrollToSymbol(data.symbol)}>
                 <td>{data.symbol.replace('.NS', '')}</td> {/* Remove .NS from symbol */}
                 <td>{data.motherCandle.high.toFixed(2)}</td>
                 <td>
@@ -391,7 +394,7 @@ const Layout = ({ children }) => {
         .sidebar {
           width: 250px;
           height: 100vh;
-          background-image: url ('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099004/Flux_Dev_Create_a_tall_rectangular_banner_background_with_an_u_1_oyb158.jpg');
+          background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099004/Flux_Dev_Create_a_tall_rectangular_banner_background_with_an_u_1_oyb158.jpg');
           background-size: cover;
           background-position: center;
           position: fixed;
