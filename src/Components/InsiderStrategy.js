@@ -7,6 +7,7 @@ const InsiderBar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [highOrderData, setHighOrderData] = useState([]);
 
   const fetchData = async () => {
     try {
@@ -16,6 +17,12 @@ const InsiderBar = () => {
       }
       const data = await response.json();
       setInsiderData(data);
+      // Filter for high order data with change of 0.5% or more
+      const filteredHighOrderData = data.filter(item => {
+        const changeValue = parseFloat(item.motherCandle.change);
+        return changeValue >= 0.5;
+      });
+      setHighOrderData(filteredHighOrderData);
     } catch (error) {
       setError(error);
     } finally {
@@ -154,6 +161,46 @@ const InsiderBar = () => {
         </table>
       </div>
 
+      {/* New Highorder Container */}
+      <div className="Highorder">
+        <h3>HOM STOCKS 🚀</h3>
+        <div className="highorder-table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Current Price</th>
+                <th>Chart</th>
+                <th>Breakout</th>
+              </tr>
+            </thead>
+            <tbody>
+              {highOrderData.map((data, index) => (
+                <tr key={index} id={data.symbol}>
+                  <td>{data.symbol.replace('.NS', '')}</td>
+                  <td>{data.motherCandle.high.toFixed(2)}</td>
+                  <td>
+                    <a href={`https://in.tradingview.com/chart/?symbol=${data.symbol.replace('.NS', '')}`} target="_blank" rel="noopener noreferrer">
+                      <img
+                        src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
+                        alt="Chart Icon"
+                        width="25"
+                        className="icon"
+                      />
+                    </a>
+                  </td>
+                  <td>
+                    <span style={{ color: data.type === "Bearish Inside Bar" ? "red" : data.type === "Bullish Inside Bar" ? "green" : "black", fontWeight: 'bold' }}>
+                      {data.type === "Bearish Inside Bar" ? "Bearish" : data.type === "Bullish Inside Bar" ? "Bullish" : "Neutral"}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <style jsx>{`
         .insider-bar {
           background: #121212;
@@ -204,9 +251,22 @@ const InsiderBar = () => {
           background: #1c1c1c;
           border-radius: 10px;
           width: 100%;
-          height: 400px;
+          height: 400px; /* Set height to match the squares */
           overflow-y: auto;
           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .Highorder {
+          background:rgb(101, 250, 128);
+          border-radius: 10px;
+          padding: 20px;
+          margin-top: 20px; /* Space between table and Highorder */
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .highorder-table-container {
+          overflow-y: auto;
+          max-height: 300px; /* Set a max height for the Highorder table */
         }
 
         table {
@@ -224,17 +284,18 @@ const InsiderBar = () => {
         }
 
         th {
-          background: #f2f2f2; /* Header background color */
+          background: #4CAF50; /* Header background color */
+          color: white; /* Header text color */
           font-weight: bold;
           height: 50px;
         }
 
         tbody tr:nth-child(even) {
-          background-color: rgba(144, 238, 144, 0.5); /* Light green for even rows */
+          background-color: rgba(144, 238, 144, 0.3); /* Light green for even rows */
         }
 
         tbody tr:nth-child(odd) {
-          background-color: #ffffff; /* White for odd rows */
+          background-color: rgba(255, 255, 255, 0.8); /* Light white for odd rows */
         }
 
         tbody tr:hover {
@@ -267,7 +328,7 @@ const InsiderBar = () => {
           position: sticky;
           top: 0;
           z-index: 1;
-          background: #f2f2f2; /* Header background color */
+          background: #4CAF50; /* Header background color */
         }
 
         .loading, .error {
