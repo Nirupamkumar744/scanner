@@ -17,7 +17,7 @@ const HomePage = () => {
   const fetchStockData = async () => {
     try {
 
-      const response = await fetch("https://lngra-production.up.railway.app/api/stocks");
+      const response = await fetch("https://local-gain-production.up.railway.app/api/stocks");
 
     
 
@@ -356,13 +356,17 @@ td {
                         {gainer.change.toFixed(2)}%
                       </td>
                       <td>
-                        <a href={`https://in.tradingview.com/chart/tioZvgwv/?symbol=NSE%3A${gainer.stock.toUpperCase()}`} target="_blank" rel="noopener noreferrer">
-                          <img
-                            src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
-                            alt="Chart"
-                            className="chart-icon"
-                          />
-                        </a>
+                      <a 
+  href={`https://in.tradingview.com/chart/?symbol=NSE:${gainer.stock.toUpperCase()}`} 
+  target="_blank" 
+  rel="noopener noreferrer"
+>
+  <img
+    src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
+    alt="Chart"
+    className="chart-icon"
+  />
+</a>
                       </td>
                     </tr>
                   ))}
