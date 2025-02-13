@@ -11,7 +11,7 @@ const InsiderBar = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch("https://insiderbartradingg-production.up.railway.app/inside-bars");
+      const response = await fetch("https://local-inside-production.up.railway.app/inside-bars");
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -125,13 +125,13 @@ const InsiderBar = () => {
               <th>Current Price</th>
               <th>Chart</th>
               <th>Technicals</th>
-              <th>Breakout</th> {/* New column for Breakout */}
- </tr>
+              <th>Breakout</th>
+            </tr>
           </thead>
           <tbody>
             {filteredData.map((data, index) => (
               <tr key={index} id={data.symbol} onClick={() => scrollToSymbol(data.symbol)}>
-                <td>{data.symbol.replace('.NS', '')}</td> {/* Remove .NS from symbol */}
+                <td>{data.symbol.replace('.NS', '')}</td>
                 <td>{data.motherCandle.high.toFixed(2)}</td>
                 <td>
                   <a href={`https://in.tradingview.com/chart/?symbol=${data.symbol.replace('.NS', '')}`} target="_blank" rel="noopener noreferrer">
@@ -164,7 +164,6 @@ const InsiderBar = () => {
         </table>
       </div>
 
-      {/* New Highorder Container */}
       <div className="Highorder">
         <h2 className="highorder-heading">HOM STOCKS 🚀</h2>
         <div className="highorder-table-container">
@@ -230,9 +229,9 @@ const InsiderBar = () => {
         }
 
         .highorder-heading {
-          font-size: 32px; /* Match the size of the INSIDER BAR heading */
+          font-size: 32px;
           font-weight: bold;
-          margin-bottom: 20px; /* Space below the heading */
+          margin-bottom: 20px;
         }
 
         .tooltip {
@@ -260,7 +259,7 @@ const InsiderBar = () => {
           background: #1c1c1c;
           border-radius: 10px;
           width: 100%;
-          height: 400px; /* Set height to match the squares */
+          height: 400px;
           overflow-y: auto;
           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
@@ -269,47 +268,47 @@ const InsiderBar = () => {
           background: #1c1c1c;
           border-radius: 10px;
           padding: 20px;
-          margin-top: 20px; /* Space between table and Highorder */
+          margin-top: 20px;
           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
 
         .highorder-table-container {
           overflow-y: auto;
-          max-height: 300px; /* Set a max height for the Highorder table */
+          max-height: 300px;
         }
 
         table {
           width: 100%;
           border-collapse: collapse;
-          background: #fff; /* Table background color */
+          background: #fff;
         }
 
         th,
         td {
           padding: 12px;
           text-align: center;
-          border: 1px solid #ddd; /* Light border color */
-          color: black; /* Font color */
+          border: 1px solid #ddd;
+          color: black;
         }
 
         th {
-          background: #4CAF50; /* Header background color */
-          color: white; /* Header text color */
+          background: #4CAF50;
+          color: white;
           font-weight: bold;
           height: 50px;
         }
 
         tbody tr:nth-child(even) {
-          background-color: rgba(144, 238, 144, 0.3); /* Light green for even rows */
+          background-color: rgba(144, 238, 144, 0.3);
         }
 
         tbody tr:nth-child(odd) {
-          background-color: rgba(255, 255, 255, 0.8); /* Light white for odd rows */
+          background-color: rgba(255, 255, 255, 0.8);
         }
 
         tbody tr:hover {
-          background-color: #1abc9c; /* Hover effect color */
-          color: white; /* Font color on hover */
+          background-color: #1abc9c;
+          color: white;
         }
 
         tbody td {
@@ -337,7 +336,7 @@ const InsiderBar = () => {
           position: sticky;
           top: 0;
           z-index: 1;
-          background: #4CAF50; /* Header background color */
+          background: #4CAF50;
         }
 
         .loading, .error {
