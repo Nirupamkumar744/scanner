@@ -3,7 +3,7 @@ import axios from "axios";
 import TickerTape from "../Widgets/TickerTape"; // Ensure this component exists
 import { FaHome } from "react-icons/fa";
 
-const STOCK_API_URL = 'https://lngra-production.up.railway.app/api/stocks';
+const STOCK_API_URL = 'https://local-gain-production.up.railway.app/api/stocks';
 
 // Complete stock categories with all symbols
 const stockCategories = {
