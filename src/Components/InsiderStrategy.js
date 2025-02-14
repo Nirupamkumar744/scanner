@@ -4,6 +4,7 @@ import TickerTape from "../Widgets/TickerTape"; // Ensure this is the correct pa
 
 const InsiderBar = () => {
   const [insiderData, setInsiderData] = useState([]);
+  const [previousData, setPreviousData] = useState([]); // Store previous data
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -19,6 +20,7 @@ const InsiderBar = () => {
       // Filter for stocks with isInsideBar: true
       const filteredData = data.filter(item => item.isInsideBar === true);
       setInsiderData(filteredData);
+      setPreviousData(filteredData); // Update previous data only if fetch is successful
 
       // Filter for high order data with change of 0.5% or more
       const filteredHighOrderData = filteredData.filter(item => {
@@ -40,11 +42,10 @@ const InsiderBar = () => {
 
     // Define the next fetch times
     const fetchTimes = [
-      { hour: 11, minute: 18 },
-      { hour: 12, minute: 18 },
-      { hour: 13, minute: 18 },
-      { hour: 14, minute: 18 },
-      { hour: 15, minute: 18 },
+      { hour: 11, minute: 30 },
+      { hour: 12, minute: 30 },
+      { hour: 13, minute: 30 },
+      { hour: 14, minute: 30 },
     ];
 
     // Find the next fetch time
@@ -57,9 +58,9 @@ const InsiderBar = () => {
       }
     }
 
-    // If no next fetch time is found, schedule for the next day at 11:18 AM
+    // If no next fetch time is found, schedule for the next day at 11:30 AM
     if (!nextFetchTime) {
-      nextFetchTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 11, 18);
+      nextFetchTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 11, 30);
     }
 
     // Calculate the delay until the next fetch time
@@ -87,7 +88,8 @@ const InsiderBar = () => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredData = insiderData.filter((data) =>
+  const filteredData = insiderData.length > 0 ? insiderData : previousData; // Use previous data if insiderData is empty
+  const filteredDataWithSearch = filteredData.filter((data) =>
     data.symbol.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -98,7 +100,7 @@ const InsiderBar = () => {
     }
   };
 
-  if (loading) return <div className="loading">Loading...</div>;
+  if (loading) return <div className ="loading">Loading...</div>;
   if (error) return <div className="error">Error: {error.message}</div>;
 
   return (
@@ -129,7 +131,7 @@ const InsiderBar = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((data, index) => (
+            {filteredDataWithSearch.map((data, index) => (
               <tr key={index} id={data.symbol} onClick={() => scrollToSymbol(data.symbol)}>
                 <td>{data.symbol.replace('.NS', '')}</td>
                 <td>{data.motherCandle && data.motherCandle.high ? data.motherCandle.high.toFixed(2) : 'N/A'}</td>
@@ -209,7 +211,7 @@ const InsiderBar = () => {
           color: #f4f4f4;
           padding: 30px;
           border-radius: 10px;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 4px  15px rgba(0, 0, 0, 0.3);
           width: 90%;
           max-width: 100%;
           margin: 20px auto;
@@ -370,7 +372,7 @@ const Layout = ({ children }) => {
           <li><a href="/marketpulse"><i className="fa fa-chart-line"></i>Crypto/Forex</a></li>
           <li><a href="/marketpulse"><i className="fa fa-book"></i>Trading Journal</a></li>
           <li><a href="/technical"><i className="fa fa-video"></i>Technical Analysis</a></li>
-          <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
+ <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
         </ul>
       </div>
 
