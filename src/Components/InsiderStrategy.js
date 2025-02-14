@@ -132,7 +132,7 @@ const InsiderBar = () => {
             {filteredData.map((data, index) => (
               <tr key={index} id={data.symbol} onClick={() => scrollToSymbol(data.symbol)}>
                 <td>{data.symbol.replace('.NS', '')}</td>
-                <td>{data.motherCandle.high.toFixed(2)}</td>
+                <td>{data.motherCandle && data.motherCandle.high ? data.motherCandle.high.toFixed(2) : 'N/A'}</td>
                 <td>
                   <a href={`https://in.tradingview.com/chart/?symbol=${data.symbol.replace('.NS', '')}`} target="_blank" rel="noopener noreferrer">
                     <img
@@ -180,7 +180,7 @@ const InsiderBar = () => {
               {highOrderData.map((data, index) => (
                 <tr key={index} id={data.symbol}>
                   <td>{data.symbol.replace('.NS', '')}</td>
-                  <td>{data.motherCandle.high.toFixed(2)}</td>
+                  <td>{data.motherCandle && data.motherCandle.high ? data.motherCandle.high.toFixed(2) : 'N/A'}</td>
                   <td>
                     <a href={`https://in.tradingview.com/chart/?symbol=${data.symbol.replace('.NS', '')}`} target="_blank" rel="noopener noreferrer">
                       <img
