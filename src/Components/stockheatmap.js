@@ -97,30 +97,20 @@ const Heatmap = () => {
   }, []);
 
   const getColor = (percentageChange) => {
-    if (percentageChange > 5) return "#007A00";  // Dark green for >5% increase
-    if (percentageChange > 0) return "#76FF7A";  // Light green for small increase
-    if (percentageChange < -5) return "#8B0000"; // Dark red for >5% drop
-    if (percentageChange < 0) return "#C6011F";  // Light red for small drop
-    return "#ccc"; // Neutral color for no change
+    if (percentageChange < -3) return "#991f29"; // Dark Red
+    if (percentageChange < 0) return "#ff4d4d"; // Light Red
+    if (percentageChange === 0) return "#c5e4e8"; // Grayish Blue
+    if (percentageChange < 1) return "#42bd7f"; // Light Green
+    if (percentageChange < 2) return "#089950"; // Medium Green
+    if (percentageChange >= 3) return "#056636"; // Dark Green
+    return "#c5e4e8";
   };
 
   const StockBlock = ({ symbol, price, change, color }) => (
-    <div style={{
-      backgroundColor: color,
-      padding: "10px",
-      margin: "5px",
-      borderRadius: "5px",
-      textAlign: "center",
-      width: "120px",
-      height: "120px",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      alignItems: "center",
-    }}>
-      <strong style={{ color: "black", fontSize: "16px" }}>{symbol}</strong>
-      <p style={{ color: "black", fontSize: "14px" }}>₹{price.toFixed(2)}</p>
-      <p style={{ color: "black", fontSize: "14px" }}>{change.toFixed(2)}%</p>
+    <div className="stock-block" style={{ backgroundColor: color }}>
+      <strong>{symbol.replace('.NS', '')}</strong>
+      <p>₹{price.toFixed(2)}</p>
+      <p>{change.toFixed(2)}%</p>
     </div>
   );
 
@@ -156,26 +146,28 @@ const Heatmap = () => {
         <TickerTape />
         <h2>Stock Heatmap</h2>
         <p style={{ fontSize: "14px", color: "#999" }}>Last Updated: {lastUpdated}</p>
-        {Object.entries(stockCategories).map(([category, stocks]) => (
-          <div key={category}>
-            <h3>{category}</h3>
-            <div style={{ display: "flex", flexWrap: "wrap" }}>
-              {stocks.map((symbol) => {
-                const stock = stocksData[symbol];
-                const color = stock ? getColor(stock.percentage_change) : "#ccc";
-                return (
-                  <StockBlock
-                    key={symbol}
-                    symbol={symbol.replace('.NS', '')} // Remove .NS from the symbol
-                    price={stock ? stock.current_price : 0}
-                    change={stock ? stock.percentage_change : 0}
-                    color={color}
-                  />
-                );
-              })}
+        <div className="heatmap-container">
+          {Object.entries(stockCategories).map(([category, stocks]) => (
+            <div className="partition" key={category}>
+              <h3>{category}</h3>
+              <div className="stock-grid">
+                {stocks.map((symbol) => {
+                  const stock = stocksData[symbol];
+                  const color = stock ? getColor(stock.percentage_change) : "#ccc";
+                  return (
+                    <StockBlock
+                      key={symbol}
+                      symbol={symbol}
+                      price={stock ? stock.current_price : 0}
+                      change={stock ? stock.percentage_change : 0}
+                      color={color}
+                    />
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       <style jsx>{`
@@ -265,6 +257,52 @@ const Heatmap = () => {
           color: white;
           min-height: 100vh;
           position: relative;
+        }
+
+        .heatmap-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px; /* Space between partitions */
+          margin-top: 20px;
+        }
+
+        .partition {
+          background-color: rgba(255, 255, 255, 0.1); /* Light background for partitions */
+          border-radius: 5px;
+          padding: 10px;
+          flex: 1 1 calc(25% - 10px); /* 4 columns */
+          min-width: 200px; /* Minimum width for responsiveness */
+        }
+
+        .stock-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Responsive grid */
+          gap: 5px; /* Space between stock blocks */
+        }
+
+        .stock-block {
+          padding: 10px;
+          border-radius: 5px;
+ text-align: center;
+          transition: transform 0.2s, box-shadow 0.2s;
+          cursor: pointer;
+        }
+
+        .stock-block:hover {
+          transform: scale(1.05);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .stock-block strong {
+          display: block;
+          font-size: 14px;
+          color: #fff;
+        }
+
+        .stock-block p {
+          margin: 5px 0;
+          font-size: 12px;
+          color: #fff;
         }
       `}</style>
     </div>
