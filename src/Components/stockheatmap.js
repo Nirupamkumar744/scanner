@@ -144,7 +144,7 @@ const Heatmap = () => {
       </div>
       <div className="content">
         <TickerTape />
-        <h2>Stock Heatmap</h2>
+        
         <p style={{ fontSize: "14px", color: "#999" }}>Last Updated: {lastUpdated}</p>
         <div className="heatmap-container">
           {Object.entries(stockCategories).map(([category, stocks]) => (
@@ -283,7 +283,7 @@ const Heatmap = () => {
         .stock-block {
           padding: 10px;
           border-radius: 5px;
- text-align: center;
+          text-align: center;
           transition: transform 0.2s, box-shadow 0.2s;
           cursor: pointer;
         }
@@ -301,8 +301,8 @@ const Heatmap = () => {
 
         .stock-block p {
           margin: 5px 0;
-          font-size: 12px;
-          color: #fff;
+          font-size: 20px;
+          color: black;
         }
       `}</style>
     </div>
