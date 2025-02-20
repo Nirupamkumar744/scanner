@@ -45,7 +45,7 @@ const stockCategories = {
     "ABFRL.NS", "DMART.NS", "NYKAA.NS", "PAGEIND.NS", "PAYTM.NS", "TRENT.NS", "VBL.NS", "ZOMATO.NS"
   ],
   ConsumerGoods: [
-    "ASIANPAINT.NS", "BERGEPAINT.NS", "BRITANNIA.NS", "COLPAL.NS", "DABUR.NS", "HINDUNILVR.NS", "ITC.NS", "NESTLEIND.NS", "P&GHEALTH.NS", "TATAMOTORS.NS"
+    "ASIANPAINT.NS", "BERGEPAINT.NS", "BRITANNIA.NS", "COLPAL.NS", "DABUR.NS", "HINDUNILVR.NS", "ITC.NS", "NESTLEIND.NS", "PGHH.NS", "TATAMOTORS.NS"
   ],
   Pharmaceuticals: [
     "ABBOTINDIA.NS", "CIPLA.NS", "DRREDDY.NS", "LUPIN.NS", "SUNPHARMA.NS", "LUPIN.NS"
@@ -301,7 +301,7 @@ const Heatmap = () => {
 
         .stock-block p {
           margin: 5px 0;
-          font-size: 20px;
+          font-size: 17px;
           color: black;
         }
       `}</style>
