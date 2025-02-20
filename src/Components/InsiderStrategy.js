@@ -42,10 +42,10 @@ const InsiderBar = () => {
 
     // Define the next fetch times
     const fetchTimes = [
-      { hour: 11, minute: 30 },
-      { hour: 12, minute: 30 },
-      { hour: 13, minute: 30 },
-      { hour: 14, minute: 30 },
+      { hour: 11, minute: 22 },
+      { hour: 12, minute: 22 },
+      { hour: 13, minute: 22 },
+      { hour: 14, minute: 22 },
     ];
 
     // Find the next fetch time
@@ -60,7 +60,7 @@ const InsiderBar = () => {
 
     // If no next fetch time is found, schedule for the next day at 11:30 AM
     if (!nextFetchTime) {
-      nextFetchTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 11, 30);
+      nextFetchTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 11, 22);
     }
 
     // Calculate the delay until the next fetch time
