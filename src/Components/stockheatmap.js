@@ -99,7 +99,6 @@ const Heatmap = () => {
   const getColor = (percentageChange) => {
     if (percentageChange < -3) return "#991f29"; // Dark Red
     if (percentageChange < 0) return "#ff4d4d"; // Light Red
-    if (percentageChange === 0) return "#c5e4e8"; // Grayish Blue
     if (percentageChange < 1) return "#42bd7f"; // Light Green
     if (percentageChange < 2) return "#089950"; // Medium Green
     if (percentageChange >= 3) return "#056636"; // Dark Green

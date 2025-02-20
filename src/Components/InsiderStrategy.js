@@ -42,10 +42,10 @@ const InsiderBar = () => {
 
     // Define the next fetch times
     const fetchTimes = [
-      { hour: 11, minute: 22 },
-      { hour: 12, minute: 22 },
-      { hour: 13, minute: 22 },
-      { hour: 14, minute: 22 },
+      { hour: 11, minute: 25 },
+      { hour: 12, minute: 25 },
+      { hour: 13, minute: 25 },
+      { hour: 14, minute: 25 },
     ];
 
     // Find the next fetch time
