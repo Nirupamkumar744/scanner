@@ -97,13 +97,13 @@ const Heatmap = () => {
   }, []);
 
   const getColor = (percentageChange) => {
-    if (percentageChange < -3) return "#991f29"; // Dark Red
-    if (percentageChange < 0) return "#ff4d4d"; // Light Red
-    if (percentageChange < 1) return "#42bd7f"; // Light Green
-    if (percentageChange < 2) return "#089950"; // Medium Green
-    if (percentageChange >= 3) return "#056636"; // Dark Green
-    return "#c5e4e8";
-  };
+    if (percentageChange === 0) return "#808080"; // Grey for no change
+    if (percentageChange > 1) return "#056636"; // Dark Green for more than 1%
+    if (percentageChange >= 0.1 && percentageChange <= 1) return "#42bd7f"; // Light Green for 0.1% to 1%
+    if (percentageChange < 0 && percentageChange >= -2) return "#ff4d4d"; // Light Red for 0% to -2%
+    if (percentageChange < -2) return "#991f29"; // Dark Red for less than -2%
+    return "#c5e4e8"; // Default fallback color
+};
 
   const StockBlock = ({ symbol, price, change, color }) => (
     <div className="stock-block" style={{ backgroundColor: color }}>
@@ -148,7 +148,8 @@ const Heatmap = () => {
         <div className="heatmap-container">
           {Object.entries(stockCategories).map(([category, stocks]) => (
             <div className="partition" key={category}>
-              <h3>{category}</h3>
+              <h3 className="green-banner">{category}</h3>
+
               <div className="stock-grid">
                 {stocks.map((symbol) => {
                   const stock = stocksData[symbol];
@@ -266,12 +267,26 @@ const Heatmap = () => {
         }
 
         .partition {
-          background-color: rgba(255, 255, 255, 0.1); /* Light background for partitions */
-          border-radius: 5px;
-          padding: 10px;
-          flex: 1 1 calc(25% - 10px); /* 4 columns */
-          min-width: 200px; /* Minimum width for responsiveness */
-        }
+    background-color: rgba(255, 255, 255, 0.1); /* Light background for partitions */
+    border-radius: 5px;
+    padding: 10px;
+    flex: 1 1 calc(25% - 10px); /* 4 columns */
+    min-width: 200px; /* Minimum width for responsiveness */
+    position: relative;
+    overflow: hidden;
+}
+
+.green-banner {
+    background-color:rgb(246, 110, 6); /* Dark Green */
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    padding: 8px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+
 
         .stock-grid {
           display: grid;
@@ -309,3 +324,7 @@ const Heatmap = () => {
 };
 
 export default Heatmap;
+
+
+
+
