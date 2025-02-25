@@ -133,7 +133,7 @@ const Heatmap = () => {
               Home
             </a>
           </li>
-          <li><a href="/heat"><i className="fa fa-signal" style={{ color: "yellow" }}></i>Heatmap</a></li>
+          
           <li><a href="/marketpulse"><i className="fa fa-chart-line" style={{ color: "yellow" }}></i>Crypto/Forex</a></li>
           <li><a href="/insiderstrategy"><i className="fa fa-cogs"></i>Insider Strategy</a></li>
           <li><a href="/tradejournal"><i className="fa fa-book" style={{ color: "yellow" }}></i>Trading Journal</a></li>
@@ -250,11 +250,10 @@ const Heatmap = () => {
         .content {
           margin-left: 250px;
           padding: 20px;
-          background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1739254815/empty-dark-concrete-wall-room-studio-background-floor-perspective-with-blue-soft-light-displays_p48hk9.jpg');
           background-size: cover;
           background-position: center;
           background-repeat: no-repeat;
-          color: white;
+          background-color: #252525;
           min-height: 100vh;
           position: relative;
         }
@@ -267,7 +266,7 @@ const Heatmap = () => {
         }
 
         .partition {
-    background-color: rgba(255, 255, 255, 0.1); /* Light background for partitions */
+    background-color: rgba(245, 238, 243, 0.98); /* Light background for partitions */
     border-radius: 5px;
     padding: 10px;
     flex: 1 1 calc(25% - 10px); /* 4 columns */
@@ -310,7 +309,7 @@ const Heatmap = () => {
         .stock-block strong {
           display: block;
           font-size: 14px;
-          color: #fff;
+          color: black;
         }
 
         .stock-block p {
