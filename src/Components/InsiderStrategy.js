@@ -19,8 +19,10 @@ const InsiderBar = () => {
       const data = await response.json();
       // Filter for stocks with isInsideBar: true
       const filteredData = data.filter(item => item.isInsideBar === true);
+      
+      // Update previous data only if fetch is successful
+      setPreviousData(insiderData); // Keep the old data until new data is fetched
       setInsiderData(filteredData);
-      setPreviousData(filteredData); // Update previous data only if fetch is successful
 
       // Filter for high order data with change of 0.5% or more
       const filteredHighOrderData = filteredData.filter(item => {
@@ -71,7 +73,7 @@ const InsiderBar = () => {
       fetchData();
       scheduleNextFetch(); // Schedule the next fetch after this one
     }, delay);
-  }, []); // No dependencies, as it doesn't rely on any external state
+  }, [insiderData]); // Add insiderData to the dependency array
 
   useEffect(() => {
     // Initial fetch
@@ -100,7 +102,7 @@ const InsiderBar = () => {
     }
   };
 
-  if (loading) return <div className ="loading">Loading...</div>;
+  if (loading) return <div className="loading">Loading...</div>;
   if (error) return <div className="error">Error: {error.message}</div>;
 
   return (
@@ -372,7 +374,7 @@ const Layout = ({ children }) => {
           <li><a href="/marketpulse"><i className="fa fa-chart-line"></i>Crypto/Forex</a></li>
           <li><a href="/marketpulse"><i className="fa fa-book"></i>Trading Journal</a></li>
           <li><a href="/technical"><i className="fa fa-video"></i>Technical Analysis</a></li>
- <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
+          <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
         </ul>
       </div>
 
