@@ -4,27 +4,24 @@ import TickerTape from "../Widgets/TickerTape"; // Ensure this is the correct pa
 
 const InsiderBar = () => {
   const [insiderData, setInsiderData] = useState([]);
-  const [previousData, setPreviousData] = useState([]); // Store previous data
+  const [previousData, setPreviousData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [highOrderData, setHighOrderData] = useState([]);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const response = await fetch("https://local-inside-production.up.railway.app/inside-bars");
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      // Filter for stocks with isInsideBar: true
       const filteredData = data.filter(item => item.isInsideBar === true);
       
-      // Update previous data only if fetch is successful
-      setPreviousData(insiderData); // Keep the old data until new data is fetched
+      setPreviousData(insiderData);
       setInsiderData(filteredData);
 
-      // Filter for high order data with change of 0.5% or more
       const filteredHighOrderData = filteredData.filter(item => {
         const changeValue = parseFloat(item.motherCandle.change);
         return changeValue >= 0.5;
@@ -35,14 +32,13 @@ const InsiderBar = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [insiderData]);
 
   const scheduleNextFetch = useCallback(() => {
     const now = new Date();
     const hours = now.getHours();
     const minutes = now.getMinutes();
 
-    // Define the next fetch times
     const fetchTimes = [
       { hour: 11, minute: 20 },
       { hour: 12, minute: 20 },
@@ -50,7 +46,6 @@ const InsiderBar = () => {
       { hour: 14, minute: 20 },
     ];
 
-    // Find the next fetch time
     let nextFetchTime = null;
 
     for (const time of fetchTimes) {
@@ -60,37 +55,32 @@ const InsiderBar = () => {
       }
     }
 
-    // If no next fetch time is found, schedule for the next day at 11:30 AM
     if (!nextFetchTime) {
       nextFetchTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 11, 22);
     }
 
-    // Calculate the delay until the next fetch time
     const delay = nextFetchTime - now;
 
-    // Schedule the next fetch
     setTimeout(() => {
       fetchData();
-      scheduleNextFetch(); // Schedule the next fetch after this one
+      scheduleNextFetch();
     }, delay);
-  }, [insiderData]); // Add insiderData to the dependency array
+  }, [fetchData]);
 
   useEffect(() => {
-    // Initial fetch
     fetchData();
-    scheduleNextFetch(); // Schedule the first fetch
+    scheduleNextFetch();
 
-    // Cleanup function to clear any timeouts if the component unmounts
     return () => {
-      // No need to clear timeout since we are scheduling a new one each time
+      // Cleanup if necessary
     };
-  }, [scheduleNextFetch]); // Add scheduleNextFetch to the dependency array
+  }, [fetchData, scheduleNextFetch]);
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredData = insiderData.length > 0 ? insiderData : previousData; // Use previous data if insiderData is empty
+  const filteredData = insiderData.length > 0 ? insiderData : previousData;
   const filteredDataWithSearch = filteredData.filter((data) =>
     data.symbol.toLowerCase().includes(searchTerm.toLowerCase())
   );
