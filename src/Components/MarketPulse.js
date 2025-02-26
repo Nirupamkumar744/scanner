@@ -158,13 +158,9 @@ const MarketPulse = () => {
         </div>
         <ul className="nav-links">
           <li><a href="/home"><FaHome style={{ marginRight: '10px', color: "yellow" }} />Home</a></li>
-          
-          <li><a href="/insiderstrategy"><i className="fa fa-cogs"></i>Insider Strategy</a></li>
-          
+          <li><a href="/insiderstrategy"><i className="fa fa-cogs"></i>Insider Strategy</a></li> 
           <li><a href="/heat"><i className="fa fa-signal"></i>Heatmap</a></li>
-          
           <li><a href="/tradejournal"><i className="fa fa-book"></i>Trading Journal</a></li>
-          
           <li><a href="/technical"><i className="fa fa-video"></i>Technical Analysis</a></li>
           <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
         </ul>
