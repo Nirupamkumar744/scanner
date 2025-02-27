@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import TickerTape from "../Widgets/TickerTape"; // Import the TickerTape component
 import { FaHome } from "react-icons/fa";
 import { db } from "./firebase"; // Assuming your firebase is set up in the firebase.js file
-import { doc, setDoc, collection } from "firebase/firestore"; // Import Firestore functions
+import { doc, setDoc, collection, getDocs } from "firebase/firestore"; // Import Firestore functions
 import { getAuth } from "firebase/auth"; // Import Firebase Auth
 
 // CSS styles moved outside the component to avoid dependency warnings
@@ -99,7 +99,7 @@ const styles = `
     color: white; /* Set text color to white for better contrast */
     min-height: 100vh; /* Ensure the content area takes at least full viewport height */
     position: relative; /* Maintain relative positioning */
-}
+  }
 
   .ticker-container {
     position: relative;
@@ -185,6 +185,7 @@ const styles = `
     text-align: center;
     color: #fff;
     border-radius: 5px;
+    position: relative; /* For positioning the popup */
   }
 
   .weekend {
@@ -286,6 +287,18 @@ const styles = `
   .add-trade-button:hover {
     background-color: #45a049;
   }
+
+  .popup {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    top: -30px; /* Adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+  }
 `;
 
 const TradeJournal = () => {
@@ -296,6 +309,8 @@ const TradeJournal = () => {
   const [buyPrice, setBuyPrice] = useState("");
   const [sellPrice, setSellPrice] = useState("");
   const [profitLoss, setProfitLoss] = useState(null);
+  const [hoveredDate, setHoveredDate] = useState(null);
+  const [overallProfitLoss, setOverallProfitLoss] = useState(0);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -313,13 +328,13 @@ const TradeJournal = () => {
 
   const saveTrade = async () => {
     try {
-      const user = getAuth().currentUser;
+      const user = getAuth().currentUser ;
       if (!user) {
-        alert("User not authenticated");
+        alert("User  not authenticated");
         return;
       }
-      const userEmail = user.email.replace(/[^a-zA-Z0-9]/g, "_");
-      const tradesRef = collection(db, "users", userEmail, "Trade");
+      const userId = user.uid; // Use UID instead of email
+      const tradesRef = collection(db, "users", userId, "Trade");
       const tradeRef = doc(tradesRef);
       await setDoc(tradeRef, {
         tradeType,
@@ -343,6 +358,43 @@ const TradeJournal = () => {
       calculateProfitLoss();
     }
   }, [buyPrice, sellPrice, quantity, calculateProfitLoss]);
+
+  const fetchOverallProfitLoss = async (date) => {
+    try {
+      const user = getAuth().currentUser ;
+      if (!user) return;
+
+      const userId = user.uid; // Use UID instead of email
+      const tradesRef = collection(db, "users", userId, "Trade");
+      const querySnapshot = await getDocs(tradesRef);
+      let totalProfitLoss = 0;
+
+      querySnapshot.forEach((doc) => {
+        const trade = doc.data();
+        const tradeDate = trade.timestamp.toDate().toDateString(); // Convert timestamp to date string
+        if (tradeDate === date) {
+          totalProfitLoss += trade.profitLoss || 0; // Accumulate profit/loss
+        }
+      });
+
+      setOverallProfitLoss(totalProfitLoss);
+    } catch (error) {
+      console.error("Error fetching trades: ", error.message);
+    }
+  };
+
+  const handleMouseEnter = (day, month) => {
+    if (day) {
+      const date = new Date(2025, month, day).toDateString(); // Include month in the date
+      setHoveredDate(date);
+      fetchOverallProfitLoss(date);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredDate(null);
+    setOverallProfitLoss(0);
+  };
 
   const getMonthDays = (month, year) => {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -391,13 +443,23 @@ const TradeJournal = () => {
           <h2>Trade Journal</h2>
           <button className="add-trade-button" onClick={openModal}>Add Trade</button>
           <div className="calendar-grid">
-            {months.map((month, index) => (
-              <div className="month" key={index}>
+            {months.map((month, monthIndex) => (
+              <div className="month" key={monthIndex}>
                 <h3>{month.name}</h3>
                 <div className="month-days">
-                  {month.days.map((day, idx) => (
-                    <div key={idx} className={`month-day ${day === null ? "empty" : ""} ${idx % 7 === 5 || idx % 7 === 6 ? "weekend" : ""}`}>
+                  {month.days.map((day, dayIndex) => (
+                    <div
+                      key={dayIndex}
+                      className={`month-day ${day === null ? "empty" : ""} ${dayIndex % 7 === 5 || dayIndex % 7 === 6 ? "weekend" : ""}`}
+                      onMouseEnter={() => handleMouseEnter(day, monthIndex)} // Pass monthIndex
+                      onMouseLeave={handleMouseLeave}
+                    >
                       {day || ""}
+                      {hoveredDate === new Date(2025, monthIndex, day).toDateString() && (
+                        <div className="popup">
+                          Profit/Loss: {overallProfitLoss}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
