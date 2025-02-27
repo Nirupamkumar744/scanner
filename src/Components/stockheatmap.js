@@ -7,7 +7,7 @@ const STOCK_API_URL = 'https://local-gain-production.up.railway.app/api/stocks';
 
 // Complete stock categories with all symbols
 const stockCategories = {
-  Banks: [
+Banks: [
 "AXISBANK.NS","HDFCBANK.NS","ICICIBANK.NS","IDFCFIRSTB.NS","INDUSINDBK.NS","KOTAKBANK.NS","PNB.NS",
 "RBLBANK.NS","SBIN.NS","YESBANK.NS","FEDERALBNK.NS","BANDHANBNK.NS","CITYUNIONBANK.NS","CANBK.NS",
 "BANKBARODA.NS"
