@@ -362,7 +362,7 @@ const Layout = ({ children }) => {
           </li>
           <li><a href="/heat"><i className="fa fa-signal"></i>Heatmap</a></li>
           <li><a href="/marketpulse"><i className="fa fa-chart-line"></i>Crypto/Forex</a></li>
-          <li><a href="/marketpulse"><i className="fa fa-book"></i>Trading Journal</a></li>
+          <li><a href="/tradejournal"><i className="fa fa-book"></i>Trading Journal</a></li>
           <li><a href="/technical"><i className="fa fa-video"></i>Technical Analysis</a></li>
           <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
         </ul>
