@@ -423,7 +423,7 @@ const TradeJournal = () => {
 
       <div className="sidebar">
         <div className="logo">
-          <img src="https://res.cloudinary.com/dyrn2eg1j/image/upload/v1740729458/Add_a_subheading_zggqbd.png" alt="Logo" />
+          <img src="https://res.cloudinary.com/dyrn2eg1j/image/upload/v1740734340/Add_a_subheading_1_pui9fq.png" alt="Logo" />
         </div>
         <ul className="nav-links">
           <li><a href="/home"><FaHome style={{ marginRight: "10px", color: "gold" }} />Home</a></li>

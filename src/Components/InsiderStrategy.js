@@ -349,7 +349,7 @@ const Layout = ({ children }) => {
       <div className="sidebar">
         <div className="logo">
           <img
-            src="https://res.cloudinary.com/dyrn2eg1j/image/upload/v1740729458/Add_a_subheading_zggqbd.png"
+            src="https://res.cloudinary.com/dyrn2eg1j/image/upload/v1740734340/Add_a_subheading_1_pui9fq.png"
             alt="Logo"
           />
         </div>
