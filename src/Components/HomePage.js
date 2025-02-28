@@ -395,7 +395,7 @@ td {
               {loser.change.toFixed(2)}%
             </td>
             <td>
-              <a href={`https://in.tradingview.com/chart/tioZvgwv/?symbol=NSE%3A${loser.stock.toUpperCase()}`} target="_blank" rel="noopener noreferrer">
+              <a href={`https://in.tradingview.com/chart/?symbol=NSE:${loser.stock.toUpperCase()}`} target="_blank" rel="noopener noreferrer">
                 <img
                   src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
                   alt="Chart"

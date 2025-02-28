@@ -9,13 +9,13 @@ const STOCK_API_URL = 'https://local-gain-production.up.railway.app/api/stocks';
 const stockCategories = {
 Banks: [
 "AXISBANK.NS","HDFCBANK.NS","ICICIBANK.NS","IDFCFIRSTB.NS","INDUSINDBK.NS","KOTAKBANK.NS","PNB.NS",
-"RBLBANK.NS","SBIN.NS","YESBANK.NS","FEDERALBNK.NS","BANDHANBNK.NS","CITYUNIONBANK.NS","CANBK.NS",
+"RBLBANK.NS","SBIN.NS","YESBANK.NS","FEDERALBNK.NS","BANDHANBNK.NS","CANBK.NS",
 "BANKBARODA.NS"
 ],
   NBFCs: [
-    "BAJFINANCE.NS","BAJAJFINSV.NS","MUTHOOTFIN.NS","MANAPPURAM.NS","LICHSGFIN.NS","RECLTD.NS",
+    "BAJFINANCE.NS","BAJAJFINSV.NS","MUTHOOTFIN.NS","MANAPPURAM.NS","RECLTD.NS",
     "PFC.NS","SBICARD.NS","HDFCAMC.NS","HDFCLIFE.NS","ICICIGI.NS","ICICIPRULI.NS","SHRIRAMFIN.NS",
-     "M&MFIN.NS","CANFINHOME.NS","CHOLAFIN.NS","L&TFH.NS", "ABCAPITAL.NS"
+     "M&MFIN.NS","CANFINHOME.NS","CHOLAFIN.NS", "ABCAPITAL.NS"
 
   ],
   OilAndGas: [
@@ -45,7 +45,7 @@ Banks: [
     "ABFRL.NS", "DMART.NS", "NYKAA.NS", "PAGEIND.NS", "PAYTM.NS", "TRENT.NS", "VBL.NS", "ZOMATO.NS"
   ],
   ConsumerGoods: [
-    "ASIANPAINT.NS", "BERGEPAINT.NS", "BRITANNIA.NS", "COLPAL.NS", "DABUR.NS", "HINDUNILVR.NS", "ITC.NS", "NESTLEIND.NS", "PGHH.NS", "TATAMOTORS.NS"
+    "ASIANPAINT.NS", "BERGEPAINT.NS", "BRITANNIA.NS", "COLPAL.NS", "DABUR.NS", "HINDUNILVR.NS", "ITC.NS", "NESTLEIND.NS","TATAMOTORS.NS"
   ],
   Pharmaceuticals: [
     "ABBOTINDIA.NS", "CIPLA.NS", "DRREDDY.NS", "LUPIN.NS", "SUNPHARMA.NS", "LUPIN.NS"
@@ -265,11 +265,11 @@ const Heatmap = () => {
           margin-top: 20px;
         }
 
-        .partition {
+       .partition {
     background-color: rgba(245, 238, 243, 0.98); /* Light background for partitions */
     border-radius: 5px;
     padding: 10px;
-    flex: 1 1 calc(25% - 10px); /* 4 columns */
+    flex: 1 1 100%; /* Full width */
     min-width: 200px; /* Minimum width for responsiveness */
     position: relative;
     overflow: hidden;
@@ -308,7 +308,7 @@ const Heatmap = () => {
 
         .stock-block strong {
           display: block;
-          font-size: 14px;
+          font-size: 12px;
           color: black;
         }
 
