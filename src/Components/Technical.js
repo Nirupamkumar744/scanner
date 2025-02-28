@@ -44,7 +44,7 @@ const TechnicalAnalysis = () => {
       <div className="sidebar">
         <div className="logo">
           <img
-            src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737098769/Default_Create_a_round_logo_for_a_stock_market_scanner_or_trad_1_a038e6fd-6af3-4085-9199-449cf7811765_0_vsnsbo.png"
+            src="https://res.cloudinary.com/dyrn2eg1j/image/upload/v1740729458/Add_a_subheading_zggqbd.png"
             alt="Logo"
           />
         </div>
@@ -72,7 +72,7 @@ const TechnicalAnalysis = () => {
          
           
           <li>
-            <a href="/marketpulse">
+            <a href="/tradejournal">
               <i className="fa fa-book"></i>Trading Journal
             </a>
           </li>
@@ -113,7 +113,7 @@ const TechnicalAnalysis = () => {
             font-family: "Poppins", sans-serif;
             margin: 0;
             padding: 0;
-            background: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099346/Flux_Dev_Create_an_ultrasmooth_realistic_animated_background_t_3_dg0gcs.jpg') no-repeat center center fixed;
+            background-color: #252525;
             background-size: cover;
             overflow-x: hidden;
           }
@@ -121,7 +121,7 @@ const TechnicalAnalysis = () => {
           .sidebar {
             width: 250px;
             height: 100vh;
-            background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099004/Flux_Dev_Create_a_tall_rectangular_banner_background_with_an_u_1_oyb158.jpg');
+             background-color: #252525;
             background-size: cover;
             background-position: center;
             position: fixed;

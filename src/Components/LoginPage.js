@@ -249,7 +249,7 @@ const LoginPage = () => {
       <Navbar>
         <Logo>
           <img
-            src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737098769/Default_Create_a_round_logo_for_a_stock_market_scanner_or_trad_1_a038e6fd-6af3-4085-9199-449cf7811765_0_vsnsbo.png"
+            src="https://res.cloudinary.com/dyrn2eg1j/image/upload/v1740729458/Add_a_subheading_zggqbd.png"
             alt="TradeApp Logo"
           />
         </Logo>

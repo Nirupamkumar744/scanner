@@ -95,7 +95,7 @@ const HomePage = () => {
       .sidebar {
         width: 250px;
  height: 100vh;
-        background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099004/Flux_Dev_Create_a_tall_rectangular_banner_background_with_an_u_1_oyb158.jpg');
+         background-color: #252525;
         background-size: cover;
         background-position: center;
         position: fixed;
@@ -167,7 +167,7 @@ const HomePage = () => {
       .content {
         margin-left: 250px;
         padding: 20px;
-        background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1738238118/360_F_293943271_zd4kkAHnnryKiyIdRMAX2McgijQ0mrOb_d18vhh.jpg');
+         background-color: #252525;
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -187,14 +187,14 @@ const HomePage = () => {
       .ticker-container-right {
         width: 97.5%;
         height: auto; /* Allow height to adjust based on content */
-        background: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1738238118/360_F_293943271_zd4kkAHnnryKiyIdRMAX2McgijQ0mrOb_d18vhh.jpg') no-repeat center center; 
+         background-color: #252525; 
         background-size: cover; /* Ensure the background covers the entire container */
-        box-shadow: 0 4px 20px rgba(255, 215, 0, 0.5);
+        
         padding: 15px;
         border-radius: 8px;
         color: #2e2e2e;
         margin-top: 20px;
-        border: 2px solid #ffcc00;
+        
         display: flex;
         justify-content: space-between;
         position: relative;
@@ -318,7 +318,7 @@ td {
     <div>
       <div className="sidebar">
         <div className="logo">
-          <img src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737098769/Default_Create_a_round_logo_for_a_stock_market_scanner_or_trad_1_a038e6fd-6af3-4085-9199-449cf7811765_0_vsnsbo.png" alt="Logo" />
+          <img src="https://res.cloudinary.com/dyrn2eg1j/image/upload/v1740729458/Add_a_subheading_zggqbd.png" alt="Logo" />
         </div>
         <ul className="nav-links">
           <li><a href="/heat"><i className="fa fa-signal"></i>Heatmap</a></li>

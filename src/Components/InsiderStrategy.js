@@ -199,7 +199,7 @@ const InsiderBar = () => {
 
       <style jsx>{`
         .insider-bar {
-          background: #121212;
+           background-color: #252525;
           color: #f4f4f4;
           padding: 30px;
           border-radius: 10px;
@@ -250,7 +250,7 @@ const InsiderBar = () => {
         }
 
         .table-container {
-          background: #1c1c1c;
+           background-color: #252525;
           border-radius: 10px;
           width: 100%;
           height: 400px;
@@ -259,7 +259,7 @@ const InsiderBar = () => {
         }
 
         .Highorder {
-          background: #1c1c1c;
+           background-color: #252525;
           border-radius: 10px;
           padding: 20px;
           margin-top: 20px;
@@ -349,7 +349,7 @@ const Layout = ({ children }) => {
       <div className="sidebar">
         <div className="logo">
           <img
-            src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737098769/Default_Create_a_round_logo_for_a_stock_market_scanner_or_trad_1_a038e6fd-6af3-4085-9199-449cf7811765_0_vsnsbo.png"
+            src="https://res.cloudinary.com/dyrn2eg1j/image/upload/v1740729458/Add_a_subheading_zggqbd.png"
             alt="Logo"
           />
         </div>
@@ -387,7 +387,7 @@ const Layout = ({ children }) => {
         .sidebar {
           width: 250px;
           height: 100vh;
-          background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099004/Flux_Dev_Create_a_tall_rectangular_banner_background_with_an_u_1_oyb158.jpg');
+           background-color: #252525;
           background-size: cover;
           background-position: center;
           position: fixed;
@@ -459,6 +459,7 @@ const Layout = ({ children }) => {
         .content {
           margin-left: 250px;
           padding: 20px;
+           background-color: #252525;
         }
 
         .ticker-container {

@@ -122,7 +122,7 @@ const Heatmap = () => {
       <div className="sidebar">
         <div className="logo">
           <img
-            src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737098769/Default_Create_a_round_logo_for_a_stock_market_scanner_or_trad_1_a038e6fd-6af3-4085-9199-449cf7811765_0_vsnsbo.png"
+            src="https://res.cloudinary.com/dyrn2eg1j/image/upload/v1740729458/Add_a_subheading_zggqbd.png"
             alt="Logo"
           />
         </div>
@@ -178,7 +178,7 @@ const Heatmap = () => {
         .sidebar {
           width: 250px;
           height: 100vh;
-          background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099004/Flux_Dev_Create_a_tall_rectangular_banner_background_with_an_u_1_oyb158.jpg');
+           background-color: #252525;
           background-size: cover;
           background-position: center;
           position: fixed;
@@ -266,7 +266,7 @@ const Heatmap = () => {
         }
 
        .partition {
-    background-color: rgba(245, 238, 243, 0.98); /* Light background for partitions */
+    background-color: rgba(238, 245, 243, 0.98); /* Light background for partitions */
     border-radius: 5px;
     padding: 10px;
     flex: 1 1 100%; /* Full width */

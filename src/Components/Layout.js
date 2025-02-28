@@ -8,7 +8,7 @@ const Layout = () => {
       <div className="sidebar">
         <div className="logo">
           <img
-            src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1734769382/Add_a_heading__1_-removebg-preview_gpcqii.png"
+            src="https://res.cloudinary.com/dyrn2eg1j/image/upload/v1740729458/Add_a_subheading_zggqbd.png"
             alt="Logo"
           />
         </div>

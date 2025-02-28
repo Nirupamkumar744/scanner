@@ -19,21 +19,21 @@ const MarketPulse = () => {
             overflow-x: hidden;
           }
 
-          .sidebar {
-  width: 250px;
-  height: 100vh;
-  background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1737099004/Flux_Dev_Create_a_tall_rectangular_banner_background_with_an_u_1_oyb158.jpg');
-  background-size: cover;
-  background-position: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  padding: 20px 0;
-  color: white;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-  z-index: 2;
-  overflow-y: auto;
-}
+.sidebar {
+          width: 250px;
+          height: 100vh;
+          background-color: #252525;
+          background-size: cover;
+          background-position: center;
+          position: fixed;
+          top: 0;
+          left: 0;
+          padding: 20px 0;
+          color: white;
+          box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+          z-index: 2;
+          overflow-y: auto;
+         }
 
           .sidebar::-webkit-scrollbar {
             width: 8px;
@@ -94,7 +94,7 @@ const MarketPulse = () => {
            .content {
     margin-left: 250px;
     padding: 20px;
-    background-image: url('https://res.cloudinary.com/dcbvuidqn/image/upload/v1738238118/360_F_293943271_zd4kkAHnnryKiyIdRMAX2McgijQ0mrOb_d18vhh.jpg');
+     background-color: #252525;
     background-size: cover; /* Ensure the background covers the entire area */
     background-position: center; /* Center the background image */
     background-repeat: no-repeat; /* Prevent the background from repeating */
@@ -113,7 +113,7 @@ const MarketPulse = () => {
           .main-container {
             width: 1200px;
             height: 620px;
-            background: rgba(255, 255, 255, 0.1);
+            background-color: #252525;
             border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
@@ -129,7 +129,7 @@ const MarketPulse = () => {
           .additional-container {
             width: 1200px;
             height: 600px;
-            background: rgba(255, 255, 255, 0.1);
+            background-color: #252525;
             border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
