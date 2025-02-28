@@ -2,7 +2,32 @@ import React, { useEffect, useState, useCallback } from "react";
 import { FaHome } from "react-icons/fa";
 import TickerTape from "../Widgets/TickerTape"; // Ensure this is the correct path
 
-const InsiderBar = () => {
+// Navbar Component
+const Navbar = ({ isNavOpen, setIsNavOpen }) => {
+  return (
+    <div className="navbar">
+      <div className="logo">
+        <img src="https://res.cloudinary.com/dyrn2eg1j/image/upload/v1740734340/Add_a_subheading_1_pui9fq.png" alt="Logo" />
+      </div>
+      <div className="hamburger" onClick={() => setIsNavOpen(!isNavOpen)}>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <ul className={`nav-links ${isNavOpen ? 'open' : ''}`}>
+        <li><a href="/home"><FaHome style={{ marginRight: "10px", color: "yellow" }} />Home</a></li>
+        <li><a href="/heat"><i className="fa fa-signal"></i>Heatmap</a></li>
+        <li><a href="/marketpulse"><i className="fa fa-chart-line"></i>Crypto/Forex</a></li>
+        <li><a href="/tradejournal"><i className="fa fa-book"></i>Trading Journal</a></li>
+        <li><a href="/technical"><i className="fa fa-video"></i>Technical Analysis</a></li>
+        <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
+      </ul>
+    </div>
+  );
+};
+
+// InsiderBar Component
+const InsiderBar = ({ isNavOpen }) => {
   const [insiderData, setInsiderData] = useState([]);
   const [previousData, setPreviousData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -96,7 +121,7 @@ const InsiderBar = () => {
   if (error) return <div className="error">Error: {error.message}</div>;
 
   return (
-    <div className="insider-bar">
+    <div className={`insider-bar ${isNavOpen ? 'blur' : ''}`}>
       <div className="header">
         <h2>
           Inside Bar
@@ -111,6 +136,8 @@ const InsiderBar = () => {
         />
       </div>
 
+      <TickerTape /> {/* Render the TickerTape component here */}
+
       <div className="table-container">
         <table>
           <thead>
@@ -118,8 +145,7 @@ const InsiderBar = () => {
               <th>Symbol</th>
               <th>Current Price</th>
               <th>Chart</th>
-              <th>Technicals</th>
-              <th>Breakout</th>
+              <th>Breakout</th> {/* Removed the Technicals column */}
             </tr>
           </thead>
           <tbody>
@@ -132,16 +158,6 @@ const InsiderBar = () => {
                     <img
                       src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
                       alt="Chart Icon"
-                      width="25"
-                      className="icon"
-                    />
-                  </a>
-                </td>
-                <td>
-                  <a href={`https://in.tradingview.com/symbols/${data.symbol.replace('.NS', '')}/technicals/`} target="_blank" rel="noopener noreferrer">
-                    <img
-                      src="https://img.icons8.com/ios/452/settings.png"
-                      alt="Technical Icon"
                       width="25"
                       className="icon"
                     />
@@ -199,11 +215,11 @@ const InsiderBar = () => {
 
       <style jsx>{`
         .insider-bar {
-           background-color: #252525;
+          background-color: #252525;
           color: #f4f4f4;
           padding: 30px;
           border-radius: 10px;
-          box-shadow: 0 4px  15px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
           width: 90%;
           max-width: 100%;
           margin: 20px auto;
@@ -250,7 +266,7 @@ const InsiderBar = () => {
         }
 
         .table-container {
-           background-color: #252525;
+          background-color: #252525;
           border-radius: 10px;
           width: 100%;
           height: 400px;
@@ -259,7 +275,7 @@ const InsiderBar = () => {
         }
 
         .Highorder {
-           background-color: #252525;
+          background-color: #252525;
           border-radius: 10px;
           padding: 20px;
           margin-top: 20px;
@@ -338,43 +354,123 @@ const InsiderBar = () => {
           text-align: center;
           margin-top: 20px;
         }
+
+        /* Navbar Styles */
+        .navbar {
+          display: flex;
+          justify-content: space-between; /* Space between logo and nav links */
+          align-items: center;
+          background-color: #252525;
+          padding: 5px 20px; /* Reduced padding for a thinner navbar */
+          color: white;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo img {
+          width: 100px; /* Adjust logo size if needed */
+          height: auto; /* Maintain aspect ratio */
+        }
+
+        .nav-links {
+          list-style: none;
+          display: flex;
+          padding: 0;
+          margin: 0;
+          transition: transform 0.3s ease; /* Smooth transition for sliding */
+          transform: translateX(0); /* Start on-screen */
+          margin-left: auto; /* Push nav links to the right */
+        }
+
+        .nav-links.open {
+          display: flex; /* Show nav links when open */
+        }
+
+        .nav-links li {
+          margin: 0 10px; /* Reduced margin for nav links */
+        }
+
+        .nav-links li a {
+          color: white;
+          text-decoration: none;
+          font-size: 14px; /* Reduced font size for a more compact look */
+          font-weight: 500;
+          padding: 10px 15px; /* Add padding to make it look like a button */
+          border: 1px solid transparent; /* Add border */
+          border-radius: 5px; /* Rounded corners */
+          background-color: #333; /* Background color */
+          transition: background-color 0.3s, border-color 0.3s; /* Transition for hover effect */
+          display: flex; /* Use flex to align icon and text */
+          align-items: center; /* Center items vertically */
+        }
+
+        .nav-links li a:hover {
+          background-color: gold; /* Change background on hover */
+          border-color: gold; /* Change border color on hover */
+          color: black; /* Change text color on hover */
+        }
+
+        .nav-links li a i {
+          margin-right: 5px; /* Added margin for space between icon and text */
+        }
+
+        .hamburger {
+          display: none; /* Hidden by default */
+          flex-direction: column;
+          cursor: pointer;
+        }
+
+        .hamburger div {
+          width: 25px;
+          height: 3px;
+          background-color: white;
+          margin: 4px 0;
+          transition: 0.4s;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+          .nav-links {
+            display: none; /* Hide nav links by default on small screens */
+            flex-direction: column;
+            position: absolute;
+            top: 50px; /* Adjust based on navbar height */
+            left: 0;
+            background-color: #252525;
+            width: 100%;
+            padding: 10px 0;
+            z-index: 10;
+            transform: translateX(-100%); /* Start off-screen to the left */
+            transition: transform 0.3s ease; /* Smooth transition for sliding */
+          }
+
+          .nav-links.open {
+            display: flex; /* Show nav links when open */
+            transform: translateX(0); /* Slide in */
+          }
+
+          .hamburger {
+            display: flex; /* Show hamburger icon on smaller screens */
+            z-index: 20; /* Ensure it stays above other content */
+          }
+
+          /* Make table font smaller on mobile */
+          table {
+            font-size: 12px; /* Smaller font size for mobile */
+          }
+        }
       `}</style>
     </div>
   );
 };
 
-const Layout = ({ children }) => {
+// Main App Component
+const App = () => {
+  const [isNavOpen, setIsNavOpen] = useState(false); // State to handle nav visibility
+
   return (
     <div className="layout-container">
-      <div className="sidebar">
-        <div className="logo">
-          <img
-            src="https://res.cloudinary.com/dyrn2eg1j/image/upload/v1740734340/Add_a_subheading_1_pui9fq.png"
-            alt="Logo"
-          />
-        </div>
-        <ul className="nav-links">
-          <li>
-            <a href="/home">
-              <FaHome style={{ marginRight: "10px", color: "yellow" }} />
-              Home
-            </a>
-          </li>
-          <li><a href="/heat"><i className="fa fa-signal"></i>Heatmap</a></li>
-          <li><a href="/marketpulse"><i className="fa fa-chart-line"></i>Crypto/Forex</a></li>
-          <li><a href="/tradejournal"><i className="fa fa-book"></i>Trading Journal</a></li>
-          <li><a href="/technical"><i className="fa fa-video"></i>Technical Analysis</a></li>
-          <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
-        </ul>
-      </div>
-
-      <div className="content">
-        <div className="ticker-container">
-          <TickerTape />
-        </div>
-        {children}
-      </div>
-
+      <Navbar isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
+      <InsiderBar isNavOpen={isNavOpen} />
       <style jsx>{`
         .layout-container {
           font-family: 'Poppins', sans-serif;
@@ -383,98 +479,8 @@ const Layout = ({ children }) => {
           background: black;
           overflow-x: hidden;
         }
-
-        .sidebar {
-          width: 250px;
-          height: 100vh;
-           background-color: #252525;
-          background-size: cover;
-          background-position: center;
-          position: fixed;
-          top: 0;
-          left: 0;
-          padding: 20px 0;
-          color: white;
-          box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-          z-index: 2;
-          overflow-y: auto;
-        }
-
-        .sidebar::-webkit-scrollbar {
-          width: 8px;
-        }
-
-        .sidebar::-webkit-scrollbar-thumb {
-          background-color: #888;
-          border-radius: 4px;
-        }
-
-        .sidebar::-webkit-scrollbar-thumb:hover {
-          background-color: #555;
-        }
-
-        .logo {
-          text-align: center;
-          margin-bottom: 0;
-        }
-
-        .logo img {
-          width: 140px;
-          height: 140px;
-          margin-bottom: 0;
-        }
-
-        .nav-links {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-        }
-
-        .nav-links li {
-          margin: 10px 0;
-        }
-
-        .nav-links li a {
-          display: flex;
-          align-items: center;
-          padding: 12px 20px;
-          color: white;
-          text-decoration: none;
-          font-size: 16px;
-          font-weight: 500;
-          border-radius: 8px;
-          transition: all 0.3s ease;
-        }
-
-        .nav-links li a i {
-          margin-right: 10px;
-          color: gold;
-        }
-
-        .nav-links li a:hover {
-          background: rgba(255, 255, 255, 0.1);
-          transform: scale(1.05);
-        }
-
-        .content {
-          margin-left: 250px;
-          padding: 20px;
-           background-color: #252525;
-        }
-
-        .ticker-container {
-          margin-bottom: 20px;
-        }
       `}</style>
     </div>
-  );
-};
-
-const App = () => {
-  return (
-    <Layout>
-      <InsiderBar />
-    </Layout>
   );
 };
 
