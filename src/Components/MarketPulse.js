@@ -154,7 +154,7 @@ const MarketPulse = () => {
 
       <div className="sidebar">
         <div className="logo">
-          <img src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737098769/Default_Create_a_round_logo_for_a_stock_market_scanner_or_trad_1_a038e6fd-6af3-4085-9199-449cf7811765_0_vsnsbo.png" alt="Logo" />
+          <img src="https://res.cloudinary.com/dyrn2eg1j/image/upload/v1740734340/Add_a_subheading_1_pui9fq.png" alt="Logo" />
         </div>
         <ul className="nav-links">
           <li><a href="/home"><FaHome style={{ marginRight: '10px', color: "yellow" }} />Home</a></li>
