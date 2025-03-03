@@ -4,6 +4,7 @@ import { FaHome } from "react-icons/fa";
 import { db } from "./firebase"; // Assuming your firebase is set up in the firebase.js file
 import { doc, setDoc, collection, getDocs } from "firebase/firestore"; // Import Firestore functions
 import { getAuth } from "firebase/auth"; // Import Firebase Auth
+import { format, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns'; // Import date-fns for date handling
 
 // CSS styles moved outside the component to avoid dependency warnings
 const styles = `
@@ -20,9 +21,7 @@ const styles = `
   .sidebar {
     width: 250px;
     height: 100vh;
-     background-color: #252525;
-    background-size: cover;
-    background-position: center;
+    background-color: #252525;
     position: fixed;
     top: 0;
     left: 0;
@@ -31,19 +30,6 @@ const styles = `
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
     z-index: 2;
     overflow-y: auto;
-  }
-
-  .sidebar::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  .sidebar::-webkit-scrollbar-thumb {
-    background-color: #888;
-    border-radius: 4px;
-  }
-
-  .sidebar::-webkit-scrollbar-thumb:hover {
-    background-color: #555;
   }
 
   .logo {
@@ -79,11 +65,6 @@ const styles = `
     transition: all 0.3s ease;
   }
 
-  .nav-links li a i {
-    margin-right: 10px;
-    color: gold;
-  }
-
   .nav-links li a:hover {
     background: rgba(255, 255, 255, 0.1);
     transform: scale(1.05);
@@ -92,13 +73,10 @@ const styles = `
   .content {
     margin-left: 250px;
     padding: 20px;
-     background-color: #252525;
-    background-size: cover; /* Ensure the background covers the entire area */
-    background-position: center; /* Center the background image */
-    background-repeat: no-repeat; /* Prevent the background from repeating */
-    color: white; /* Set text color to white for better contrast */
-    min-height: 100vh; /* Ensure the content area takes at least full viewport height */
-    position: relative; /* Maintain relative positioning */
+    background-color: #252525;
+    color: white;
+    min-height: 100vh;
+    position: relative;
   }
 
   .ticker-container {
@@ -109,26 +87,14 @@ const styles = `
     margin-bottom: 20px;
   }
 
-  .heading {
-    text-align: center;
-    font-size: 48px;
-    font-weight: 700;
-    color: gold;
-    margin-top: 40px;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
-  }
-
   .rectangle-container {
     margin: 20px auto;
     width: 98%;
-    height: 1080px;
     background: black;
-    border: 2px solid gold;
     border-radius: 12px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     padding: 10px;
     position: relative;
   }
@@ -152,7 +118,6 @@ const styles = `
 
   .month {
     background: #333;
-    border: 2px solid gold;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -163,7 +128,6 @@ const styles = `
     font-size: 18px;
     font-weight: 500;
     text-align: center;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   }
 
   .month h3 {
@@ -185,7 +149,7 @@ const styles = `
     text-align: center;
     color: #fff;
     border-radius: 5px;
-    position: relative; /* For positioning the popup */
+    position: relative;
   }
 
   .weekend {
@@ -299,6 +263,38 @@ const styles = `
     transform: translateX(-50%);
     z-index: 10;
   }
+
+  .trade-summary-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+
+  .trade-summary {
+    width: 48%;
+    background: #333;
+    border-radius: 10px;
+    padding: 10px;
+    color: white;
+  }
+
+  .trade-summary h2 {
+    background: green; /* Green for Winner Trade */
+    color: black; /* Black font color for Winner Trade */
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    margin: -10px -10px 10px -10px; /* Adjust margin to create a banner effect */
+  }
+
+  .trade-summary.loser h2 {
+    background: red; /* Red for Loser Trade */
+    color: black; /* White font color for Loser Trade */
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    margin: -10px -10px 10px -10px; /* Adjust margin to create a banner effect */
+  }
 `;
 
 const TradeJournal = () => {
@@ -311,6 +307,10 @@ const TradeJournal = () => {
   const [profitLoss, setProfitLoss] = useState(null);
   const [hoveredDate, setHoveredDate] = useState(null);
   const [overallProfitLoss, setOverallProfitLoss] = useState(0);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // State for selected year
+  const [mostProfitableTrade, setMostProfitableTrade] = useState(null);
+  const [biggestLosingTrade, setBiggestLosingTrade] = useState(null);
+  const [reasonForTrade, setReasonForTrade] = useState(""); // New state for reason
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -328,7 +328,7 @@ const TradeJournal = () => {
 
   const saveTrade = async () => {
     try {
-      const user = getAuth().currentUser ;
+      const user = getAuth().currentUser  ;
       if (!user) {
         alert("User  not authenticated");
         return;
@@ -343,13 +343,50 @@ const TradeJournal = () => {
         buyPrice,
         sellPrice,
         profitLoss,
+        reasonForTrade, // Save the reason for trade
         timestamp: new Date(),
       });
       alert("Trade saved successfully!");
       closeModal();
+      fetchTrades(); // Fetch trades after saving
     } catch (error) {
       console.error("Error saving trade: ", error.message);
       alert(`Error saving trade: ${error.message}`);
+    }
+  };
+
+  const fetchTrades = async () => {
+    try {
+      const user = getAuth().currentUser  ;
+      if (!user) return;
+
+      const userId = user.uid; // Use UID instead of email
+      const tradesRef = collection(db, "users", userId, "Trade");
+      const querySnapshot = await getDocs(tradesRef);
+      let trades = [];
+
+      querySnapshot.forEach((doc) => {
+        const trade = doc.data();
+        const tradeDate = trade.timestamp.toDate();
+        if (tradeDate.getFullYear() === selectedYear) {
+          trades.push(trade);
+        }
+      });
+
+      // Calculate most profitable trade
+      const profitableTrade = trades.reduce((prev, current) => {
+        return (prev.profitLoss > current.profitLoss) ? prev : current;
+      }, { profitLoss: -Infinity });
+
+      // Calculate biggest losing trade
+      const losingTrade = trades.reduce((prev, current) => {
+        return (prev.profitLoss < current.profitLoss) ? prev : current;
+      }, { profitLoss: Infinity });
+
+      setMostProfitableTrade(profitableTrade.profitLoss > 0 ? profitableTrade : null);
+      setBiggestLosingTrade(losingTrade.profitLoss < 0 ? losingTrade : null);
+    } catch (error) {
+      console.error("Error fetching trades: ", error.message);
     }
   };
 
@@ -359,9 +396,13 @@ const TradeJournal = () => {
     }
   }, [buyPrice, sellPrice, quantity, calculateProfitLoss]);
 
+  useEffect(() => {
+    fetchTrades(); // Fetch trades when the selected year changes
+  }, [selectedYear, fetchTrades]); // Include fetchTrades in the dependency array
+
   const fetchOverallProfitLoss = async (date) => {
     try {
-      const user = getAuth().currentUser ;
+      const user = getAuth().currentUser  ;
       if (!user) return;
 
       const userId = user.uid; // Use UID instead of email
@@ -383,9 +424,9 @@ const TradeJournal = () => {
     }
   };
 
-  const handleMouseEnter = (day, month) => {
+  const handleMouseEnter = (day) => {
     if (day) {
-      const date = new Date(2025, month, day).toDateString(); // Include month in the date
+      const date = day.toDateString(); // Use the day directly
       setHoveredDate(date);
       fetchOverallProfitLoss(date);
     }
@@ -397,23 +438,15 @@ const TradeJournal = () => {
   };
 
   const getMonthDays = (month, year) => {
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const firstDay = new Date(year, month, 1).getDay();
-    const days = [];
-    for (let i = 0; i < firstDay; i++) {
-      days.push(null);
-    }
-    for (let i = 1; i <= daysInMonth; i++) {
-      days.push(i);
-    }
-    return days;
+    const start = startOfMonth(new Date(year, month));
+    const end = endOfMonth(start);
+    return eachDayOfInterval({ start, end });
   };
 
   const months = Array.from({ length: 12 }, (_, index) => {
-    const month = new Date(2025, index, 1); // Example year 2025
     return {
-      name: month.toLocaleString("default", { month: "long" }),
-      days: getMonthDays(index, 2025),
+      name: format(new Date(selectedYear, index), 'MMMM'),
+      days: getMonthDays(index, selectedYear),
     };
   });
 
@@ -442,6 +475,14 @@ const TradeJournal = () => {
         <div className="rectangle-container">
           <h2>Trade Journal</h2>
           <button className="add-trade-button" onClick={openModal}>Add Trade</button>
+          <div>
+            <label>Select Year:</label>
+            <select onChange={(e) => setSelectedYear(Number(e.target.value))} value={selectedYear}>
+              {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+          </div>
           <div className="calendar-grid">
             {months.map((month, monthIndex) => (
               <div className="month" key={monthIndex}>
@@ -450,12 +491,13 @@ const TradeJournal = () => {
                   {month.days.map((day, dayIndex) => (
                     <div
                       key={dayIndex}
-                      className={`month-day ${day === null ? "empty" : ""} ${dayIndex % 7 === 5 || dayIndex % 7 === 6 ? "weekend" : ""}`}
-                      onMouseEnter={() => handleMouseEnter(day, monthIndex)} // Pass monthIndex
+                      className={`month-day ${day === null ? "empty" : ""} ${day.getDay() === 0 || day.getDay() === 6 ? "weekend" : ""}`}
+                      onMouseEnter={() => handleMouseEnter(day)} // Pass day
                       onMouseLeave={handleMouseLeave}
+                      onClick={() => handleMouseEnter(day)} // Click to view trades
                     >
-                      {day || ""}
-                      {hoveredDate === new Date(2025, monthIndex, day).toDateString() && (
+                      {day.getDate()}
+                      {hoveredDate === day.toDateString() && (
                         <div className="popup">
                           Profit/Loss: {overallProfitLoss}
                         </div>
@@ -465,6 +507,40 @@ const TradeJournal = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+
+        <div className="trade-summary-container">
+          <div className="trade-summary">
+            <h2>Winner Trade</h2>
+            {mostProfitableTrade ? (
+              <div>
+                <p><strong>Stock Name:</strong> {mostProfitableTrade.stockName}</p>
+                <p><strong>Trade Type:</strong> {mostProfitableTrade.tradeType}</p>
+                <p><strong>Quantity:</strong> {mostProfitableTrade.quantity}</p>
+                <p><strong>Buy Price:</strong> {mostProfitableTrade.buyPrice}</p>
+                <p><strong>Sell Price:</strong> {mostProfitableTrade.sellPrice}</p>
+                <p><strong>Profit/Loss:</strong> {mostProfitableTrade.profitLoss}</p>
+              </div>
+            ) : (
+              <p>No profitable trades found for the selected year.</p>
+            )}
+          </div>
+
+          <div className="trade-summary loser"> {/* Add loser class here */}
+            <h2>Loser Trade</h2>
+            {biggestLosingTrade ? (
+              <div>
+                <p><strong>Stock Name:</strong> {biggestLosingTrade.stockName}</p>
+                <p><strong>Trade Type:</strong> {biggestLosingTrade.tradeType}</p>
+                <p><strong>Quantity:</strong> {biggestLosingTrade.quantity}</p>
+                <p><strong>Buy Price:</strong> {biggestLosingTrade.buyPrice}</p>
+                <p><strong>Sell Price:</strong> {biggestLosingTrade.sellPrice}</p>
+                <p><strong>Profit/Loss:</strong> {biggestLosingTrade.profitLoss}</p>
+              </div>
+            ) : (
+              <p>No losing trades found for the selected year.</p>
+            )}
           </div>
         </div>
       </div>
@@ -507,8 +583,15 @@ const TradeJournal = () => {
               value={sellPrice}
               onChange={(e) => setSellPrice(Number(e.target.value))}
             />
+            <label>Reason for Trade</label>
+            <input
+              type="text"
+              placeholder="Enter reason for trade"
+              value={reasonForTrade}
+              onChange={(e) => setReasonForTrade(e.target.value)}
+            />
             <div>
-              <strong>Profit/Loss: </strong>
+              <strong>Profit/Loss : </strong>
               <span>{profitLoss}</span>
             </div>
             <div className="modal-buttons">
