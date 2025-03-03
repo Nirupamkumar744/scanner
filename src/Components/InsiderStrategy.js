@@ -139,6 +139,8 @@ const InsiderBar = ({ isNavOpen }) => {
       <div className="table-container">
         {loading ? (
           <div className="loading">Loading data...</div>
+        ) : error ? (
+          <div className="error">Error: {error}</div>
         ) : (
           <table>
             <thead>
@@ -289,15 +291,15 @@ const InsiderBar = ({ isNavOpen }) => {
 
         .header {
           display: flex;
-          justify-content: space-between;
-          align-items: center;
+          flex-direction: column; /* Stack header elements vertically */
+          align-items: flex-start; /* Align items to the start */
           margin-bottom: 30px;
         }
 
         .table-heading, .highorder-heading, .loworder-heading {
           font-size: 32px;
           font-weight: bold;
-          margin-bottom: 20px;
+          margin-bottom: 10px; /* Space between heading and search box */
         }
 
         .tooltip {
