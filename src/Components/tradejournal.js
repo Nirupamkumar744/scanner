@@ -328,7 +328,7 @@ const TradeJournal = () => {
 
   const saveTrade = async () => {
     try {
-      const user = getAuth().currentUser  ;
+      const user = getAuth().currentUser ;
       if (!user) {
         alert("User  not authenticated");
         return;
@@ -355,9 +355,9 @@ const TradeJournal = () => {
     }
   };
 
-  const fetchTrades = async () => {
+  const fetchTrades = useCallback(async () => {
     try {
-      const user = getAuth().currentUser  ;
+      const user = getAuth().currentUser ;
       if (!user) return;
 
       const userId = user.uid; // Use UID instead of email
@@ -388,7 +388,7 @@ const TradeJournal = () => {
     } catch (error) {
       console.error("Error fetching trades: ", error.message);
     }
-  };
+  }, [selectedYear]); // Add selectedYear as a dependency
 
   useEffect(() => {
     if (buyPrice && sellPrice && quantity) {
@@ -402,7 +402,7 @@ const TradeJournal = () => {
 
   const fetchOverallProfitLoss = async (date) => {
     try {
-      const user = getAuth().currentUser  ;
+      const user = getAuth().currentUser ;
       if (!user) return;
 
       const userId = user.uid; // Use UID instead of email
