@@ -29,13 +29,16 @@ const Navbar = ({ isNavOpen, setIsNavOpen }) => {
 // InsiderBar Component
 const InsiderBar = ({ isNavOpen }) => {
   const [insiderData, setInsiderData] = useState([]);
-  const [previousData, setPreviousData] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [mainSearchTerm, setMainSearchTerm] = useState(""); // Search term for main table
+  const [highOrderSearchTerm, setHighOrderSearchTerm] = useState(""); // Search term for high order table
+  const [lowOrderSearchTerm, setLowOrderSearchTerm] = useState(""); // Search term for low order table
+  const [loading, setLoading] = useState(false); // Set loading to false initially
   const [error, setError] = useState(null);
   const [highOrderData, setHighOrderData] = useState([]);
+  const [lowOrderData, setLowOrderData] = useState([]); // New state for low order data
 
   const fetchData = useCallback(async () => {
+    setLoading(true); // Set loading to true when fetching data
     try {
       const response = await fetch("https://local-inside-production.up.railway.app/inside-bars");
       if (!response.ok) {
@@ -44,7 +47,6 @@ const InsiderBar = ({ isNavOpen }) => {
       const data = await response.json();
       const filteredData = data.filter(item => item.isInsideBar === true);
       
-      setPreviousData(insiderData);
       setInsiderData(filteredData);
 
       const filteredHighOrderData = filteredData.filter(item => {
@@ -52,18 +54,21 @@ const InsiderBar = ({ isNavOpen }) => {
         return changeValue >= 0.5;
       });
       setHighOrderData(filteredHighOrderData);
+
+      // Filter for low order data (negative change)
+      const filteredLowOrderData = filteredData.filter(item => {
+        const changeValue = parseFloat(item.motherCandle.change);
+        return changeValue < 0; // Negative change
+      });
+      setLowOrderData(filteredLowOrderData);
     } catch (error) {
-      setError(error);
+      setError(error.message); // Set error message
     } finally {
-      setLoading(false);
+      setLoading(false); // Set loading to false after fetching data
     }
-  }, [insiderData]);
+  }, []);
 
   const scheduleNextFetch = useCallback(() => {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-
     const fetchTimes = [
       { hour: 11, minute: 20 },
       { hour: 12, minute: 20 },
@@ -71,44 +76,33 @@ const InsiderBar = ({ isNavOpen }) => {
       { hour: 14, minute: 20 },
     ];
 
-    let nextFetchTime = null;
+    const now = new Date();
+    const currentTime = now.getHours() * 60 + now.getMinutes(); // Convert current time to minutes
 
-    for (const time of fetchTimes) {
-      if (hours < time.hour || (hours === time.hour && minutes < time.minute)) {
-        nextFetchTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), time.hour, time.minute);
-        break;
-      }
+    const nextFetchTime = fetchTimes.find(time => {
+      const fetchTimeInMinutes = time.hour * 60 + time.minute;
+      return fetchTimeInMinutes > currentTime; // Find the next scheduled time
+    });
+
+    if (nextFetchTime) {
+      const fetchTimeInMinutes = nextFetchTime.hour * 60 + nextFetchTime.minute;
+      const delay = (fetchTimeInMinutes - currentTime) * 60 * 1000; // Calculate delay in milliseconds
+
+      setTimeout(() => {
+        fetchData(); // Fetch data at the scheduled time
+        scheduleNextFetch(); // Schedule the next fetch
+      }, delay);
     }
-
-    if (!nextFetchTime) {
-      nextFetchTime = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 11, 22);
-    }
-
-    const delay = nextFetchTime - now;
-
-    setTimeout(() => {
-      fetchData();
-      scheduleNextFetch();
-    }, delay);
   }, [fetchData]);
 
   useEffect(() => {
-    fetchData();
-    scheduleNextFetch();
+    fetchData(); // Fetch data immediately on mount
+    scheduleNextFetch(); // Start the scheduling for future fetches
 
     return () => {
       // Cleanup if necessary
     };
   }, [fetchData, scheduleNextFetch]);
-
-  const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
-  };
-
-  const filteredData = insiderData.length > 0 ? insiderData : previousData;
-  const filteredDataWithSearch = filteredData.filter((data) =>
-    data.symbol.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const scrollToSymbol = (symbol) => {
     const element = document.getElementById(symbol);
@@ -117,13 +111,18 @@ const InsiderBar = ({ isNavOpen }) => {
     }
   };
 
-  if (loading) return <div className="loading">Loading...</div>;
-  if (error) return <div className="error">Error: {error.message}</div>;
+  // Filtered data for each table
+  const filteredHighOrderDataWithSearch = highOrderData.filter((data) =>
+    data.symbol.toLowerCase().includes(highOrderSearchTerm.toLowerCase())
+  );
+  const filteredLowOrderDataWithSearch = lowOrderData.filter((data) =>
+    data.symbol.toLowerCase().includes(lowOrderSearchTerm.toLowerCase())
+  );
 
   return (
     <div className={`insider-bar ${isNavOpen ? 'blur' : ''}`}>
       <div className="header">
-        <h2>
+        <h2 className="table-heading">
           Inside Bar
           <span className="tooltip">💡</span>
         </h2>
@@ -131,51 +130,64 @@ const InsiderBar = ({ isNavOpen }) => {
           type="text"
           className="search-box"
           placeholder="Search Symbol..."
-          value={searchTerm}
-          onChange={handleSearch}
+          value={mainSearchTerm}
+          onChange={(e) => setMainSearchTerm(e.target.value)}
         />
       </div>
 
-      <TickerTape /> {/* Render the TickerTape component here */}
-
+      {/* Main Insider Data Table */}
       <div className="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Symbol</th>
-              <th>Current Price</th>
-              <th>Chart</th>
-              <th>Breakout</th> {/* Removed the Technicals column */}
-            </tr>
-          </thead>
-          <tbody>
-            {filteredDataWithSearch.map((data, index) => (
-              <tr key={index} id={data.symbol} onClick={() => scrollToSymbol(data.symbol)}>
-                <td>{data.symbol.replace('.NS', '')}</td>
-                <td>{data.motherCandle && data.motherCandle.high ? data.motherCandle.high.toFixed(2) : 'N/A'}</td>
-                <td>
-                  <a href={`https://in.tradingview.com/chart/?symbol=${data.symbol.replace('.NS', '')}`} target="_blank" rel="noopener noreferrer">
-                    <img
-                      src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
-                      alt="Chart Icon"
-                      width="25"
-                      className="icon"
-                    />
-                  </a>
-                </td>
-                <td>
-                  <span style={{ color: data.type === "Bearish Inside Bar" ? "red" : data.type === "Bullish Inside Bar" ? "green" : "black", fontWeight: 'bold' }}>
-                    {data.type === "Bearish Inside Bar" ? "Bearish" : data.type === "Bullish Inside Bar" ? "Bullish" : "Neutral"}
-                  </span>
-                </td>
+        {loading ? (
+          <div className="loading">Loading data...</div>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Current Price</th>
+                <th>Chart</th>
+                <th>Breakout</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {insiderData.filter((data) =>
+                data.symbol.toLowerCase().includes(mainSearchTerm.toLowerCase())
+              ).map((data, index) => (
+                <tr key={index} id={data.symbol} onClick={() => scrollToSymbol(data.symbol)}>
+                  <td>{data.symbol.replace('.NS', '')}</td>
+                  <td>{data.motherCandle && data.motherCandle.high ? data.motherCandle.high.toFixed(2) : 'N/A'}</td>
+                  <td>
+                    <a href={`https://in.tradingview.com/chart/?symbol=${data.symbol.replace('.NS', '')}`} target="_blank" rel="noopener noreferrer">
+                      <img
+                        src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
+                        alt="Chart Icon"
+                        width="25"
+                        className="icon"
+                      />
+                    </a>
+                  </td>
+                  <td>
+                    <span style={{ color: data.type === "Bearish Inside Bar" ? "red" : data.type === "Bullish Inside Bar" ? "green" : "black", fontWeight: 'bold' }}>
+                      {data.type === "Bearish Inside Bar" ? "Bearish" : data.type === "Bullish Inside Bar" ? "Bullish" : "Neutral"}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
 
+      {/* High Order Section */}
       <div className="Highorder">
         <h2 className="highorder-heading">BULLISH MOMENTUM STOCKS🚀</h2>
+        <input
+          type="text"
+          className="search-box"
+          placeholder="Search in High Order..."
+          value={highOrderSearchTerm}
+          onChange={(e) => setHighOrderSearchTerm(e.target.value)}
+        />
         <div className="highorder-table-container">
           <table>
             <thead>
@@ -187,7 +199,7 @@ const InsiderBar = ({ isNavOpen }) => {
               </tr>
             </thead>
             <tbody>
-              {highOrderData.map((data, index) => (
+              {filteredHighOrderDataWithSearch.map((data, index) => (
                 <tr key={index} id={data.symbol}>
                   <td>{data.symbol.replace('.NS', '')}</td>
                   <td>{data.motherCandle && data.motherCandle.high ? data.motherCandle.high.toFixed(2) : 'N/A'}</td>
@@ -213,9 +225,58 @@ const InsiderBar = ({ isNavOpen }) => {
         </div>
       </div>
 
+      {/* Low Order Section */}
+      <div className="Loworder">
+        <h2 className="loworder-heading">BEARISH MOMENTUM STOCKS📉</h2>
+        <input
+          type="text"
+          className="search-box"
+          placeholder="Search in Low Order..."
+          value={lowOrderSearchTerm}
+          onChange={(e) => setLowOrderSearchTerm(e.target.value)}
+        />
+        <div className="loworder-table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Current Price</th>
+                <th>Chart</th>
+                <th>Breakout</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredLowOrderDataWithSearch.map((data, index) => (
+                <tr key={index} id={data.symbol}>
+                  <td>{data.symbol.replace('.NS', '')}</td>
+                  <td>{data.motherCandle && data.motherCandle.high ? data.motherCandle.high.toFixed(2) : 'N/A'}</td>
+                  <td>
+                    <a href={`https://in.tradingview.com/chart/?symbol=${data.symbol.replace('.NS', '')}`} target="_blank" rel="noopener noreferrer">
+                      <img
+                        src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
+                        alt="Chart Icon"
+                        width="25"
+                        className="icon"
+                      />
+                    </a>
+                  </td>
+                  <td>
+                    <span style={{ color: data.type === "Bearish Inside Bar" ? "red" : data.type === "Bullish Inside Bar" ? "green" : "black", fontWeight: 'bold' }}>
+                      {data.type === "Bearish Inside Bar" ? "Bearish" : data.type === "Bullish Inside Bar" ? "Bullish" : "Neutral"}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {error && <div className="error">Error: {error}</div>} {/* Display error message if exists */}
+
       <style jsx>{`
         .insider-bar {
-          background-color: #252525;
+          background-color: #1e1e1e; /* Dark background for the insider bar */
           color: #f4f4f4;
           padding: 30px;
           border-radius: 10px;
@@ -233,12 +294,7 @@ const InsiderBar = ({ isNavOpen }) => {
           margin-bottom: 30px;
         }
 
-        .insider-bar h2 {
-          font-size: 32px;
-          font-weight: bold;
-        }
-
-        .highorder-heading {
+        .table-heading, .highorder-heading, .loworder-heading {
           font-size: 32px;
           font-weight: bold;
           margin-bottom: 20px;
@@ -258,6 +314,7 @@ const InsiderBar = ({ isNavOpen }) => {
           color: white;
           width: 250px;
           transition: border-color 0.3s;
+          margin-bottom: 20px; /* Add margin for spacing */
         }
 
         .search-box:focus {
@@ -265,26 +322,21 @@ const InsiderBar = ({ isNavOpen }) => {
           outline: none;
         }
 
-        .table-container {
-          background-color: #252525;
+        .table-container, .highorder-table-container, .loworder-table-container {
+          background-color: #2a2a2a; /* Darker background for tables */
           border-radius: 10px;
           width: 100%;
-          height: 400px;
-          overflow-y: auto;
+          max-height: 300px; /* Set a maximum height */
+          overflow-y: auto; /* Enable vertical scrolling */
           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+          margin-bottom: 20px; /* Add margin for spacing */
         }
 
-        .Highorder {
-          background-color: #252525;
-          border-radius: 10px;
-          padding: 20px;
-          margin-top: 20px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .highorder-table-container {
-          overflow-y: auto;
-          max-height: 300px;
+        /* Hide scrollbar for WebKit browsers */
+        .table-container::-webkit-scrollbar,
+        .highorder-table-container::-webkit-scrollbar,
+        .loworder-table-container::-webkit-scrollbar {
+          display: none; /* Hide scrollbar */
         }
 
         table {
@@ -302,22 +354,22 @@ const InsiderBar = ({ isNavOpen }) => {
         }
 
         th {
-          background: #4CAF50;
+          background: #4CAF50; /* Green background for headers */
           color: white;
           font-weight: bold;
           height: 50px;
         }
 
         tbody tr:nth-child(even) {
-          background-color: rgba(144, 238, 144, 0.3);
+          background-color: rgba(144, 238, 144, 0.3); /* Light green for even rows */
         }
 
         tbody tr:nth-child(odd) {
-          background-color: rgba(255, 255, 255, 0.8);
+          background-color: rgba(255, 255, 255, 0.8); /* Light white for odd rows */
         }
 
         tbody tr:hover {
-          background-color: #1abc9c;
+          background-color: #1abc9c; /* Highlight color on hover */
           color: white;
         }
 
@@ -346,7 +398,7 @@ const InsiderBar = ({ isNavOpen }) => {
           position: sticky;
           top: 0;
           z-index: 1;
-          background: #4CAF50;
+          background: #4CAF50; /* Green background for header */
         }
 
         .loading, .error {
@@ -470,6 +522,9 @@ const App = () => {
   return (
     <div className="layout-container">
       <Navbar isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
+      <div style={{ margin: "20px 0" }}> {/* Add margin for spacing above and below TickerTape */}
+        <TickerTape />
+      </div>
       <InsiderBar isNavOpen={isNavOpen} />
       <style jsx>{`
         .layout-container {
