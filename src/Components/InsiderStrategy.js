@@ -182,7 +182,7 @@ const InsiderBar = ({ isNavOpen }) => {
 
       {/* High Order Section */}
       <div className="Highorder">
-        <h2 className="highorder-heading">BULLISH MOMENTUM STOCKS🚀</h2>
+        <h2 className="highorder-heading">HOM STOCKS🚀</h2>
         <input
           type="text"
           className="search-box"
@@ -229,7 +229,7 @@ const InsiderBar = ({ isNavOpen }) => {
 
       {/* Low Order Section */}
       <div className="Loworder">
-        <h2 className="loworder-heading">BEARISH MOMENTUM STOCKS📉</h2>
+        <h2 className="loworder-heading">LOM STOCKS📉</h2>
         <input
           type="text"
           className="search-box"
