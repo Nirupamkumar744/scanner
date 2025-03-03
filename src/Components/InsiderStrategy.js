@@ -175,7 +175,7 @@ const InsiderBar = ({ isNavOpen }) => {
       </div>
 
       <div className="Highorder">
-        <h2 className="highorder-heading">HOM STOCKS 🚀</h2>
+        <h2 className="highorder-heading">BULLISH MOMENTUM STOCKS🚀</h2>
         <div className="highorder-table-container">
           <table>
             <thead>
