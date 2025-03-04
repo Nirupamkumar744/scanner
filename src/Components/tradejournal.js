@@ -5,6 +5,7 @@ import { doc, setDoc, collection, getDocs } from "firebase/firestore"; // Import
 import { getAuth } from "firebase/auth"; // Import Firebase Auth
 import { format, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns'; // Import date-fns for date handling
 import NavBar from "./NavBar/NavBar";
+
 // CSS styles moved outside the component to avoid dependency warnings
 const styles = `
   @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
@@ -19,7 +20,7 @@ const styles = `
 
   .content {
     background-color: #252525;
-    color: white;
+    color: black;
     min-height: 100vh;
     position: relative;
   }
@@ -34,8 +35,8 @@ const styles = `
 
   .rectangle-container {
     margin: 20px auto;
-    width: 98%;
-    background: black;
+    width: 100%; /* Adjusted width for better fit */
+    background: white;
     border-radius: 12px;
     display: flex;
     flex-direction: column;
@@ -216,11 +217,13 @@ const styles = `
   }
 
   .trade-summary {
-    width: 48%;
+    width: 45%; /* Reduced width for better fit */
     background: #333;
     border-radius: 10px;
     padding: 10px;
     color: white;
+    border: 2px solid white; /* Add white border */
+    margin: 0 10px; /* Add margin to the sides */
   }
 
   .trade-summary h2 {
@@ -240,6 +243,33 @@ const styles = `
     text-align: center;
     margin: -10px -10px 10px -10px; /* Adjust margin to create a banner effect */
   }
+
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .rectangle-container {
+      width: 95%; /* Adjust width for smaller screens */
+    }
+
+    .calendar-grid {
+      grid-template-columns: 1fr; /* Only one month per row */
+    }
+
+    .trade-summary-container {
+      flex-direction: column; /* Stack winner and loser summaries */
+      align-items: center; /* Center align */
+    }
+
+    .trade-summary {
+      width: 90%; /* Full width for trade summaries */
+      margin-bottom: 20px; /* Space between summaries */
+    }
+  }
+
+  @media (min-width: 769px) {
+    .rectangle-container {
+      width: 80%; /* Increase width for larger screens */
+    }
+  }
 `;
 
 const TradeJournal = () => {
@@ -250,8 +280,8 @@ const TradeJournal = () => {
   const [buyPrice, setBuyPrice] = useState("");
   const [sellPrice, setSellPrice] = useState("");
   const [profitLoss, setProfitLoss] = useState(null);
-  const [hoveredDate, setHoveredDate] = useState(null);
-  const [overallProfitLoss, setOverallProfitLoss] = useState(0);
+  const [hoveredDate, setHoveredDate] = useState(null); 
+  const [overallProfitLoss, setOverallProfitLoss] = useState(0); 
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // State for selected year
   const [mostProfitableTrade, setMostProfitableTrade] = useState(null);
   const [biggestLosingTrade, setBiggestLosingTrade] = useState(null);
@@ -369,9 +399,9 @@ const TradeJournal = () => {
     }
   };
 
-  const handleMouseEnter = (day) => {
+  const handleMouseEnter = (day ) => {
     if (day) {
-      const date = day.toDateString(); // Use the day directly
+      const date = day.toDateString(); 
       setHoveredDate(date);
       fetchOverallProfitLoss(date);
     }
@@ -401,7 +431,6 @@ const TradeJournal = () => {
       <NavBar isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
 
       <div className={`content ${isNavOpen ? 'blur' : ''}`}>
-      <div className="content">
         <div className="ticker-container">
           <TickerTape />
         </div>
@@ -442,7 +471,6 @@ const TradeJournal = () => {
             ))}
           </div>
         </div>
-      </div>
         <div className="trade-summary-container">
           <div className="trade-summary">
             <h2>Winner Trade</h2>
@@ -481,7 +509,7 @@ const TradeJournal = () => {
       {isModalOpen && (
         <div className="trade-calculator-modal">
           <div className="modal-content">
-            <h2>Trade Calculator</h2>
+            <h2> Trade Calculator</h2>
             <label>Trade Type</label>
             <select onChange={(e) => setTradeType(e.target.value)} value={tradeType}>
               <option value="">Select Trade Type</option>

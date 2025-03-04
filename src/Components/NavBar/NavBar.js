@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./NavBar.module.css"; // Import CSS Module
 import { FaBars, FaTimes, FaHome, FaSignal, FaBook, FaVideo, FaCalculator } from "react-icons/fa";
 import { FaGears } from "react-icons/fa6";
