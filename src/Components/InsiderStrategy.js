@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import TickerTape from "../Widgets/TickerTape"; // Ensure this is the correct path
 import NavBar from "./NavBar/NavBar";
+
 // InsiderBar Component
 const InsiderBar = () => {
   const [insiderData, setInsiderData] = useState([]);
@@ -96,299 +97,295 @@ const InsiderBar = () => {
 
   return (
     <div className="lay">
-    <div className="insider-bar">
-      <div className="header">
-        <h2 className="table-heading">
-          Inside Bar
-          <span className="tooltip">💡</span>
-        </h2>
-        <input
-          type="text"
-          className="search-box"
-          placeholder="Search Symbol..."
-          value={mainSearchTerm}
-          onChange={(e) => setMainSearchTerm(e.target.value)}
-        />
-      </div>
-
-      {/* Main Insider Data Table */}
-      <div className="table-container">
-        {loading ? (
-          <div className="loading">Loading data...</div>
-        ) : error ? (
-          <div className="error">Error: {error}</div>
-        ) : (
-          <table>
-            <thead>
-              <tr>
-                <th>Symbol</th>
-                <th>Current Price</th>
-                <th>Chart</th>
-                <th>Breakout</th>
-              </tr>
-            </thead>
-            <tbody>
-              {insiderData.filter((data) =>
-                data.symbol.toLowerCase().includes(mainSearchTerm.toLowerCase())
-              ).map((data, index) => (
-                <tr key={index} id={data.symbol} onClick={() => scrollToSymbol(data.symbol)}>
-                  <td>{data.symbol.replace('.NS', '')}</td>
-                  <td>{data.motherCandle && data.motherCandle.high ? data.motherCandle.high.toFixed(2) : 'N/A'}</td>
-                  <td>
-                    <a href={`https://in.tradingview.com/chart/?symbol=${data.symbol.replace('.NS', '')}`} target="_blank" rel="noopener noreferrer">
-                      <img
-                        src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
-                        alt="Chart Icon"
-                        width="25"
-                        className="icon"
-                      />
-                    </a>
-                  </td>
-                  <td>
-                    <span style={{ color: data.type === "Bearish Inside Bar" ? "red" : data.type === "Bullish Inside Bar" ? "green" : "black", fontWeight: 'bold' }}>
-                      {data.type === "Bearish Inside Bar" ? "Bearish" : data.type === "Bullish Inside Bar" ? "Bullish" : "Neutral"}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-
-      {/* High Order Section */}
-      <div className="Highorder">
-        <h2 className="highorder-heading">HOM STOCKS🚀</h2>
-        <input
-          type="text"
-          className="search-box"
-          placeholder="Search in High Order..."
-          value={highOrderSearchTerm}
-          onChange={(e) => setHighOrderSearchTerm(e.target.value)}
-        />
-        <div className="highorder-table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Symbol</th>
-                <th>Current Price</th>
-                <th>Chart</th>
-                <th>Breakout</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredHighOrderDataWithSearch.map((data, index) => (
-                <tr key={index} id={data.symbol}>
-                  <td>{data.symbol.replace('.NS', '')}</td>
-                  <td>{data.motherCandle && data.motherCandle.high ? data.motherCandle.high.toFixed(2) : 'N/A'}</td>
-                  <td>
-                    <a href={`https://in.tradingview.com/chart/?symbol=${data.symbol.replace('.NS', '')}`} target="_blank" rel="noopener noreferrer">
-                      <img
-                        src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
-                        alt="Chart Icon"
-                        width="25"
-                        className="icon"
-                      />
-                    </a>
-                  </td>
-                  <td>
-                    <span style={{ color: data.type === "Bearish Inside Bar" ? "red" : data.type === "Bullish Inside Bar" ? "green" : "black", fontWeight: 'bold' }}>
-                      {data.type === "Bearish Inside Bar" ? "Bearish" : data.type === "Bullish Inside Bar" ? "Bullish" : "Neutral"}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <div className="insider-bar">
+        <div className="header">
+          <h2 className="table-heading">
+            Inside Bar <span className="tooltip">💡</span>
+          </h2>
+          <input
+            type="text"
+            className="search-box"
+            placeholder="Search Symbol..."
+            value={mainSearchTerm}
+            onChange={(e) => setMainSearchTerm(e.target.value)}
+          />
         </div>
-      </div>
 
-      {/* Low Order Section */}
-      <div className="Loworder">
-        <h2 className="loworder-heading">LOM STOCKS📉</h2>
-        <input
-          type="text"
-          className="search-box"
-          placeholder="Search in Low Order..."
-          value={lowOrderSearchTerm}
-          onChange={(e) => setLowOrderSearchTerm(e.target.value)}
-        />
-        <div className="loworder-table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Symbol</th>
-                <th>Current Price</th>
-                <th>Chart</th>
-                <th>Breakout</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredLowOrderDataWithSearch.map((data, index) => (
-                <tr key={index} id={data.symbol}>
-                  <td>{data.symbol.replace('.NS', '')}</td>
-                  <td>{data.motherCandle && data.motherCandle.high ? data.motherCandle.high.toFixed(2) : 'N/A'}</td>
-                  <td>
-                    <a href={`https://in.tradingview.com/chart/?symbol=${data.symbol.replace('.NS', '')}`} target="_blank" rel="noopener noreferrer">
-                      <img
-                        src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
-                        alt="Chart Icon"
-                        width="25"
-                        className="icon"
-                      />
-                    </a>
-                  </td>
-                  <td>
-                    <span style={{ color: data.type === "Bearish Inside Bar" ? "red" : data.type === "Bullish Inside Bar" ? "green" : "black", fontWeight: 'bold' }}>
-                      {data.type === "Bearish Inside Bar" ? "Bearish" : data.type === "Bullish Inside Bar" ? "Bullish" : "Neutral"}
-                    </span>
-                  </td>
+        {/* Main Insider Data Table */}
+        <div className="table-container">
+          {loading ? (
+            <div className="loading">Loading data...</div>
+          ) : error ? (
+            <div className="error">Error: {error}</div>
+          ) : (
+            <table>
+              <thead>
+                <tr>
+                  <th>Symbol</th>
+                  <th>Current Price</th>
+                  <th>Chart</th>
+                  <th>Breakout</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {insiderData.filter((data) =>
+                  data.symbol.toLowerCase().includes(mainSearchTerm.toLowerCase())
+                ).map((data, index) => (
+                  <tr key={index} id={data.symbol} onClick={() => scrollToSymbol(data.symbol)}>
+                    <td>{data.symbol.replace('.NS', '')}</td>
+                    <td>{data.motherCandle && data.motherCandle.high ? data.motherCandle.high.toFixed(2) : 'N/A'}</td>
+                    <td>
+                      <a href={`https://in.tradingview.com/chart/?symbol=${data.symbol.replace('.NS', '')}`} target="_blank" rel="noopener noreferrer">
+                        <img
+                          src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
+                          alt="Chart Icon"
+                          width="25"
+                          className="icon"
+                        />
+                      </a>
+                    </td>
+                    <td>
+                      <span style={{ color: data.type === "Bearish Inside Bar" ? "red" : data.type === "Bullish Inside Bar" ? "green" : "black", fontWeight: 'bold' }}>
+                        {data.type === "Bearish Inside Bar" ? "Bearish" : data.type === "Bullish Inside Bar" ? "Bullish" : "Neutral"}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
+
+        {/* High Order Section */}
+        <div className="Highorder">
+          <h2 className="highorder-heading">HOM STOCKS🚀</h2>
+          <input
+            type="text"
+            className="search-box"
+            placeholder="Search in High Order..."
+            value={highOrderSearchTerm}
+            onChange={(e) => setHighOrderSearchTerm(e.target.value)}
+          />
+          <div className="highorder-table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Symbol</th>
+                  <th>Current Price</th>
+                  <th>Chart</th>
+                  <th>Breakout</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredHighOrderDataWithSearch.map((data, index) => (
+                  <tr key={index} id={data.symbol}>
+                    <td>{data.symbol.replace('.NS', '')}</td>
+                    <td>{data.motherCandle && data.motherCandle.high ? data.motherCandle.high.toFixed(2) : 'N/A'}</td>
+                    <td>
+                      <a href={`https://in.tradingview.com/chart/?symbol=${data.symbol.replace('.NS', '')}`} target="_blank" rel="noopener noreferrer">
+                        <img
+                          src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
+                          alt="Chart Icon"
+                          width="25"
+                          className="icon"
+                        />
+                      </a>
+                    </td>
+                    <td>
+                      <span style={{ color: data.type === "Bearish Inside Bar" ? "red" : data.type === "Bullish Inside Bar" ? "green" : "black", fontWeight: 'bold' }}>
+                        {data.type === "Bearish Inside Bar" ? "Bearish" : data.type === "Bullish Inside Bar" ? "Bullish" : "Neutral"}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Low Order Section */}
+        <div className="Loworder">
+          <h2 className="loworder-heading">LOM STOCKS📉</h2>
+          <input
+            type="text"
+            className="search-box"
+            placeholder="Search in Low Order..."
+            value={lowOrderSearchTerm}
+            onChange={(e) => setLowOrderSearchTerm(e.target.value)}
+          />
+          <div className="loworder-table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Symbol</th>
+                  <th>Current Price</th>
+                  <th>Chart</th>
+                  <th>Breakout</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredLowOrderDataWithSearch.map((data, index) => (
+                  <tr key={index} id={data.symbol}>
+                    <td>{data.symbol.replace('.NS', '')}</td>
+                    <td>{data.motherCandle && data.motherCandle.high ? data.motherCandle.high.toFixed(2) : 'N/A'}</td>
+                    <td>
+                      <a href={`https://in.tradingview.com/chart/?symbol=${data.symbol.replace('.NS', '')}`} target="_blank" rel="noopener noreferrer">
+                        <img
+                          src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737371645/HIGH_POWER_STOCKS_light_pmbvli.webp"
+                          alt="Chart Icon"
+                          width="25"
+                          className="icon"
+                        />
+                      </a>
+                    </td>
+                    <td>
+                      <span style={{ color: data.type === "Bearish Inside Bar" ? "red" : data.type === "Bullish Inside Bar" ? "green" : "black", fontWeight: 'bold' }}>
+                        {data.type === "Bearish Inside Bar" ? "Bearish" : data.type === "Bullish Inside Bar" ? "Bullish" : "Neutral"}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {error && <div className="error">Error: {error}</div>} {/* Display error message if exists */}
+
+        <style jsx>{`
+          .insider-bar {
+            background-color: black; /* Dark background for the insider bar */
+            color: #f4f4f4;
+            padding: 30px;
+            width: 90%;
+            max-width: 100%;
+            margin: 20px auto;
+            font-family: 'Bebas Neue', sans-serif;
+          }
+
+          .header {
+            display: flex;
+            flex-direction: column; /* Stack header elements vertically */
+            align-items: flex-start; /* Align items to the start */
+            margin-bottom: 30px;
+          }
+
+          .table-heading, .highorder-heading, .loworder-heading {
+            font-size: 28px; /* Reduced font size for responsiveness */
+            font-weight: bold;
+            margin-bottom: 10px; /* Space between heading and search box */
+          }
+
+          .tooltip {
+            position: relative;
+            cursor: pointer;
+          }
+
+          .search-box {
+            padding: 10px 15px;
+            font-size: 14px; /* Reduced font size for search box */
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: #333;
+            color: white;
+            width: 250px;
+            transition: border-color 0.3s;
+            margin-bottom: 20px; /* Add margin for spacing */
+          }
+
+          .search-box:focus {
+            border-color: #1abc9c;
+            outline: none;
+          }
+
+          .table-container, .highorder-table-container, .loworder-table-container {
+            background-color: #2a2a2a; /* Darker background for tables */
+            border-radius: 10px;
+            width: 100%;
+            max-height: 300px; /* Set a maximum height */
+            overflow-y: auto; /* Enable vertical scrolling */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px; /* Add margin for spacing */
+          }
+
+          /* Hide scrollbar for WebKit browsers */
+          .table-container::-webkit-scrollbar,
+          .highorder-table-container::-webkit-scrollbar,
+          .loworder-table-container::-webkit-scrollbar {
+            display: none; /* Hide scrollbar */
+          }
+
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            font-size: 14px; /* Reduced font size for table */
+          }
+
+          th,
+          td {
+            padding: 10px; /* Reduced padding for table cells */
+            text-align: center;
+            border: 1px solid #ddd;
+            color: black;
+          }
+
+          th {
+            background: BLACK; /* Green background for headers */
+            color: white;
+            font-weight: bold;
+            height: 40px; /* Reduced height for header */
+          }
+
+          tbody tr:nth-child(even) {
+            background-color: rgba( 97, 237, 244, 0.3); /* Light green for even rows */
+          }
+
+          tbody tr:nth-child(odd) {
+            background-color: rgba(255, 255, 255, 0.8); /* Light white for odd rows */
+          }
+
+          tbody tr:hover {
+            background-color: #1abc9c; /* Highlight color on hover */
+            color: white;
+          }
+
+          tbody td {
+            transition: background-color 0.3s ease;
+          }
+
+          a {
+            text-decoration: none;
+          }
+
+          a:hover {
+            opacity: 0.7;
+          }
+
+          .icon {
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+          }
+
+          .icon:hover {
+            transform: scale(1.1);
+          }
+
+          thead {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background: #4CAF50; /* Green background for header */
+          }
+
+          .loading, .error {
+            color: #f4f4f4;
+            text-align: center;
+            margin-top: 20px;
+          }
+        `}</style>
       </div>
-
-      {error && <div className="error">Error: {error}</div>} {/* Display error message if exists */}
-
-      <style jsx>{`
-
-      
-        .insider-bar {
-          background-color: black; /* Dark background for the insider bar */
-          color: #f4f4f4;
-          padding: 30px;
-          
-          width: 90%;
-          max-width: 100%;
-          margin: 20px auto;
-          font-family: 'Bebas Neue', sans-serif;
-        }
-
-        .header {
-          display: flex;
-          flex-direction: column; /* Stack header elements vertically */
-          align-items: flex-start; /* Align items to the start */
-          margin-bottom: 30px;
-        }
-
-        .table-heading, .highorder-heading, .loworder-heading {
-          font-size: 32px;
-          font-weight: bold;
-          margin-bottom: 10px; /* Space between heading and search box */
-        }
-
-        .tooltip {
-          position: relative;
-          cursor: pointer;
-        }
-
-        .search-box {
-          padding: 10px 15px;
-          font-size: 16px;
-          border-radius: 8px;
-          border: 1px solid #444;
-          background: #333;
-          color: white;
-          width: 250px;
-          transition: border-color 0.3s;
-          margin-bottom: 20px; /* Add margin for spacing */
-        }
-
-        .search-box:focus {
-          border-color: #1abc9c;
-          outline: none;
-        }
-
-        .table-container, .highorder-table-container, .loworder-table-container {
-          background-color: #2a2a2a; /* Darker background for tables */
-          border-radius: 10px;
-          width: 100%;
-          max-height: 300px; /* Set a maximum height */
-          overflow-y: auto; /* Enable vertical scrolling */
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-          margin-bottom: 20px; /* Add margin for spacing */
-        }
-
-        /* Hide scrollbar for WebKit browsers */
-        .table-container::-webkit-scrollbar,
-        .highorder-table-container::-webkit-scrollbar,
-        .loworder-table-container::-webkit-scrollbar {
-          display: none; /* Hide scrollbar */
-        }
-
-        table {
-          width: 100%;
-          border-collapse: collapse;
-          background: #fff;
-        }
-
-        th,
-        td {
-          padding: 12px;
-          text-align: center;
-          border: 1px solid #ddd;
-          color: black;
-        }
-
-        th {
-          background: BLACK; /* Green background for headers */
-          color: white;
-          font-weight: bold;
-          height: 50px;
-        }
-
-        tbody tr:nth-child(even) {
-          background-color: rgba(97, 237, 244, 0.3); /* Light green for even rows */
-        }
-
-        tbody tr:nth-child(odd) {
-          background-color: rgba(255, 255, 255, 0.8); /* Light white for odd rows */
-        }
-
-        tbody tr:hover {
-          background-color: #1abc9c; /* Highlight color on hover */
-          color: white;
-        }
-
-        tbody td {
-          transition: background-color 0.3s ease;
-        }
-
-        a {
-          text-decoration: none;
-        }
-
-        a:hover {
-          opacity: 0.7;
-        }
-
-        .icon {
-          border-radius: 50%;
-          transition: transform 0.3s ease;
-        }
-
-        .icon:hover {
-          transform: scale(1.1);
-        }
-
-        thead {
-          position: sticky;
-          top: 0;
-          z-index: 1;
-          background: #4CAF50; /* Green background for header */
-        }
-
-        .loading, .error {
-          color: #f4f4f4;
-          text-align: center;
-          margin-top: 20px;
-        }
-          
-      `}</style>
     </div>
-  </div>
   );
 };
 
@@ -399,8 +396,8 @@ const App = () => {
     <div className="layout-container">
       <style jsx>{`
         .blur {
-        filter: blur(5px); /* Blur effect on content */
-      }
+          filter: blur(5px); /* Blur effect on content */
+        }
       `}</style>
       <NavBar isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
       <div className={`content ${isNavOpen ? 'blur' : ''}`} style={{ margin: "20px 0" }}> {/* Add margin for spacing above and below TickerTape */}
@@ -414,7 +411,6 @@ const App = () => {
           padding: 0;
           background: black;
           overflow-x: hidden;
-        
         }
       `}</style>
     </div>
