@@ -26,12 +26,12 @@ const Calculator = () => {
         font-family: "Poppins", sans-serif;
         margin: 0;
         padding: 0;
-        background: #1a1a1a; /* Dark background for contrast */
+        background: black; /* Dark background for contrast */
         overflow-x: hidden;
       }
 
       .content {
-        background-color: #252525;
+        background-color: black;
         color: white; /* Set text color to white for better contrast */
         min-height: 100vh; /* Ensure the content area takes at least full viewport height */
       }

@@ -19,7 +19,7 @@ const styles = `
   }
 
   .content {
-    background-color: #252525;
+    background-color: black;
     color: black;
     min-height: 100vh;
     position: relative;
@@ -46,8 +46,8 @@ const styles = `
   }
 
   .rectangle-container h2 {
-    font-size: 24px;
-    color: gold;
+    font-size: 30px;
+    color: black;
     font-weight: 600;
     margin: 0;
     padding: 10px;
@@ -218,7 +218,7 @@ const styles = `
 
   .trade-summary {
     width: 45%; /* Reduced width for better fit */
-    background: #333;
+    background: black;
     border-radius: 10px;
     padding: 10px;
     color: white;

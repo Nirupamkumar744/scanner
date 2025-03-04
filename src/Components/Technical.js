@@ -5,6 +5,7 @@ import NavBar from "./NavBar/NavBar";
 const TechnicalAnalysis = () => {
   const [symbol, setSymbol] = useState("NSE:RELIANCE");
   const [isNavOpen, setIsNavOpen] = useState(false); // State to handle nav visibility
+
   const handleSymbolChange = (e) => {
     let input = e.target.value.toUpperCase();
     if (!input.startsWith("NSE:")) {
@@ -42,7 +43,7 @@ const TechnicalAnalysis = () => {
 
   return (
     <div className="technical-analysis-page">
-       <NavBar isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
+      <NavBar isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
 
       <div className="content">
         <div className="ticker-container">
@@ -72,13 +73,12 @@ const TechnicalAnalysis = () => {
             font-family: "Poppins", sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #252525;
+            background-color: black;
             background-size: cover;
             overflow-x: hidden;
           }
 
           .content {
-            padding: 20px;
             background: transparent;
             color: white;
           }
@@ -122,7 +122,18 @@ const TechnicalAnalysis = () => {
           .widget-container {
             width: 100%;
             height: 450px;
-            background-color: #000;
+            background-color: black;
+            overflow: hidden; /* Hide overflow */
+          }
+
+          /* Hide scrollbar */
+          .widget-container::-webkit-scrollbar {
+            display: none; /* For Chrome, Safari, and Opera */
+          }
+
+          .widget-container {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
           }
         `}
       </style>

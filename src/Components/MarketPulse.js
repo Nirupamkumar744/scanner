@@ -24,7 +24,7 @@ const MarketPulse = () => {
 
           .content {
             
-            background-color: #252525;
+            background-color: black;
             background-size: cover; /* Ensure the background covers the entire area */
             background-position: center; /* Center the background image */
             background-repeat: no-repeat; /* Prevent the background from repeating */
@@ -42,12 +42,9 @@ const MarketPulse = () => {
           }
 
           .main-container {
-            width: 1200px;
-            height: 620px;
-            background-color: #252525;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            width: 1800px;
+            height: 900px;
+            background-color: black;
             margin: 20px auto;
             display: flex;
             justify-content: center;
@@ -58,10 +55,10 @@ const MarketPulse = () => {
           }
 
           .additional-container {
-            width: 1200px;
-            height: 600px;
+            width: 1250px;
+            height: 650px;
             background-color: #252525;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid #252525;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
             margin: 20px auto;
@@ -75,7 +72,7 @@ const MarketPulse = () => {
 
           .heading {
             text-align: center;
-            font-size: 24px;
+            font-size: 40px;
             font-weight: bold;
             margin-bottom: 20px;
             color: #FFD700;
@@ -94,7 +91,7 @@ const MarketPulse = () => {
           {/* Render any component or content here */}
           <Crypto />
         </div>
-
+        <div className="heading">Forex Cross Rates</div>
         <div className="additional-container">
           <Forex />
         </div>

@@ -93,7 +93,7 @@ const HomePage = () => {
       .content {
         margin: 0; /* Removed margin */
         padding: 0; /* Removed padding */
-        background-color: #252525;
+        background-color:black;
         color: white;
         min-height: 100vh;
         transition: filter 0.3s ease; /* Smooth transition for blur effect */

@@ -148,7 +148,7 @@ const Heatmap = () => {
       <style jsx>{`
         .content {
           
-          background-color: #252525;
+          background-color: black;
           min-height: 100vh;
           position: relative;
         }

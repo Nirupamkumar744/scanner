@@ -95,6 +95,7 @@ const InsiderBar = () => {
   );
 
   return (
+    <div className="lay">
     <div className="insider-bar">
       <div className="header">
         <h2 className="table-heading">
@@ -252,12 +253,13 @@ const InsiderBar = () => {
       {error && <div className="error">Error: {error}</div>} {/* Display error message if exists */}
 
       <style jsx>{`
+
+      
         .insider-bar {
-          background-color: #1e1e1e; /* Dark background for the insider bar */
+          background-color: black; /* Dark background for the insider bar */
           color: #f4f4f4;
           padding: 30px;
-          border-radius: 10px;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+          
           width: 90%;
           max-width: 100%;
           margin: 20px auto;
@@ -331,14 +333,14 @@ const InsiderBar = () => {
         }
 
         th {
-          background: #4CAF50; /* Green background for headers */
+          background: BLACK; /* Green background for headers */
           color: white;
           font-weight: bold;
           height: 50px;
         }
 
         tbody tr:nth-child(even) {
-          background-color: rgba(144, 238, 144, 0.3); /* Light green for even rows */
+          background-color: rgba(97, 237, 244, 0.3); /* Light green for even rows */
         }
 
         tbody tr:nth-child(odd) {
@@ -383,8 +385,10 @@ const InsiderBar = () => {
           text-align: center;
           margin-top: 20px;
         }
+          
       `}</style>
     </div>
+  </div>
   );
 };
 
