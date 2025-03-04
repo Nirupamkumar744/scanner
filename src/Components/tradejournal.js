@@ -1,11 +1,10 @@
 import React, { useState, useCallback, useEffect } from "react";
 import TickerTape from "../Widgets/TickerTape"; // Import the TickerTape component
-import { FaHome } from "react-icons/fa";
 import { db } from "./firebase"; // Assuming your firebase is set up in the firebase.js file
 import { doc, setDoc, collection, getDocs } from "firebase/firestore"; // Import Firestore functions
 import { getAuth } from "firebase/auth"; // Import Firebase Auth
 import { format, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns'; // Import date-fns for date handling
-
+import NavBar from "./NavBar/NavBar";
 // CSS styles moved outside the component to avoid dependency warnings
 const styles = `
   @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
@@ -18,61 +17,7 @@ const styles = `
     overflow-x: hidden;
   }
 
-  .sidebar {
-    width: 250px;
-    height: 100vh;
-    background-color: #252525;
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding: 20px 0;
-    color: white;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-    z-index: 2;
-    overflow-y: auto;
-  }
-
-  .logo {
-    text-align: center;
-    margin-bottom: 0;
-  }
-
-  .logo img {
-    width: 140px;
-    height: 140px;
-    margin-bottom: 0;
-  }
-
-  .nav-links {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .nav-links li {
-    margin: 10px 0;
-  }
-
-  .nav-links li a {
-    display: flex;
-    align-items: center;
-    padding: 12px 20px;
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: 500;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-  }
-
-  .nav-links li a:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: scale(1.05);
-  }
-
   .content {
-    margin-left: 250px;
-    padding: 20px;
     background-color: #252525;
     color: white;
     min-height: 100vh;
@@ -311,7 +256,7 @@ const TradeJournal = () => {
   const [mostProfitableTrade, setMostProfitableTrade] = useState(null);
   const [biggestLosingTrade, setBiggestLosingTrade] = useState(null);
   const [reasonForTrade, setReasonForTrade] = useState(""); // New state for reason
-
+  const [isNavOpen, setIsNavOpen] = useState(false); // State to handle nav visibility
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
@@ -453,21 +398,9 @@ const TradeJournal = () => {
   return (
     <>
       <style>{styles}</style>
+      <NavBar isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
 
-      <div className="sidebar">
-        <div className="logo">
-          <img src="https://res.cloudinary.com/dyrn2eg1j/image/upload/v1740734340/Add_a_subheading_1_pui9fq.png" alt="Logo" />
-        </div>
-        <ul className="nav-links">
-          <li><a href="/home"><FaHome style={{ marginRight: "10px", color: "gold" }} />Home</a></li>
-          <li><a href="/heat"><i className="fa fa-signal"></i>Heatmap</a></li>
-          <li><a href="/marketpulse"><i className="fa fa-chart-line"></i>Crypto/Forex</a></li>
-          <li><a href="/insiderstrategy"><i className="fa fa-cogs"></i>Insider Strategy</a></li>
-          <li><a href="/technical"><i className="fa fa-video"></i>Technical Analysis</a></li>
-          <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
-        </ul>
-      </div>
-
+      <div className={`content ${isNavOpen ? 'blur' : ''}`}>
       <div className="content">
         <div className="ticker-container">
           <TickerTape />
@@ -509,7 +442,7 @@ const TradeJournal = () => {
             ))}
           </div>
         </div>
-
+      </div>
         <div className="trade-summary-container">
           <div className="trade-summary">
             <h2>Winner Trade</h2>

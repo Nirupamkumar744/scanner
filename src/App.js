@@ -12,6 +12,7 @@ import TradeJournal from "./Components/tradejournal";
 import ProtectedRoute from "./Components/ProtectedRoutes"; // Correct path for ProtectedRoutes
 import { AuthProvider } from "./Components/AuthContext"; // Correct path for AuthContext
 
+
 function App() {
   return (
     <AuthProvider>
@@ -61,7 +62,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
+           <Route
             path="/technical"
             element={
               <ProtectedRoute>
@@ -86,6 +87,7 @@ function App() {
             }
           />
         </Routes>
+        
       </Router>
     </AuthProvider>
   );

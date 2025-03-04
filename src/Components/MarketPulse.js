@@ -1,10 +1,13 @@
-import React from "react";
-import { FaHome } from "react-icons/fa"; // Keep only the used icons
+
+import React, { useState } from "react";
 import TickerTape from '../Widgets/TickerTape'; 
 import Crypto from "../Widgets/crypto";
 import Forex from "../Widgets/Forex";
+import NavBar from "./NavBar/NavBar";
+
 
 const MarketPulse = () => {
+  const [isNavOpen, setIsNavOpen] = useState(false); // State to handle nav visibility
   return (
     <div>
       <style>
@@ -19,89 +22,17 @@ const MarketPulse = () => {
             overflow-x: hidden;
           }
 
-.sidebar {
-          width: 250px;
-          height: 100vh;
-          background-color: #252525;
-          background-size: cover;
-          background-position: center;
-          position: fixed;
-          top: 0;
-          left: 0;
-          padding: 20px 0;
-          color: white;
-          box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-          z-index: 2;
-          overflow-y: auto;
-         }
-
-          .sidebar::-webkit-scrollbar {
-            width: 8px;
+          .content {
+            
+            background-color: #252525;
+            background-size: cover; /* Ensure the background covers the entire area */
+            background-position: center; /* Center the background image */
+            background-repeat: no-repeat; /* Prevent the background from repeating */
+            color: white; /* Set text color to white for better contrast */
+            min-height: 100vh; /* Ensure the content area takes at least full viewport height */
+            position: relative; /* Maintain relative positioning */
           }
 
-          .sidebar::-webkit-scrollbar-thumb {
-            background-color: #888;
-            border-radius: 4px;
-          }
-
-          .sidebar::-webkit-scrollbar-thumb:hover {
-            background-color: #555;
-          }
-
-          .logo {
-            text-align: center;
-            margin-bottom: 0;
-          }
-
-          .logo img {
-            width: 140px;
-            height: 140px;
-            margin-bottom: 0;
-          }
-
-          .nav-links {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-          }
-
-          .nav-links li {
-            margin: 10px 0;
-          }
-
-          .nav-links li a {
-            display: flex;
-            align-items: center;
-            padding: 12px 20px;
-            color: white;
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 500;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-          }
-
-          .nav-links li a i {
-            margin-right: 10px;
-            color: gold;
-          }
-
-          .nav-links li a:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.05);
-          }
-
-           .content {
-    margin-left: 250px;
-    padding: 20px;
-     background-color: #252525;
-    background-size: cover; /* Ensure the background covers the entire area */
-    background-position: center; /* Center the background image */
-    background-repeat: no-repeat; /* Prevent the background from repeating */
-    color: white; /* Set text color to white for better contrast */
-    min-height: 100vh; /* Ensure the content area takes at least full viewport height */
-    position: relative; /* Maintain relative positioning */
-}
           .ticker-container {
             position: relative;
             width: 100%;
@@ -151,28 +82,12 @@ const MarketPulse = () => {
           }
         `}
       </style>
-
-      <div className="sidebar">
-        <div className="logo">
-          <img src="https://res.cloudinary.com/dyrn2eg1j/image/upload/v1740734340/Add_a_subheading_1_pui9fq.png" alt="Logo" />
-        </div>
-        <ul className="nav-links">
-          <li><a href="/home"><FaHome style={{ marginRight: '10px', color: "yellow" }} />Home</a></li>
-          <li><a href="/insiderstrategy"><i className="fa fa-cogs"></i>Insider Strategy</a></li> 
-          <li><a href="/heat"><i className="fa fa-signal"></i>Heatmap</a></li>
-          <li><a href="/tradejournal"><i className="fa fa-book"></i>Trading Journal</a></li>
-          <li><a href="/technical"><i className="fa fa-video"></i>Technical Analysis</a></li>
-          <li><a href="/calcu"><i className="fa fa-calendar-check"></i>Calculator</a></li>
-        </ul>
-      </div>
-
+      <NavBar isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
       <div className="content">
         {/* Ticker Tape added here */}
         <div className="ticker-container">
           <TickerTape />
         </div>
-       
-        
 
         <div className="heading">Crypto Heatmap</div>
         <div className="additional-container">
@@ -180,7 +95,6 @@ const MarketPulse = () => {
           <Crypto />
         </div>
 
-        {/* Additional Container 2 */}
         <div className="additional-container">
           <Forex />
         </div>

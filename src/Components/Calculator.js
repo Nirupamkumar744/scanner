@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { FaHome } from "react-icons/fa";
 import TickerTape from "../Widgets/TickerTape"; // Ensure this is the correct path
-
+import NavBar from "./NavBar/NavBar";
 const Calculator = () => {
   const [investment, setInvestment] = useState("");
   const [tenure, setTenure] = useState("");
   const [rate, setRate] = useState("");
   const [futureValue, setFutureValue] = useState(null);
-
   const calculateSIP = () => {
     if (!investment || !tenure || !rate) {
       setFutureValue("Please fill all fields correctly.");
@@ -32,85 +30,14 @@ const Calculator = () => {
         overflow-x: hidden;
       }
 
-      /* Navbar Styles */
-      .navbar {
-        display: flex;
-        justify-content: space-between; /* Space between logo and nav links */
-        align-items: center;
-        background-color: #252525;
-        padding: 5px 20px; /* Reduced padding for a thinner navbar */
-        color: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        position: relative; /* Position relative for absolute children */
-        z-index: 10; /* Ensure navbar is above other content */
-      }
-
-      .logo img {
-        width: 100px; /* Adjust logo size if needed */
-        height: auto; /* Maintain aspect ratio */
-      }
-
-      .nav-links {
-        list-style: none;
-        display: flex;
-        padding: 0;
-        margin: 0;
-        transition: transform 0.3s ease; /* Smooth transition for sliding */
-        transform: translateX(0); /* Start on-screen */
-        margin-left: auto; /* Push nav links to the right */
-      }
-
-      .nav-links.open {
-        display: flex; /* Show nav links when open */
-        flex-direction: column; /* Stack links vertically */
-        position: absolute; /* Position absolute for dropdown */
-        top: 50px; /* Adjust based on navbar height */
-        left: 0;
-        background-color: #252525;
-        width: 100%;
-        padding: 10px 0;
-        z-index: 10;
-      }
-
-      .nav-links li {
-        margin: 0; /* Remove margin for list items */
-      }
-
-      .nav-links li a {
-        color: white;
-        text-decoration: none;
-        font-size: 14px; /* Reduced font size for a more compact look */
-        font-weight: 500;
-        padding: 10px 15px; /* Add padding to make it look like a button */
-        transition: background-color 0.3s; /* Transition for hover effect */
-        display: flex; /* Use flex to align icon and text */
-        align-items: center; /* Center items vertically */
-      }
-
-      .nav-links li a:hover {
-        background-color: gold; /* Change background on hover */
-        color: black; /* Change text color on hover */
-      }
-
-      .hamburger {
-        display: none; /* Hidden by default */
-        flex-direction: column;
-        cursor: pointer;
-      }
-
-      .hamburger div {
-        width: 25px;
-        height: 3px;
-        background-color: white;
-        margin: 4px 0;
-        transition: 0.4s;
-      }
-
       .content {
-        padding: 20px;
         background-color: #252525;
         color: white; /* Set text color to white for better contrast */
         min-height: 100vh; /* Ensure the content area takes at least full viewport height */
+      }
+
+      .blur {
+        filter: blur(5px); /* Blur effect on content */
       }
 
       .ticker-container {
@@ -265,52 +192,8 @@ const Layout = ({ children }) => {
 
   return (
     <div className="layout-container">
-      <div className="navbar">
-        <div className="logo">
-          <img
-            src="https://res.cloudinary.com/dyrn2eg1j/image/upload/v1740734340/Add_a_subheading_1_pui9fq.png"
-            alt="Logo"
-          />
-        </div>
-        <div className="hamburger" onClick={() => setIsNavOpen(!isNavOpen)}>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-        <ul className={`nav-links ${isNavOpen ? 'open' : ''}`}>
-          <li>
-            <a href="/home">
-              <FaHome style={{ marginRight: "10px", color: "yellow" }} /> Home
-            </a>
-          </li>
-          <li>
-            <a href="/marketpulse">
-              <i className="fa fa-chart-line"></i>Crypto/Forex
-            </a>
-          </li>
-          <li>
-            <a href="https://stockarchery.in/about">
-              <i className="fa fa-cogs"></i>Insider Strategy
-            </a>
-          </li>
-          <li>
-            <a href="/heat">
-              <i className="fa fa-signal"></i>Heatmap
-            </a>
-          </li>
-          <li>
-            <a href="/tradejournal">
-              <i className="fa fa-book"></i>Trading Journal
-            </a>
-          </li>
-          <li>
-            <a href="/technical">
-              <i className="fa fa-book"></i>Technical Analysis
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div className="content">
+      <NavBar isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
+      <div className={`content ${isNavOpen ? 'blur' : ''}`}>
         <div className="ticker-container">
           <TickerTape />
         </div>

@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useCallback } from "react";
 import TickerTape from "../Widgets/TickerTape";
+import NavBar from "./NavBar/NavBar";
 
 const TechnicalAnalysis = () => {
   const [symbol, setSymbol] = useState("NSE:RELIANCE");
-
+  const [isNavOpen, setIsNavOpen] = useState(false); // State to handle nav visibility
   const handleSymbolChange = (e) => {
     let input = e.target.value.toUpperCase();
     if (!input.startsWith("NSE:")) {
@@ -41,49 +42,7 @@ const TechnicalAnalysis = () => {
 
   return (
     <div className="technical-analysis-page">
-      <div className="sidebar">
-        <div className="logo">
-          <img
-            src="https://res.cloudinary.com/dyrn2eg1j/image/upload/v1740734340/Add_a_subheading_1_pui9fq.png"
-            alt="Logo"
-          />
-        </div>
-        <ul className="nav-links">
-          <li>
-            <a href="/home">
-              <i className="fa fa-calendar-check"></i>Home
-            </a>
-          </li>
-          <li>
-            <a href="/marketpulse">
-              <i className="fa fa-chart-line"></i>Crypto/Forex
-            </a>
-          </li>
-          <li>
-            <a href="/heat">
-              <i className="fa fa-th"></i>Heatmap
-            </a>
-          </li>
-          <li>
-            <a href="/insiderstrategy">
-              <i className="fa fa-cogs"></i>Insider Strategy
-            </a>
-          </li>
-         
-          
-          <li>
-            <a href="/tradejournal">
-              <i className="fa fa-book"></i>Trading Journal
-            </a>
-          </li>
-          
-          <li>
-            <a href="/calcu">
-              <i className="fa fa-calendar-check"></i>Calculator
-            </a>
-          </li>
-        </ul>
-      </div>
+       <NavBar isNavOpen={isNavOpen} setIsNavOpen={setIsNavOpen} />
 
       <div className="content">
         <div className="ticker-container">
@@ -118,67 +77,7 @@ const TechnicalAnalysis = () => {
             overflow-x: hidden;
           }
 
-          .sidebar {
-            width: 250px;
-            height: 100vh;
-             background-color: #252525;
-            background-size: cover;
-            background-position: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            padding: 20px 0;
-            color: white;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-            z-index: 2;
-            overflow-y: auto;
-          }
-
-          .logo {
-            text-align: center;
-            margin-bottom: 0;
-          }
-
-          .logo img {
-            width: 140px;
-            height: 140px;
-            margin-bottom: 0;
-          }
-
-          .nav-links {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-          }
-
-          .nav-links li {
-            margin: 10px 0;
-          }
-
-          .nav-links li a {
-            display: flex;
-            align-items: center;
-            padding: 12px 20px;
-            color: white;
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 500;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-          }
-
-          .nav-links li a i {
-            margin-right: 10px;
-            color: gold;
-          }
-
-          .nav-links li a:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.05);
-          }
-
           .content {
-            margin-left: 250px;
             padding: 20px;
             background: transparent;
             color: white;
