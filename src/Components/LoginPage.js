@@ -1,8 +1,65 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../Components/firebase";
 import styled from "styled-components";
+import { ToastContainer, toast } from 'react-toastify';
+import TextField from '@mui/material/TextField';
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Loading from "../Widgets/loading";
+
+// Create a theme for Material-UI components
+const theme = createTheme({
+  components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#f0f0f0",
+          borderRadius: "10px",
+          boxShadow: "2px 2px 10px rgba(0, 0, 0, 0.2)",
+          transition: "all 0.3s ease-in-out",
+          "&:hover": {
+            backgroundColor: "#f0f0f0",
+            boxShadow: "4px 4px 12px rgba(0, 0, 0, 0.3)",
+          },
+          "&.Mui-focused": {
+            backgroundColor: "#f0f0f0",
+            boxShadow: "4px 4px 15px rgba(0, 0, 0, 0.4)",
+          },
+          "& .MuiOutlinedInput-notchedOutline": {
+            borderColor: "black",
+            borderWidth: "1px",
+          },
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#f39c12",
+            borderWidth: "3px",
+          },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "green",
+            borderWidth: "3.5px",
+          },
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: "black",
+          fontWeight: "bold",
+          fontSize: "0.8rem",
+          transition: "all 0.2s ease-in-out",
+          top: "0px",
+          "&.Mui-focused": {
+            color: "green",
+            fontSize: "1rem",
+            fontWeight: "bold",
+            top: "0px"
+          },
+        },
+      },
+    },
+  },
+});
 
 // Styled component for navigation bar
 const Navbar = styled.nav`
@@ -10,7 +67,6 @@ const Navbar = styled.nav`
   justify-content: space-between;
   align-items: center;
   padding: 20px 40px;
- 
   position: fixed;
   top: 0;
   left: 0;
@@ -24,17 +80,17 @@ const Navbar = styled.nav`
   }
 `;
 
-// Styled component for the logo, making it round
+// Styled component for the logo
 const Logo = styled.div`
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  overflow: hidden;  /* Ensures the image is cropped to fit the round shape */
-  
+  overflow: hidden;
+
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover;  /* Ensures the image fits inside the round container */
+    object-fit: cover;
   }
 `;
 
@@ -42,7 +98,7 @@ const Logo = styled.div`
 const NavLinks = styled.div`
   display: flex;
   gap: 20px;
-  
+
   @media (max-width: 768px) {
     display: ${({ open }) => (open ? "flex" : "none")};
     flex-direction: column;
@@ -54,7 +110,7 @@ const NavLinks = styled.div`
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
-    background-color: rgba(52, 152, 219, 0.9); /* Background color for mobile menu */
+    background-color: rgba(52, 152, 219, 0.9);
     padding: 20px 0;
     border-radius: 10px;
   }
@@ -69,14 +125,12 @@ const NavLink = styled.a`
 
   &:hover {
     color: #f39c12;
-    box-shadow: 0 0 10px #f39c12, 0 0 20px #f39c12; /* Glowing effect */
   }
 
   @media (max-width: 768px) {
-    transition: color 0.3s, box-shadow 0.3s;
     &:hover {
       color: #f39c12;
-      box-shadow: 0 0 10px #f39c12, 0 0 20px #f39c12; /* Glowing effect */
+      box shadow: 0 0 10px #f39c12, 0 0 20px #f39c12;
     }
   }
 `;
@@ -150,10 +204,10 @@ const Form = styled.form`
   align-items: center;
   width: 100%;
   max-width: 400px;
-  background: #2c3e50;
+  background: #F5F5F5;
   padding: 40px;
   border-radius: 15px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 15px 16px rgba(0, 0, 0, 0.2);
   animation: formFadeIn 1s ease-out;
   box-sizing: border-box;
 
@@ -166,26 +220,6 @@ const Form = styled.form`
       transform: translateY(0);
       opacity: 1;
     }
-  }
-`;
-
-
-
-// Styled component for input fields
-const Input = styled.input`
-  width: 100%;
-  padding: 15px;
-  margin: 10px 0;
-  border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  outline: none;
-  transition: border 0.3s ease, box-shadow 0.3s ease;
-  box-sizing: border-box;
-
-  &:focus {
-    border: 2px solid #f39c12;
-    box-shadow: 0 0 12px #f39c12;
   }
 `;
 
@@ -216,19 +250,30 @@ const Error = styled.p`
   margin-bottom: 15px;
 `;
 
+// Styled version of TextField
+const StyledInput = styled(TextField)`
+  margin: 15px 0;
+`;
+
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const [showImg, setShowImg] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowImg(false);
+    }, 1000);
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Basic input validation
     if (!email.trim() || !password.trim()) {
-      setError("Please enter both email and password.");
+      toast("Please enter email and password.");
       return;
     }
 
@@ -237,6 +282,7 @@ const LoginPage = () => {
       navigate("/home");
     } catch (err) {
       setError("Invalid username or password.");
+      toast ("Invalid username or password.");
     }
   };
 
@@ -246,44 +292,62 @@ const LoginPage = () => {
 
   return (
     <>
-      <Navbar>
-        <Logo>
-          <img
-            src="https://res.cloudinary.com/dyrn2eg1j/image/upload/v1740729458/Add_a_subheading_zggqbd.png"
-            alt="TradeApp Logo"
-          />
-        </Logo>
-        <HamburgerIcon open={isOpen} onClick={toggleMenu}>
-          <div></div>
-          <div></div>
-          <div></div>
-        </HamburgerIcon>
-        <NavLinks open={isOpen}>
-          <NavLink href="/blogs">Blogs</NavLink>
-          <NavLink href="/tutorial">Tutorial</NavLink>
-          <NavLink href="/contact">Contact</NavLink>
-        </NavLinks>
-      </Navbar>
+      {
+        showImg ? (
+          <Loading />
+        ) : (
+          <>
+            <ToastContainer position="top-center" />
+            <Navbar>
+              <Logo>
+                <img
+                  src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737098769/Default_Create_a_round_logo_for_a_stock_market_scanner_or_trad_1_a038e6fd-6af3-4085-9199-449cf7811765_0_vsnsbo.png"
+                  alt="TradeApp Logo"
+                />
+              </Logo>
+              <HamburgerIcon open={isOpen} onClick={toggleMenu}>
+                <div></div>
+                <div></div>
+                <div></div>
+              </HamburgerIcon>
+              <NavLinks open={isOpen}>
+                <NavLink href="/contact">Contact</NavLink>
+              </NavLinks>
+            </Navbar>
 
-      <LoginContainer>
-        
-        <Form onSubmit={handleLogin}>
-          {error && <Error>{error}</Error>}
-          <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Button type="submit">Login</Button>
-        </Form>
-      </LoginContainer>
+            <LoginContainer>
+              <Form onSubmit={handleLogin}>
+                {error && <Error>{error}</Error>}
+                <Logo>
+                  <img
+                    src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737098769/Default_Create_a_round_logo_for_a_stock_market_scanner_or_trad_1_a038e6fd-6af3-4085-9199-449cf7811765_0_vsnsbo.png"
+                    alt="TradeApp Logo"
+                  />
+                </Logo>
+
+                <h3 style={{ color: "black" }}>Welcome Back!</h3>
+                <ThemeProvider theme={theme}>
+                  <StyledInput
+                    fullWidth
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    id="outlined-basic" label="Email" variant="outlined"
+                  />
+                  <StyledInput
+                    fullWidth
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    id="outlined-basic" label="Password" variant="outlined"
+                  />
+                </ThemeProvider>
+                <Button type="submit">Login</Button>
+              </Form>
+            </LoginContainer>
+          </>
+        )
+      }
     </>
   );
 };
