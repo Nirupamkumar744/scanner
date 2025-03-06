@@ -130,7 +130,7 @@ const NavLink = styled.a`
   @media (max-width: 768px) {
     &:hover {
       color: #f39c12;
-      box shadow: 0 0 10px #f39c12, 0 0 20px #f39c12;
+      box-shadow: 0 0 10px #f39c12, 0 0 20px #f39c12;
     }
   }
 `;
@@ -210,17 +210,6 @@ const Form = styled.form`
   box-shadow: 0 15px 16px rgba(0, 0, 0, 0.2);
   animation: formFadeIn 1s ease-out;
   box-sizing: border-box;
-
-  @keyframes formFadeIn {
-    0% {
-      transform: translateY(-30px);
-      opacity: 0;
-    }
-    100% {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
 `;
 
 // Styled component for button
@@ -250,9 +239,31 @@ const Error = styled.p`
   margin-bottom: 15px;
 `;
 
-// Styled version of TextField
+// Styled version of TextField with added styles
 const StyledInput = styled(TextField)`
-  margin: 15px 0;
+  margin: 15px 0; // Space between input fields
+  & .MuiOutlinedInput-root {
+    background-color: #ffffff; // White background for input
+    border-radius: 10px; // Rounded corners
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); // Subtle shadow
+    transition: all 0.3s ease;
+
+    &:hover .MuiOutlinedInput-notchedOutline {
+      border-color: #f39c12; // Change border color on hover
+    }
+
+    &.Mui-focused .MuiOutlinedInput-notchedOutline {
+      border-color: #27ae60; // Change border color when focused
+    }
+  }
+
+  & .MuiInputLabel-root {
+    color: #555; // Label color
+  }
+
+  & .MuiInputLabel-root.Mui-focused {
+    color: #27ae60; // Label color when focused
+  }
 `;
 
 const LoginPage = () => {
@@ -282,7 +293,7 @@ const LoginPage = () => {
       navigate("/home");
     } catch (err) {
       setError("Invalid username or password.");
-      toast ("Invalid username or password.");
+      toast("Invalid username or password.");
     }
   };
 
@@ -320,7 +331,7 @@ const LoginPage = () => {
                 {error && <Error>{error}</Error>}
                 <Logo>
                   <img
-                    src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737098769/Default_Create_a_round_logo_for_a_stock_market_scanner_or_trad_1_a038e6fd-6af3-4085-9199-449cf7811765_0_vsnsbo.png"
+                    src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737098769/Default_Create_a_round_logo_for_a_stock_market_scanner_or_trad_1_a038e6fd-6af3-4085-9199-449cf7811765_0_vs nsbo.png"
                     alt="TradeApp Logo"
                   />
                 </Logo>

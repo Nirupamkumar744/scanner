@@ -7,10 +7,11 @@ import MarketPulse from "./Components/MarketPulse";
 import Calculator from "./Components/Calculator";
 import InsiderStrategy from "./Components/InsiderStrategy";
 import Technical from "./Components/Technical";
-import StockHeatmap from "./Components/stockheatmap";
-import TradeJournal from "./Components/tradejournal";
-import ProtectedRoute from "./Components/ProtectedRoutes"; // Correct path for ProtectedRoutes
-import { AuthProvider } from "./Components/AuthContext"; // Correct path for AuthContext
+import StockHeatmap from "./Components/stockheatmap"; // Ensure correct casing
+import TradeJournal from "./Components/tradejournal"; // Ensure correct casing
+import ProtectedRoute from "./Components/ProtectedRoutes"; // Ensure correct path
+import { AuthProvider } from "./Components/AuthContext"; // Ensure correct path
+import LandingPage from "./Components/LandingPage";
 
 
 function App() {
@@ -19,8 +20,9 @@ function App() {
       <Router>
         <Routes>
           {/* Public Route */}
-          <Route path="/" element={<LoginPage />} />
-
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          
           {/* Protected Routes */}
           <Route
             path="/home"
@@ -47,7 +49,7 @@ function App() {
             }
           />
           <Route
-            path="/calcu"
+            path="/calculator" // Changed from "/calcu" to "/calculator"
             element={
               <ProtectedRoute>
                 <Calculator />
@@ -62,7 +64,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-           <Route
+          <Route
             path="/technical"
             element={
               <ProtectedRoute>
@@ -86,8 +88,8 @@ function App() {
               </ProtectedRoute>
             }
           />
+          
         </Routes>
-        
       </Router>
     </AuthProvider>
   );
