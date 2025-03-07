@@ -43,7 +43,7 @@ const LandingPage = () => {
                     height: 55px;
                     width: 55px;
                 }
-                .login-btn {
+                .login-btn, .buy-btn {
                     background: #000000;
                     color: white;
                     border-radius: 5px;
@@ -51,21 +51,27 @@ const LandingPage = () => {
                     padding: 10px 20px;
                     transition: all 0.3s ease-in-out;
                     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-left: 10px; /* Add space between buttons */
                 }
-                .login-btn:hover {
+                .login-btn:hover, .buy-btn:hover {
                     transform: scale(1.1);
                     background: #222222;
                     box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
                 }
-                .login-btn:active {
+                .login-btn:active, .buy-btn:active {
                     transform: scale(0.95);
                     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
                 }
-                .login-btn a {
+                .login-btn a, .buy-btn a {
                     font-weight: bold;
                     border: none;
                     font-size: 14.5px;
                     cursor: pointer;
+                    color: white;
+                    text-decoration: none;
                 }
                 .contact-btn {
                     margin-top: 10px;
@@ -125,12 +131,19 @@ const LandingPage = () => {
                     <img src="https://res.cloudinary.com/dcbvuidqn/image/upload/v1737098769/Default_Create_a_round_logo_for_a_stock_market_scanner_or_trad_1_a038e6fd-6af3-4085-9199-449cf7811765_0_vsnsbo.png" alt="Logo" />
                     <span style={{ marginLeft: '10px', fontSize: '18px', fontWeight: 'bold' }}>Trading Courses</span>
                 </div>
-                <Link to={"/login"}>
-                    <div className='login-btn flex'>
-                        <a>Login</a>
-                        <LuLogIn strokeWidth={3} />
-                    </div>
-                </Link>
+                <div className='flex'>
+                    <Link to={"/pay"}>
+                        <div className='buy-btn flex'>
+                            <span>Buy Now</span>
+                        </div>
+                    </Link>
+                    <Link to={"/login"}>
+                        <div className='login-btn flex'>
+                            <span>Login</span>
+                            <LuLogIn strokeWidth={3} />
+                        </div>
+                    </Link>
+                </div>
             </nav>
 
             {[
@@ -164,7 +177,7 @@ const LandingPage = () => {
                         <h2>{section.title}</h2>
                         <p>{section.description}</p>
                         <div className='contact-btn flex'>
-                            <a href="#" className="button">Contact Us</a>
+                            <a href="https://stockarchery.in/contact" className="button">Contact Us</a>
                             <FaArrowRight />
                         </div>
                     </div>

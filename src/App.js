@@ -12,6 +12,7 @@ import TradeJournal from "./Components/tradejournal"; // Ensure correct casing
 import ProtectedRoute from "./Components/ProtectedRoutes"; // Ensure correct path
 import { AuthProvider } from "./Components/AuthContext"; // Ensure correct path
 import LandingPage from "./Components/LandingPage";
+import Payment from "./Components/Payment";
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           {/* Public Route */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/pay" element={<Payment/>} />
           
           {/* Protected Routes */}
           <Route

@@ -46,11 +46,11 @@ const InsiderBar = () => {
 
   const scheduleNextFetch = useCallback(() => {
     const fetchTimes = [
-      { hour: 11, minute: 27 },
-      { hour: 12, minute: 27 },
-      { hour: 13, minute: 27 },
-      { hour: 14, minute: 27 },
-      { hour: 15, minute: 27 }
+      { hour: 11, minute: 32 },
+      { hour: 12, minute: 32 },
+      { hour: 13, minute: 32 },
+      { hour: 14, minute: 32 },
+      { hour: 15, minute: 32 }
     ];
 
     const now = new Date();
