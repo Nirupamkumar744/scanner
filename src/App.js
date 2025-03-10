@@ -7,10 +7,10 @@ import MarketPulse from "./Components/MarketPulse";
 import Calculator from "./Components/Calculator";
 import InsiderStrategy from "./Components/InsiderStrategy";
 import Technical from "./Components/Technical";
-import StockHeatmap from "./Components/stockheatmap"; // Ensure correct casing
-import TradeJournal from "./Components/tradejournal"; // Ensure correct casing
-import ProtectedRoute from "./Components/ProtectedRoutes"; // Ensure correct path
-import { AuthProvider } from "./Components/AuthContext"; // Ensure correct path
+import StockHeatmap from "./Components/stockheatmap"; 
+import TradeJournal from "./Components/tradejournal"; 
+import ProtectedRoute from "./Components/ProtectedRoutes"; 
+import { AuthProvider } from "./Components/AuthContext"; 
 import LandingPage from "./Components/LandingPage";
 import Payment from "./Components/Payment";
 
@@ -50,14 +50,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/calculator" // Changed from "/calcu" to "/calculator"
-            element={
-              <ProtectedRoute>
-                <Calculator />
-              </ProtectedRoute>
-            }
-          />
+          
           <Route
             path="/insiderstrategy"
             element={
@@ -87,6 +80,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <TradeJournal />
+              </ProtectedRoute>
+            }
+          />
+            <Route
+            path="/calcu"
+            element={
+              <ProtectedRoute>
+                <Calculator />
               </ProtectedRoute>
             }
           />
