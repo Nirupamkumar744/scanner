@@ -17,9 +17,9 @@ const PaymentPage = () => {
   const [selectedPackage, setSelectedPackage] = useState(null);
 
   const packages = [
-    { id: 1, duration: "1 Month", price: 1000, description: "Access for 1 month", image: "https://via.placeholder.com/150" },
-    { id: 2, duration: "6 Months", price: 5000, description: "Access for 6 months", image: "https://via.placeholder.com/150" },
-    { id: 3, duration: "12 Months", price: 9000, description: "Access for 12 months", image: "https://via.placeholder.com/150" },
+    { id: 1, duration: "1 Month", price: 1000, description: "Access for 1 month", image:    "https://via.placeholder.com/150" },
+    { id: 2, duration: "6 Months", price: 5000, description: "Access for 6 months", image:  "https://via.placeholder.com/150" },
+    { id: 3, duration: "12 Months", price: 9000, description: "Access for 12 months", image:"https://via.placeholder.com/150" },
   ];
 
   const handleChange = (e) => {
